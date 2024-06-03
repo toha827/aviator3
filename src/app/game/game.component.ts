@@ -73,6 +73,9 @@ export class GameComponent {
 
   ngOnInit(): void {
     this.showLogin = !localStorage.getItem('token');
+    if (!localStorage.getItem('token')) {
+      this.login();
+    }
     this.obs.asObservable().subscribe(res => {
       if (!this.firstLoading && res) {
         this.restart();
