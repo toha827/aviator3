@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="title">Admin panel</div>
+  <div class="body">
+    <div class="input">
+      <input type="number" [(ngModel)]="coefficient" step="0.01" min="0">
+    </div>
+    <div class="set-btn" (click)="setCoefficient()">
+      Set Coefficient
+    </div>
+    <div class="red-btn" (click)="cancel()">
+      Go back
+    </div>
+  </div>
+</div>
