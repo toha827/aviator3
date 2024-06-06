@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'https://f172-178-91-18-156.ngrok-free.app';
+  private readonly baseUrl = 'https://c569-37-150-0-122.ngrok-free.app';
   private http = inject(HttpClient);
 
   public getRoomsList(): Observable<any> {
@@ -36,6 +36,10 @@ export class RoomService {
 
   public addCoefficient(body: {coefficient: number[]}): Observable<any> {
     return this.http.post(`${this.baseUrl}/v1/bets/add-coefficients`, body);
+  }
+
+  public getBalance(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/v1/bets/balance`);
   }
 
 }

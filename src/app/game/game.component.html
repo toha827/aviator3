@@ -1,7 +1,6 @@
 <div class="header">
   <div><img src="https://aviator-demo.spribegaming.com/aviator-logo.cafbd29233306bf7.svg" alt=""></div>
-<!--  <div *ngIf="showLogin" class="title" (click)="login()">Login</div>-->
-  <div class="balance ml-auto"><span>3000</span> USD</div>
+  <div class="balance ml-auto"><span>{{balance}}</span> USD</div>
   <div class="title" (click)="admin()">Admin</div>
 </div>
 <div class="body">
@@ -17,7 +16,7 @@
   </div>
   <div class="graph">
     <div *ngIf="isFlewAway" class="flex-away">
-      FLEW AWAY!
+      VOLÓ LEJOS!
     </div>
     <div class="sum" [ngClass]="{'color-red': isFlewAway}">
       <ng-container *ngIf="!showLoading">
@@ -26,88 +25,42 @@
     </div>
     <ng-container *ngIf="showLoading">
       <div class="sum" style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
-        <span style="font-size: 18px">Waiting for next round</span>
+        <span style="font-size: 18px;text-align: center">Esperando la próxima ronda</span>
         <img src="/assets/images/loading.svg" alt="" style="width: 50px; height: 50px;">
       </div>
     </ng-container>
-    <ng-lottie
-      [options]="options"
-      width="100%"
-      height="220px"
-      (animationCreated)="animationCreated($event)" />
-  </div>
-  <div class="first-block" style="margin-top: 20px;">
-    <div class="container">
-      <div class="tabs">
-        <input type="radio" id="radio-1" (click)="handleTab('bet')" name="tabs" checked="">
-        <label class="tab" for="radio-1">Bet</label>
-        <input type="radio" id="radio-2" (click)="handleTab('auto')" name="tabs">
-        <label class="tab" for="radio-2">Auto</label>
-        <span class="glider"></span>
-      </div>
+    <div style="position: relative">
+      <ng-lottie
+        style="position: relative;z-index: 2"
+        [options]="options"
+        width="100%"
+        height="220px"
+        (animationCreated)="animationCreated($event)" />
+      <ng-lottie style="position: absolute;top:0"
+                 [options]="optionBg"
+                 width="100%"
+                 height="220px" (animationCreated)="animationBgCreated($event)">
+      </ng-lottie>
     </div>
-    <div class="div-buttons">
-      <div class="left-side">
-        <div class="main-input">
-          <div class="input">
-            <div class="minus" (click)="subtractAmount()" [ngClass]="{'pointer-none': amount === 1}">-</div>
-            <input type="number" [(ngModel)]="amount" step="0.01" min="0">
-            <div class="minus" (click)="addAmount()">+</div>
-          </div>
-          <div class="buttons">
-            <div class="num" (click)="addAmount(1)">1</div>
-            <div class="num" (click)="addAmount(2)">2</div>
-            <div class="num" (click)="addAmount(5)">5</div>
-            <div class="num" (click)="addAmount(10)">10</div>
-          </div>
-        </div>
-      </div>
-      <div class="right-side">
-        <div class="bet-btn" [ngClass]="{'green-btn': !isBet, 'red-btn': isBet}" (click)="makeBet()">
-          <ng-container *ngIf="!isBet; else bet">
-            BET <br>
-            {{amount}} USD
-          </ng-container>
-          <ng-template #bet>
-            Cash out {{(amount * startCoefficient).toFixed(2)}} USD
-          </ng-template>
-        </div>
-      </div>
-    </div>
-    <ng-container *ngIf="showAuto">
-      <div class="auto-play">
-        <div class="btn-auto-play">
-          AUTO PLAY
-        </div>
-        <div class="auto-cash-out">
-          <div class="label">
-            Auto Cash Out
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox">
-            <div class="toggle-switch-background">
-              <div class="toggle-switch-handle"></div>
-            </div>
-          </label>
-        </div>
-        <div class="input">
-          <input type="number" [(ngModel)]="inputCoeff" step="0.01" min="0">
-        </div>
-      </div>
-    </ng-container>
   </div>
+<!--  <ng-container *ngFor="let of [{id: 'radio1'},{}]; let idx=index">-->
+    <app-bet [id]="'id1'" [id2]="'id2'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>
+<!--  <app-bet [id]="'id3'" [id2]="'id4'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
+<!--  <app-bet [id]="'id3'" [id2]="'id4'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
+<!--  <app-bet [id]="'radio-3'" [id2]="'radio-4'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
+<!--  </ng-container>-->
   <div class="first-block" style="margin-top: 20px;">
     <table>
       <thead>
-      <tr>
-        <th>Date</th>
-        <th>User</th>
-        <th>Bet USD</th>
-        <th>Cash out USD</th>
+      <tr style="font-size: 12px">
+        <th>Fecha</th>
+        <th>Usuario</th>
+        <th>Apuesta USD</th>
+        <th>Retiro de efectivo USD</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let bet of myBetsList">
+      <tr *ngFor="let bet of myBetsList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
         <td>{{bet.created_at | date: 'HH:mm'}}</td>
         <td>{{bet.user}}</td>
         <td>{{bet.amount}}</td>
