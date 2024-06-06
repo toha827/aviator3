@@ -1,0 +1,66 @@
+<div class="first-block" style="margin-top: 20px;">
+  <div class="container" *ngIf="id && id2">
+    <div class="tabs">
+      <div class="radio-inputs">
+        <label class="radio" [for]="autoId">
+          <input type="radio" name="radio" [id]="autoId" checked="" (change)="handleTab('auto')">
+          <span class="name">Auto</span>
+        </label>
+        <label class="radio" [for]="apuestaId">
+          <input type="radio" name="radio" [id]="apuestaId" (change)="handleTab('apuesta')">
+          <span class="name">Apuesta</span>
+        </label>
+      </div>
+      <span [id]="gliderId" class="glider"></span>
+    </div>
+  </div>
+  <div class="div-buttons">
+    <div class="left-side">
+      <div class="main-input">
+        <div class="input">
+          <div class="minus" (click)="subtractAmount()" [ngClass]="{'pointer-none': amount === 1}">-</div>
+          <input type="number" [(ngModel)]="amount" step="0.01" min="0" max="100" [max]="100">
+          <div class="minus" (click)="addAmount()">+</div>
+        </div>
+        <div class="buttons">
+          <div class="num" (click)="addAmount(1)">1</div>
+          <div class="num" (click)="addAmount(2)">2</div>
+          <div class="num" (click)="addAmount(5)">5</div>
+          <div class="num" (click)="addAmount(10)">10</div>
+        </div>
+      </div>
+    </div>
+    <div class="right-side">
+      <div class="bet-btn" [ngClass]="{'green-btn': !isBet, 'red-btn': isBet}" (click)="makeBet()">
+        <ng-container *ngIf="!isBet; else bet">
+          Apuesta <br>
+          {{amount}} USD
+        </ng-container>
+        <ng-template #bet>
+          Retiro de efectivo {{(amount * startCoefficient).toFixed(2)}} USD
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="showAuto">
+    <div class="auto-play" style="align-items: center">
+      <div class="btn-auto-play" style="text-align: center; font-size: 13px">
+        Auto reproducción
+      </div>
+      <div class="auto-cash-out">
+        <div class="label">
+          Cobro automático
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox">
+          <div class="toggle-switch-background">
+            <div class="toggle-switch-handle"></div>
+          </div>
+        </label>
+      </div>
+      <div class="input">
+        <input type="number" [(ngModel)]="inputCoeff" step="0.01" min="0">
+      </div>
+    </div>
+  </ng-container>
+</div>
