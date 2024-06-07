@@ -60,9 +60,9 @@
       <tr *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
         <td>{{bet.date}}</td>
         <td>{{bet.user}}</td>
-        <td>{{highlightedRows.includes(i) ? startCoefficient : ''}}</td>
         <td>{{bet.amount}}</td>
-        <td>{{highlightedRows.includes(i) ? (bet.amount * startCoefficient).toFixed(2) : ''}}</td>
+        <td>{{highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : ''}}</td>
+        <td>{{highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : ''}}</td>
       </tr>
       </tbody>
     </table>

@@ -27,54 +27,43 @@ export class GameComponent implements OnInit, OnDestroy {
     {
       date: '22:30',
       amount: 12,
-      user: 'td**3'
+      user: 'td**3',
+      coeff: 1.01
     },
     {
       date: '15:45',
       amount: 25,
-      user: 'ab**1'
+      user: 'ab**1',
+      coeff: 1.01
     },
     {
       date: '09:00',
       amount: 8,
-      user: 'xy**7'
+      user: 'xy**7',
+      coeff: 1.01
     },
     {
       date: '11:15',
       amount: 15,
-      user: 'mn**5'
+      user: 'mn**5',
+      coeff: 1.01
     },
     {
       date: '19:50',
       amount: 20,
-      user: 'jk**2'
+      user: 'jk**2',
+      coeff: 1.01
     },
     {
       date: '08:30',
       amount: 10,
-      user: 'pq**6'
+      user: 'pq**6',
+      coeff: 1.01
     },
-    {
-      date: '14:20',
-      amount: 30,
-      user: 'gh**9'
-    },
-    {
-      date: '17:10',
-      amount: 18,
-      user: 'uv**4'
-    },
-    {
-      date: '23:05',
-      amount: 22,
-      user: 'rs**8'
-    },
-    {
-      date: '06:50',
-      amount: 5,
-      user: 'cd**0'
-    }
-  ]
+  ];
+
+  startCoefficients: number[] = this.userList.map(() => 1.01);
+
   public options: AnimationOptions = {
     path: '/assets/images/plane.json',
     loop: true,
@@ -89,6 +78,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public isGameStarting: boolean = false;
 
   public coefficientList: any[] = []
+  public coeffRow: any[] = [];
 
   public showLoading: boolean = false;
 
@@ -144,38 +134,6 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     });
     this.getBets();
-    this.startHighlightingSequence();
-  }
-
-  startHighlightingSequence() {
-    this.mainIntervalId = setInterval(() => {
-      this.clearAllIntervals(); // Clear any existing intervals
-      this.highlightedRows = []; // Reset highlighted rows
-      this.startHighlighting();
-    }, 10000); // Repeat every 15 seconds
-  }
-
-  startHighlighting() {
-    this.highlightRow(0, 3000); // Highlight first row after 3 seconds
-    this.highlightRow(2, 5000); // Highlight third row after 5 seconds
-    this.highlightRow(4, 7000); // Highlight fifth row after 7 seconds
-    this.highlightRow(6, 10000); // Highlight seventh row after 10 seconds
-  }
-
-  highlightRow(rowIndex: number, timeout: number) {
-    const intervalId = setTimeout(() => {
-      if (this.highlightedRows.includes(rowIndex)) {
-        this.highlightedRows = this.highlightedRows.filter(row => row !== rowIndex);
-      } else {
-        this.highlightedRows.push(rowIndex);
-      }
-    }, timeout);
-    this.intervalIds.push(intervalId);
-  }
-
-  clearAllIntervals() {
-    this.intervalIds.forEach(id => clearTimeout(id));
-    this.intervalIds = [];
   }
 
   private getBets(): void {
@@ -247,30 +205,8 @@ export class GameComponent implements OnInit, OnDestroy {
             this.isAutoReached = true;
           }
         }
-
-        // Log the current state for debugging purposes
-        console.log(`Coefficient: ${this.startCoefficient}, Step: ${this.inputCoeff}`);
       }
     }, intervalTime);
-    // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    // const totalDuration = 15000;
-    // const intervalTime = totalDuration / this.steps;
-    //
-    // const interval = setInterval(() => {
-    //   if (this.currentIndex >= this.steps) {
-    //     this.stop();
-    //     this.stopBg();
-    //     this.firstLoading = false;
-    //     this.obs.next(true);
-    //     clearInterval(interval);
-    //   } else {
-    //     this.startCoefficient += stepSize;
-    //     this.currentIndex++;
-    //     if (this.isChecked && this.startCoefficient >= this.inputCoeff) {
-    //       this.isAutoReached = true;
-    //     }
-    //   }
-    // }, intervalTime);
   }
 
   public animationCreated(animationItem: AnimationItem): void {
@@ -304,7 +240,6 @@ export class GameComponent implements OnInit, OnDestroy {
       this.animationItem.play();
       this.playBg();
       this.changeCoefficientAutomatically();
-      // this.getRooms();
     }
   }
 
@@ -323,13 +258,16 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public restart(): void {
     if (this.animationItem) {
-        this.isBet = false;
-        this.stop();
-        this.isGameStarting = false;
-        this.clearAllIntervals();
-        this.resetCoefficients();
-        this.getRooms();
-      }
+      this.isBet = false;
+      this.stop();
+      clearInterval(this.mainIntervalId);
+      this.isGameStarting = false;
+      this.clearAllIntervals();
+      this.resetCoefficients();
+      this.coeffRow = [];
+      this.clearHighlightedRows();
+      this.getRooms();
+    }
   }
 
   private resetCoefficients(): void {
@@ -352,8 +290,60 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public onGetIsChecked(event: any): void {
     this.isChecked = event.isChecked;
-    console.log(event.startCoeff);
     this.inputCoeff = event.startCoeff;
+  }
+
+
+  startHighlightingSequence() {
+    this.mainIntervalId = setInterval(() => {
+      this.clearAllIntervals(); // Clear any existing intervals
+      this.highlightedRows = []; // Reset highlighted rows
+      this.startHighlighting();
+    }, 10000); // Repeat every 10 seconds
+  }
+
+  startHighlighting() {
+    const indices = this.generateRandomIndices();
+    this.highlightRow(indices[0], 1000); // Highlight first row after 3 seconds
+    this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
+    this.highlightRow(indices[2], 4000); // Highlight fifth row after 7 seconds
+  }
+
+  generateRandomIndices(): number[] {
+    const indices = [];
+    const usedIndices = new Set<number>();
+
+    while (indices.length < 3) {
+      const randomIndex = Math.floor(Math.random() * this.userList.length);
+      if (!usedIndices.has(randomIndex)) {
+        indices.push(randomIndex);
+        usedIndices.add(randomIndex);
+      }
+    }
+
+    return indices;
+  }
+
+  highlightRow(rowIndex: number, timeout: number) {
+    const intervalId = setTimeout(() => {
+      if (this.highlightedRows.includes(rowIndex)) {
+        this.highlightedRows = this.highlightedRows.filter(row => row !== rowIndex);
+        this.startCoefficients[rowIndex] = 1.01;
+      } else {
+        this.highlightedRows.push(rowIndex);
+        this.startCoefficients[rowIndex] = this.startCoefficient;
+      }
+    }, timeout);
+    this.intervalIds.push(intervalId);
+  }
+
+  clearAllIntervals() {
+    this.intervalIds.forEach(id => clearTimeout(id));
+    this.intervalIds = [];
+  }
+
+  private clearHighlightedRows(): void {
+    this.highlightedRows = [];
   }
 
   ngOnDestroy(): void {
