@@ -43,12 +43,8 @@
       </ng-lottie>
     </div>
   </div>
-<!--  <ng-container *ngFor="let of [{id: 'radio1'},{}]; let idx=index">-->
-    <app-bet [id]="'id1'" [id2]="'id2'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>
-<!--  <app-bet [id]="'id3'" [id2]="'id4'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
-<!--  <app-bet [id]="'id3'" [id2]="'id4'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
-<!--  <app-bet [id]="'radio-3'" [id2]="'radio-4'" [isBet]="isBet" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
-<!--  </ng-container>-->
+  <app-bet [isAutoReached]="isAutoReached" [firstStatus]="firstStatus" [currentStatus]="currentStatus" [id]="'id1'" [id2]="'id2'" [startCoefficient]="startCoefficient" [isGameStarting]="isGameStarting" (passBalance)="onGetBalance($event)" (passIsChecked)="onGetIsChecked($event)"></app-bet>
+<!--  <app-bet [firstStatus]="firstStatus" [currentStatus]="currentStatus" [id]="'id1'" [id2]="'id2'" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
   <div class="first-block" style="margin-top: 20px;">
     <table>
       <thead>
@@ -56,15 +52,17 @@
         <th>Fecha</th>
         <th>Usuario</th>
         <th>Apuesta USD</th>
+        <th></th>
         <th>Retiro de efectivo USD</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let bet of myBetsList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
-        <td>{{bet.created_at | date: 'HH:mm'}}</td>
+      <tr *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
+        <td>{{bet.date}}</td>
         <td>{{bet.user}}</td>
+        <td>{{highlightedRows.includes(i) ? startCoefficient : ''}}</td>
         <td>{{bet.amount}}</td>
-        <td></td>
+        <td>{{highlightedRows.includes(i) ? (bet.amount * startCoefficient).toFixed(2) : ''}}</td>
       </tr>
       </tbody>
     </table>

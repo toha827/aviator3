@@ -8,12 +8,11 @@ import {Router, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BetComponent} from "../bet/bet.component";
-import {Bet2Component} from "../bet-2/bet-2.component";
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [RouterOutlet, LottieComponent, CommonModule, FormsModule, BetComponent, Bet2Component],
+  imports: [RouterOutlet, LottieComponent, CommonModule, FormsModule, BetComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -24,6 +23,58 @@ export class GameComponent implements OnInit, OnDestroy {
   private roomService = inject(RoomService);
   private router = inject(Router);
 
+  public userList = [
+    {
+      date: '22:30',
+      amount: 12,
+      user: 'td**3'
+    },
+    {
+      date: '15:45',
+      amount: 25,
+      user: 'ab**1'
+    },
+    {
+      date: '09:00',
+      amount: 8,
+      user: 'xy**7'
+    },
+    {
+      date: '11:15',
+      amount: 15,
+      user: 'mn**5'
+    },
+    {
+      date: '19:50',
+      amount: 20,
+      user: 'jk**2'
+    },
+    {
+      date: '08:30',
+      amount: 10,
+      user: 'pq**6'
+    },
+    {
+      date: '14:20',
+      amount: 30,
+      user: 'gh**9'
+    },
+    {
+      date: '17:10',
+      amount: 18,
+      user: 'uv**4'
+    },
+    {
+      date: '23:05',
+      amount: 22,
+      user: 'rs**8'
+    },
+    {
+      date: '06:50',
+      amount: 5,
+      user: 'cd**0'
+    }
+  ]
   public options: AnimationOptions = {
     path: '/assets/images/plane.json',
     loop: true,
@@ -35,11 +86,14 @@ export class GameComponent implements OnInit, OnDestroy {
     autoplay: false
   }
 
+  public isGameStarting: boolean = false;
+
   public coefficientList: any[] = []
 
   public showLoading: boolean = false;
 
   public isBet: boolean = false;
+  public isBet2: boolean = false;
   public isFlewAway: boolean = false;
   public startCoefficient: number = 1.01;
   private endCoefficient: number = 2;
@@ -47,7 +101,8 @@ export class GameComponent implements OnInit, OnDestroy {
   private intervalTime: number = 60000; // Time interval in milliseconds
   private currentIndex: number = 0;
   private betId: number = 0;
-  private currentStatus: string = '';
+  firstStatus: string = '';
+  currentStatus: string = '';
 
   public myBetsList: any[] = [];
 
@@ -57,9 +112,16 @@ export class GameComponent implements OnInit, OnDestroy {
   private firstLoading: boolean = true;
   public balance: number = 0;
 
+  public isChecked: boolean = false;
+  public inputCoeff: number = 0;
+
+  intervalId: any;
+
   highlightedRows: number[] = [];
   intervalIds: any[] = [];
   mainIntervalId: any;
+
+  public isAutoReached: boolean = false;
 
   private obs: Subject<boolean> = new Subject<boolean>();
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
@@ -71,19 +133,18 @@ export class GameComponent implements OnInit, OnDestroy {
         this.balance = res.balance;
         }
       )
-    // this.getRooms();
+    this.getRooms();
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
     }
     this.obs.asObservable().subscribe(res => {
       if (!this.firstLoading && res) {
-        // this.startHighlightingSequence();
         this.restart();
       }
     });
     this.getBets();
-    // this.startHighlightingSequence();
+    this.startHighlightingSequence();
   }
 
   startHighlightingSequence() {
@@ -91,7 +152,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.clearAllIntervals(); // Clear any existing intervals
       this.highlightedRows = []; // Reset highlighted rows
       this.startHighlighting();
-    }, 15000); // Repeat every 15 seconds
+    }, 10000); // Repeat every 15 seconds
   }
 
   startHighlighting() {
@@ -135,13 +196,17 @@ export class GameComponent implements OnInit, OnDestroy {
         this.coefficientList = res;
         this.coefficientList = this.coefficientList.slice(1);
         this.betId = res[0].id;
-        this.currentStatus = res[0].status;
+        this.currentStatus = res[1].status;
+        this.firstStatus = res[0].status;
         this.endCoefficient = res[1].coefficient;
         this.showLoading = true;
+        this.isBet = false;
         if (res[1].status === 'PLAYING') {
           this.showLoading = false;
+          this.isGameStarting = true;
           this.play();
         } else if (res[1].status === 'FINISHED') {
+          this.isBet = false;
           setTimeout(() => {
             this.getRooms();
           }, 2000); // Retry every second
@@ -151,21 +216,61 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public changeCoefficientAutomatically(): void {
     const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    const totalDuration = 15000;
-    const intervalTime = totalDuration / this.steps;
+    const totalDuration = 15000; // Total duration in milliseconds
+    const intervalTime = totalDuration / this.steps; // Time per step
+    const tolerance = 0.001; // Define a small tolerance value
 
-    const interval = setInterval(() => {
+    // Ensure interval ID is cleared in case of multiple calls
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+
+    // Reset currentIndex to ensure proper counting from the start
+    this.currentIndex = 0;
+
+    this.intervalId = setInterval(() => {
+      // Check if the current index has reached the total steps
       if (this.currentIndex >= this.steps) {
-        this.stop();
-        this.stopBg();
+        this.stop(); // Stop the main animation
+        this.stopBg(); // Stop the background animation
         this.firstLoading = false;
-        this.obs.next(true);
-        clearInterval(interval);
+        this.obs.next(true); // Emit the observer event
+        clearInterval(this.intervalId); // Clear the interval to stop execution
       } else {
+        // Increment the startCoefficient by the step size
         this.startCoefficient += stepSize;
         this.currentIndex++;
+
+        if (this.isChecked) {
+          // Check if auto coefficient is reached and update the flag
+          if (this.startCoefficient.toFixed(1) === this.inputCoeff.toFixed(1)) {
+            this.isAutoReached = true;
+          }
+        }
+
+        // Log the current state for debugging purposes
+        console.log(`Coefficient: ${this.startCoefficient}, Step: ${this.inputCoeff}`);
       }
     }, intervalTime);
+    // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
+    // const totalDuration = 15000;
+    // const intervalTime = totalDuration / this.steps;
+    //
+    // const interval = setInterval(() => {
+    //   if (this.currentIndex >= this.steps) {
+    //     this.stop();
+    //     this.stopBg();
+    //     this.firstLoading = false;
+    //     this.obs.next(true);
+    //     clearInterval(interval);
+    //   } else {
+    //     this.startCoefficient += stepSize;
+    //     this.currentIndex++;
+    //     if (this.isChecked && this.startCoefficient >= this.inputCoeff) {
+    //       this.isAutoReached = true;
+    //     }
+    //   }
+    // }, intervalTime);
   }
 
   public animationCreated(animationItem: AnimationItem): void {
@@ -194,6 +299,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public play(): void {
     if (this.animationItem) {
+      this.startHighlightingSequence();
       this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
@@ -216,22 +322,14 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public restart(): void {
-    this.showLoading = true;
-    // this.getRooms();
-    // setTimeout(() => {
-      this.showLoading = false;
-      if (this.animationItem) {
+    if (this.animationItem) {
+        this.isBet = false;
         this.stop();
+        this.isGameStarting = false;
         this.clearAllIntervals();
         this.resetCoefficients();
         this.getRooms();
-        // this.animationItem.goToAndPlay(0, true);
-        // this.play();
-        // setTimeout(() => {
-        //   this.changeCoefficientAutomatically();
-        // }, 100);
       }
-    // }, 5000);
   }
 
   private resetCoefficients(): void {
@@ -250,6 +348,12 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public onGetBalance(event: any): void {
     this.balance = event;
+  }
+
+  public onGetIsChecked(event: any): void {
+    this.isChecked = event.isChecked;
+    console.log(event.startCoeff);
+    this.inputCoeff = event.startCoeff;
   }
 
   ngOnDestroy(): void {

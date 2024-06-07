@@ -48,40 +48,40 @@
   display: none;
 }
 
-//.tab {
-//  cursor: pointer;
-//  display: flex;
-//  align-items: center;
-//  justify-content: center;
-//  height: 30px;
-//  width: 50%;
-//  font-size: .8rem;
-//  color: #9ea0a3;
-//  font-weight: 500;
-//  border-radius: 99px;
-//  transition: color 0.15s ease-in;
-//}
+.tab {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 50%;
+  font-size: .8rem;
+  color: #9ea0a3;
+  font-weight: 500;
+  border-radius: 99px;
+  transition: color 0.15s ease-in;
+}
 
-//.container input[type="radio"]:checked + label {
-//  color: #ffff;
-//  z-index: 4;
-//}
-//
-//.container input[id="radio1"]:checked ~ .glider {
-//  transform: translateX(0);
-//}
-//
-//.container input[id="radio2"]:checked ~ .glider {
-//  transform: translateX(100%);
-//}
+.container input[type="radio"]:checked + label {
+  color: #ffff;
+  z-index: 4;
+}
 
-//.container input[id="radio-3"]:checked ~ .glider {
-//  transform: translateX(0);
-//}
-//
-//.container input[id="radio-4"]:checked ~ .glider {
-//  transform: translateX(100%);
-//}
+.container input[id="radio1"]:checked ~ .glider {
+  transform: translateX(0);
+}
+
+.container input[id="radio2"]:checked ~ .glider {
+  transform: translateX(100%);
+}
+
+.container input[id="radio-3"]:checked ~ .glider {
+  transform: translateX(0);
+}
+
+.container input[id="radio-4"]:checked ~ .glider {
+  transform: translateX(100%);
+}
 
 
 .div-buttons {
@@ -204,16 +204,16 @@
   }
 }
 
-//.glider {
-//  position: absolute;
-//  display: flex;
-//  height: 30px;
-//  width: 50%;
-//  z-index: 1;
-//  transition: 0.25s ease-out;
-//  background-color: gray;
-//  border-radius: 10px;
-//}
+.glider {
+  position: absolute;
+  display: flex;
+  height: 30px;
+  width: 50%;
+  z-index: 1;
+  transition: 0.25s ease-out;
+  background-color: gray;
+  border-radius: 10px;
+}
 
 .radio-inputs {
   position: relative;
@@ -261,7 +261,38 @@
   font-weight: 600;
 }
 
-//.radio-inputs .radio input:checked + .name {
-//  background-color: red;
-//  font-weight: 600;
-//}
+.radio-inputs .radio input:checked + .name {
+  background-color: red;
+  font-weight: 600;
+}
+
+.tabs {
+  width: 202px;
+  height: 22px;
+  background-color: #141516;
+  border-radius: 10px;
+}
+
+.isActive {
+  background-color: rgb(44, 45, 48);
+  border-radius: 10px;
+}
+
+.l {
+  //padding-left: 20px;
+}
+
+.r {
+  //padding-right: 20px;
+}
+
+.tab-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #9ea0a3;
+}

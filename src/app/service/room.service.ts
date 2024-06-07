@@ -1,14 +1,15 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class RoomService {
-  private readonly baseUrl = 'https://c569-37-150-0-122.ngrok-free.app';
+  private readonly baseUrl = 'https://422e-178-90-250-95.ngrok-free.app';
   private http = inject(HttpClient);
+  checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   public getRoomsList(): Observable<any> {
     return this.http.get(`${this.baseUrl}/v1/rooms`);
@@ -27,7 +28,7 @@ export class RoomService {
   }
 
   public withdraw(): Observable<any> {
-    return this.http.get(`${this.baseUrl}v1/bets/withdraw`);
+    return this.http.get(`${this.baseUrl}/v1/bets/withdraw`);
   }
 
   public cancelBet(id: number): Observable<any> {
@@ -40,6 +41,14 @@ export class RoomService {
 
   public getBalance(): Observable<any> {
     return this.http.get(`${this.baseUrl}/v1/bets/balance`);
+  }
+
+  public getIsCheckedAuto() {
+    return this.checkIsAuto$.asObservable();
+  }
+
+  public setIsCheckedAuto(value: any): void {
+    this.checkIsAuto$.next(value);
   }
 
 }
