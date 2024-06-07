@@ -54,7 +54,7 @@
         </label>
       </div>
       <div class="input">
-        <input type="number" [(ngModel)]="inputCoeff" step="0.01" min="0">
+        <input type="number" [(ngModel)]="inputCoeff" (ngModelChange)="handleInputCoeff($event)" step="0.01" min="0">
       </div>
     </div>
   </ng-container>

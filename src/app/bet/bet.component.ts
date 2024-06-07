@@ -181,4 +181,10 @@ export class BetComponent implements OnInit{
     this.isChecked = event.target.checked;
     this.passIsChecked.emit({isChecked: this.isChecked, startCoeff: this.inputCoeff});
   }
+
+  public handleInputCoeff(event: any): void {
+    if (this.isChecked) {
+      this.passIsChecked.emit({isChecked: this.isChecked, startCoeff: this.inputCoeff});
+    }
+  }
 }
