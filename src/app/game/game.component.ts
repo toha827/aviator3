@@ -151,6 +151,15 @@ export class GameComponent implements OnInit, OnDestroy {
     this.roomService.getRoomsList()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
+        /// NEW CODE
+        if (res[1].status === 'PLAYING'){
+          this.nextGame = res[0];
+          this.currentGame = res[1];
+        } else if (res[1].status === "FINISHED") {
+          this.nextGame = res[0];
+          this.currentGame = res[1];
+        }
+        /// OLD CODE
         this.coefficientList = res;
         this.coefficientList = this.coefficientList.slice(1);
         this.betId = res[0].id;

@@ -11,12 +11,13 @@ import {FormsModule} from "@angular/forms";
   templateUrl: './bet.component.html',
   styleUrl: './bet.component.scss'
 })
-export class BetComponent implements OnInit{
+export class BetComponent implements OnInit {
 
   private _currentStatus = '';
   private _isBet = false;
   @Input() isGameStarting: boolean = false;
   @Input() firstStatus: string = '';
+
   @Input()
   set currentStatus(value) {
     this._currentStatus = value;
@@ -31,6 +32,7 @@ export class BetComponent implements OnInit{
   get currentStatus() {
     return this._currentStatus;
   }
+
   @Input() id: string = '';
   @Input() id2: string = '';
   public isBet: boolean = false;
@@ -128,6 +130,8 @@ export class BetComponent implements OnInit{
   public addAmount(num?: number): void {
     if (this.amount < 100) {
       !num ? this.amount += 0.1 : this.amount += num;
+    } else if (this.amount > 100) {
+      this.amount = 100;
     } else {
       return;
     }
