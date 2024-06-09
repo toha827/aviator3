@@ -43,13 +43,26 @@
       </ng-lottie>
     </div>
   </div>
-  <app-bet [isAutoReached]="isAutoReached" [firstStatus]="firstStatus" [currentStatus]="currentStatus" [id]="'id1'" [id2]="'id2'" [startCoefficient]="startCoefficient" [isGameStarting]="isGameStarting" (passBalance)="onGetBalance($event)" (passIsChecked)="onGetIsChecked($event)"></app-bet>
+  <app-bet [currentGame]="currentGame"
+           [nextGame]="nextGame"
+           [gameStatus]="gameStatus"
+           [isBet]="isBet"
+           [isAutoReached]="isAutoReached"
+           [firstStatus]="firstStatus"
+           [currentStatus]="currentStatus"
+           [id]="'id1'"
+           [id2]="'id2'"
+           [startCoefficient]="startCoefficient"
+           [isGameStarting]="isGameStarting"
+           (passBalance)="onGetBalance($event)"
+           (passIsChecked)="onGetIsChecked($event)"
+           (isBetExist)="onIsBetExist($event)"></app-bet>
 <!--  <app-bet [firstStatus]="firstStatus" [currentStatus]="currentStatus" [id]="'id1'" [id2]="'id2'" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
   <div class="first-block" style="margin-top: 20px;">
     <table>
       <thead>
       <tr style="font-size: 12px">
-        <th>Fecha</th>
+        <th style="padding: 10px;">Fecha</th>
         <th>Usuario</th>
         <th>Apuesta USD</th>
         <th></th>
@@ -58,7 +71,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
-        <td>{{bet.date}}</td>
+        <td style="padding: 10px">{{bet.date}}</td>
         <td>{{bet.user}}</td>
         <td>{{bet.amount}}</td>
         <td>{{highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : ''}}</td>

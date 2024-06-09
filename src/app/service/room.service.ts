@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'https://422e-178-90-250-95.ngrok-free.app';
+  private readonly baseUrl = 'https://e2d0-79-134-37-179.ngrok-free.app';
   private http = inject(HttpClient);
   checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 

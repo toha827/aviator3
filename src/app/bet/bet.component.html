@@ -22,18 +22,15 @@
       </div>
     </div>
     <div class="right-side">
-      <div class="bet-btn" [ngClass]="{'green-btn': !isBet, 'red-btn': (isBet && showCancel) || (!isGameStarting && isBet), 'orange-btn': !showCancel && isBet && currentStatus === 'PLAYING'}"
-           (click)="makeBet()">
-        <ng-container *ngIf="!isBet">
-          Apuesta <br>
-          {{amount}} USD
-        </ng-container>
-        <ng-container *ngIf="!showCancel && isBet && currentStatus === 'PLAYING' ">
-          Retiro de efectivo {{(amount * startCoefficient).toFixed(2)}} USD
-        </ng-container>
-        <ng-container *ngIf="(isBet && showCancel) || (!isGameStarting && isBet && showCancel)">
-          Сancelación
-        </ng-container>
+      <div *ngIf="!currentBet" class="bet-btn green-btn" (click)="makeBet()">
+        Apuesta <br>
+        {{amount}} USD
+      </div>
+      <div *ngIf="currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id" class="bet-btn red-btn" (click)="cancel()">
+        Сancelación
+      </div>
+      <div *ngIf="currentBet && currentBet!.aviator_room_id === currentGame?.id" class="bet-btn orange-btn" (click)="withDraw()">
+        Retiro de efectivo {{(amount * startCoefficient).toFixed(2)}} USD
       </div>
     </div>
   </div>

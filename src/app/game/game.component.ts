@@ -90,7 +90,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private steps: number = 100;
   private intervalTime: number = 60000; // Time interval in milliseconds
   private currentIndex: number = 0;
-  private betId: number = 0;
+  public betId: number = 0;
   firstStatus: string = '';
   currentStatus: string = '';
 
@@ -113,6 +113,16 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public isAutoReached: boolean = false;
 
+  // new Code
+  public currentGame: any;
+  public nextGame: any;
+  //
+  public currentBtnType: string = 'bet';
+
+  isBetExit: boolean = false;
+
+  interRoom: any;
+  public gameStatus: string = 'waiting';
   private obs: Subject<boolean> = new Subject<boolean>();
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -123,7 +133,9 @@ export class GameComponent implements OnInit, OnDestroy {
         this.balance = res.balance;
         }
       )
-    this.getRooms();
+    this.interRoom = setInterval(() => {
+      this.getRooms();
+    }, 1000);
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
@@ -169,14 +181,16 @@ export class GameComponent implements OnInit, OnDestroy {
         this.showLoading = true;
         this.isBet = false;
         if (res[1].status === 'PLAYING') {
+          this.gameStatus = 'playing';
           this.showLoading = false;
           this.isGameStarting = true;
+          this.isBet = this.currentBtnType === 'cancel';
           this.play();
         } else if (res[1].status === 'FINISHED') {
-          this.isBet = false;
-          setTimeout(() => {
-            this.getRooms();
-          }, 2000); // Retry every second
+          this.gameStatus = 'waiting';
+          this.isBet = this.currentBtnType === 'cancel';// Retry every second
+          this.stop(); // Stop the main animation
+          this.stopBg();
         }
       })
   }
@@ -355,7 +369,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.highlightedRows = [];
   }
 
+  public onIsBetExist(event: boolean): void {
+    this.currentBtnType = 'cancel';
+  }
+
   ngOnDestroy(): void {
+    clearInterval(this.interRoom);
     this.clearAllIntervals();
     this.#destroyed$.next(true);
     this.#destroyed$.complete();
