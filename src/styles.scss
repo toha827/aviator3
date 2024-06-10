@@ -263,6 +263,12 @@ th, td {
 }
 
 @media (280px <= width <= 650px) {
+  #lottie-container {
+    div {
+      height: 200px !important;
+    }
+  }
+
   .body {
     height: 120vh !important;
   }
@@ -282,7 +288,7 @@ th, td {
   }
 
   #lottie-container {
-    height: 33vh;
+    height: 23vh;
     width: 400px;
   }
 
