@@ -1,5 +1,5 @@
 .body {
-  height: 100vh;
+  //height: 140vh;
   background-color: black;
 }
 
@@ -30,9 +30,10 @@
 
 .coefficient {
   display: flex;
-  justify-content: space-between;
+  //justify-content: space-between;
   margin-left: 10px;
   margin-right: 10px;
+  gap: 2px;
   .item {
     font-weight: 700;
     font-size: 12px;
@@ -44,8 +45,8 @@
 
 .graph {
   margin-left: 10px;
-  border-left: 1px solid white;
-  border-bottom: 1px solid white;
+  //border-left: 1px solid white;
+  //border-bottom: 1px solid white;
   position: relative;
   display: flex;
   .flex-away {
@@ -87,5 +88,5 @@ button {
 }
 
 .highlight {
-  background-color: yellow; /* or any color you prefer */
+  background-color: #427f00; /* or any color you prefer */
 }

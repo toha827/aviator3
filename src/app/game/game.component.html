@@ -4,62 +4,81 @@
   <div class="title" (click)="admin()">Admin</div>
 </div>
 <div class="body">
-  <div class="coefficient">
-    <ng-container *ngFor="let coeff of coefficientList">
-      <div class="item" [ngClass]="{
-    'low': coeff.coefficient < 2,
-    'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
-    'high': coeff.coefficient >= 10}">
-        {{coeff.coefficient | number: '1.2-2'}}x
-      </div>
-    </ng-container>
-  </div>
-  <div class="graph">
-    <div *ngIf="isFlewAway" class="flex-away">
-      VOLÓ LEJOS!
-    </div>
-    <div class="sum" [ngClass]="{'color-red': isFlewAway}">
-      <ng-container *ngIf="!showLoading">
-        {{startCoefficient.toFixed(2)}}x
+  <div class="graph-body">
+    <div class="coefficient">
+      <ng-container *ngFor="let coeff of coefficientList">
+        <div class="item" [ngClass]="{
+      'low': coeff.coefficient < 2,
+      'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
+      'high': coeff.coefficient >= 10}">
+          {{coeff.coefficient | number: '1.2-2'}}x
+        </div>
       </ng-container>
     </div>
-    <ng-container *ngIf="showLoading">
-      <div class="sum" style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
-        <span style="font-size: 18px;text-align: center">Esperando la próxima ronda</span>
-        <img src="/assets/images/loading.svg" alt="" style="width: 50px; height: 50px;">
+    <div class="graph" style="margin-top: 10px">
+      <div *ngIf="isFlewAway" class="flex-away">
+        VOLÓ LEJOS!
       </div>
-    </ng-container>
-    <div style="position: relative">
-      <ng-lottie
-        style="position: relative;z-index: 2"
-        [options]="options"
-        width="100%"
-        height="220px"
-        (animationCreated)="animationCreated($event)" />
-      <ng-lottie style="position: absolute;top:0"
-                 [options]="optionBg"
-                 width="100%"
-                 height="220px" (animationCreated)="animationBgCreated($event)">
-      </ng-lottie>
+      <div class="sum" [ngClass]="{'color-red': isFlewAway}">
+        <ng-container *ngIf="!showLoading">
+          {{startCoefficient.toFixed(2)}}x
+        </ng-container>
+      </div>
+      <ng-container *ngIf="showLoading">
+        <div class="sum" style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
+          <span style="font-size: 18px;text-align: center">Esperando la próxima ronda</span>
+          <img src="/assets/images/loading.svg" alt="" style="width: 50px; height: 50px;">
+        </div>
+      </ng-container>
+      <div style="position: relative" id="lottie-container">
+        <ng-lottie
+          style="position: relative;z-index: 2"
+          [options]="options"
+          width="100%"
+          height="465px"
+          (animationCreated)="animationCreated($event)" />
+        <ng-lottie
+          style="position: absolute;top:0"
+          [options]="optionBg"
+          width="100%"
+          height="220px"
+          (animationCreated)="animationBgCreated($event)">
+        </ng-lottie>
+      </div>
+    </div>
+    <div class="bet-buttons-1">
+    <app-bet [currentGame]="currentGame"
+             [nextGame]="nextGame"
+             [gameStatus]="gameStatus"
+             [isBet]="isBet"
+             [isAutoReached]="isAutoReached"
+             [firstStatus]="firstStatus"
+             [currentStatus]="currentStatus"
+             [id]="'id1'"
+             [id2]="'id2'"
+             [startCoefficient]="startCoefficient"
+             [isGameStarting]="isGameStarting"
+             (passBalance)="onGetBalance($event)"
+             (passIsChecked)="onGetIsChecked($event)"
+             (isBetExist)="onIsBetExist($event)"></app-bet>
+    <app-bet [currentGame]="currentGame"
+             [nextGame]="nextGame"
+             [gameStatus]="gameStatus"
+             [isBet]="isBet"
+             [isAutoReached]="isAutoReached"
+             [firstStatus]="firstStatus"
+             [currentStatus]="currentStatus"
+             [id]="'id1'"
+             [id2]="'id2'"
+             [startCoefficient]="startCoefficient"
+             [isGameStarting]="isGameStarting"
+             (passBalance)="onGetBalance($event)"
+             (passIsChecked)="onGetIsChecked($event)"
+             (isBetExist)="onIsBetExist($event)"></app-bet>
     </div>
   </div>
-  <app-bet [currentGame]="currentGame"
-           [nextGame]="nextGame"
-           [gameStatus]="gameStatus"
-           [isBet]="isBet"
-           [isAutoReached]="isAutoReached"
-           [firstStatus]="firstStatus"
-           [currentStatus]="currentStatus"
-           [id]="'id1'"
-           [id2]="'id2'"
-           [startCoefficient]="startCoefficient"
-           [isGameStarting]="isGameStarting"
-           (passBalance)="onGetBalance($event)"
-           (passIsChecked)="onGetIsChecked($event)"
-           (isBetExist)="onIsBetExist($event)"></app-bet>
-<!--  <app-bet [firstStatus]="firstStatus" [currentStatus]="currentStatus" [id]="'id1'" [id2]="'id2'" [startCoefficient]="startCoefficient" (passBalance)="onGetBalance($event)"></app-bet>-->
-  <div class="first-block" style="margin-top: 20px;">
-    <table>
+  <div class="first-block class-table" style="width: 30%;">
+    <table style="margin-bottom: auto;">
       <thead>
       <tr style="font-size: 12px">
         <th style="padding: 10px;">Fecha</th>

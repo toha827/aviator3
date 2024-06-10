@@ -57,7 +57,31 @@ export class GameComponent implements OnInit, OnDestroy {
     {
       date: '08:30',
       amount: 10,
-      user: 'pq**6',
+      user: 'mn**6',
+      coeff: 1.01
+    },
+    {
+      date: '13:30',
+      amount: 23,
+      user: 'po**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '18:30',
+      amount: 99,
+      user: 'pa**6',
       coeff: 1.01
     },
   ];
@@ -67,12 +91,20 @@ export class GameComponent implements OnInit, OnDestroy {
   public options: AnimationOptions = {
     path: '/assets/images/plane.json',
     loop: true,
-    autoplay: false
+    autoplay: false,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+      className: "lottie-svg-class1",
+    }
   };
   public optionBg: AnimationOptions = {
     path: '/assets/images/bg.json',
     loop: true,
-    autoplay: false
+    autoplay: false,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+      className: "lottie-svg-class",
+    }
   }
 
   public isGameStarting: boolean = false;
@@ -173,7 +205,7 @@ export class GameComponent implements OnInit, OnDestroy {
         }
         /// OLD CODE
         this.coefficientList = res;
-        this.coefficientList = this.coefficientList.slice(1);
+        this.coefficientList = this.coefficientList.slice(1).slice(0,-3);
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
         this.firstStatus = res[0].status;
@@ -197,9 +229,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public changeCoefficientAutomatically(): void {
     const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    const totalDuration = 15000; // Total duration in milliseconds
+    const totalDuration = 15500; // Total duration in milliseconds
     const intervalTime = totalDuration / this.steps; // Time per step
-    const tolerance = 0.001; // Define a small tolerance value
 
     // Ensure interval ID is cleared in case of multiple calls
     if (this.intervalId) {
@@ -234,6 +265,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public animationCreated(animationItem: AnimationItem): void {
     this.animationItem = animationItem;
+    this.play();
     setTimeout(() => {
       // this.changeCoefficientAutomatically();
     }, 100);
@@ -322,7 +354,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.clearAllIntervals(); // Clear any existing intervals
       this.highlightedRows = []; // Reset highlighted rows
       this.startHighlighting();
-    }, 10000); // Repeat every 10 seconds
+    }, 15500); // Repeat every 10 seconds
   }
 
   startHighlighting() {
