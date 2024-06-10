@@ -76,7 +76,6 @@ export class BetComponent implements OnInit {
   @Input()
   set isAutoReached(value) {
     this._isAutoReached = value;
-    console.log(value);
     if (value) {
       // this.makeBet('withdraw');
     }
@@ -100,12 +99,9 @@ export class BetComponent implements OnInit {
   set currentGame(value) {
     this._currentGame = value;
     if (this.currentBet != null){
-      console.log(this._currentGame.status, this.currentBet.aviator_room_id, this._currentGame.id);
-      console.log(this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame.id && this._currentGame.status === "FINISHED");
     }
     if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame.id && this._currentGame.status === "FINISHED") {
       this.currentBet = null;
-      console.log(this._currentGame.status);
     }
   }
 
@@ -126,6 +122,7 @@ export class BetComponent implements OnInit {
   @Output() passBalance: EventEmitter<any> = new EventEmitter<any>();
   @Output() passIsChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() isBetExist: EventEmitter<any> = new EventEmitter<any>()
+  @Output() showAlert: EventEmitter<any> = new EventEmitter<any>();
 
   public tabsList: any[] = [
     {
@@ -156,6 +153,9 @@ export class BetComponent implements OnInit {
   }
 
   private roomService = inject(RoomService);
+
+  winCoefficient: number = 0;
+  winSum: number = 0;
 
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -200,8 +200,13 @@ export class BetComponent implements OnInit {
         .pipe(
           tap(res => {
             ///response withdraw bet;
+            this.winCoefficient = this.startCoefficient;
+            this.winSum = this.amount * this.winCoefficient;
             this.currentBet = null;
-            console.log(this.currentBet, this.currentGame);
+            this.showAlert.emit({
+              coeff: this.winCoefficient,
+              sum: this.winSum
+            });
           }),
           takeUntil(this.#destroyed$),
           exhaustMap(res => this.roomService.getBalance().pipe(tap(res => this.passBalance.emit(res.balance))))
@@ -222,7 +227,7 @@ export class BetComponent implements OnInit {
         tap(res => {
           ///response withdraw bet;
           this.currentBet = null;
-          console.log(this.currentBet, this.currentGame);
+
         }),
         exhaustMap(res => this.roomService.getBalance().pipe(tap(res => this.passBalance.emit(res.balance)))),
         takeUntil(this.#destroyed$)
@@ -245,7 +250,6 @@ export class BetComponent implements OnInit {
           ///response make bet;
           this.betId = res.id
           this.currentBet = res;
-          console.log(res);
         }),
         exhaustMap((response: any) => this.roomService
           .getBalance()

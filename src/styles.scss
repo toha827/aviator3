@@ -222,6 +222,7 @@ th, td {
 @media (700px <= width <= 1990px) {
   .bet-buttons-1 {
     margin-top: 120px;
+    display: flex;
   }
 
   .graph-body {
@@ -235,11 +236,11 @@ th, td {
   }
 
   .body {
-    height: 120vh !important;
+    height: 100vh !important;
   }
 
   .lottie-svg-class {
-    width: calc(86vw) !important;
+    width: calc(74vw) !important;
     max-width: 1750px !important;
     height: calc(63vh) !important;
     max-height: 1450px !important;

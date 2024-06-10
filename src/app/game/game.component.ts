@@ -84,6 +84,60 @@ export class GameComponent implements OnInit, OnDestroy {
       user: 'pa**6',
       coeff: 1.01
     },
+    {
+      date: '13:30',
+      amount: 23,
+      user: 'po**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '18:30',
+      amount: 99,
+      user: 'pa**6',
+      coeff: 1.01
+    },
+    {
+      date: '13:30',
+      amount: 23,
+      user: 'po**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '18:30',
+      amount: 99,
+      user: 'pa**6',
+      coeff: 1.01
+    },
+    {
+      date: '18:30',
+      amount: 99,
+      user: 'pa**6',
+      coeff: 1.01
+    },
   ];
 
   startCoefficients: number[] = this.userList.map(() => 1.01);
@@ -137,12 +191,16 @@ export class GameComponent implements OnInit, OnDestroy {
   public isChecked: boolean = false;
   public inputCoeff: number = 0;
 
+  public windCoeff: number = 0;
+  public winSum: number = 0;
+
   intervalId: any;
 
   highlightedRows: number[] = [];
   intervalIds: any[] = [];
   mainIntervalId: any;
 
+  public isShowAlert: boolean = false;
   public isAutoReached: boolean = false;
 
   // new Code
@@ -403,6 +461,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public onIsBetExist(event: boolean): void {
     this.currentBtnType = 'cancel';
+  }
+
+  public onShowAlert(event: any): void {
+    if (event.coeff) {
+      this.isShowAlert = true
+      this.windCoeff = event.coeff;
+      this.winSum = event.sum
+    }
   }
 
   ngOnDestroy(): void {

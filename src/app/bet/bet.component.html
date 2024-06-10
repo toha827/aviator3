@@ -30,7 +30,7 @@
         Сancelación
       </div>
       <div *ngIf="currentBet && currentBet!.aviator_room_id === currentGame?.id" class="bet-btn orange-btn" (click)="withDraw()">
-        Retiro de efectivo {{(amount * startCoefficient).toFixed(2)}} USD
+        Retiro de efectivo <br> {{(amount * startCoefficient).toFixed(2)}} USD
       </div>
     </div>
   </div>
