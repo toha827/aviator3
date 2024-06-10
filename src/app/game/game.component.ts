@@ -250,6 +250,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private getRooms(): void {
+
     this.roomService.getRoomsList()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
@@ -408,11 +409,12 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   startHighlightingSequence() {
-    this.mainIntervalId = setInterval(() => {
-      this.clearAllIntervals(); // Clear any existing intervals
-      this.highlightedRows = []; // Reset highlighted rows
-      this.startHighlighting();
-    }, 15500); // Repeat every 10 seconds
+    this.startHighlighting();
+    // this.mainIntervalId = setInterval(() => {
+    //   // this.clearAllIntervals(); // Clear any existing intervals
+    //   this.highlightedRows = []; // Reset highlighted rows
+    //   this.startHighlighting();
+    // }, 15500); // Repeat every 10 seconds
   }
 
   startHighlighting() {
@@ -420,20 +422,25 @@ export class GameComponent implements OnInit, OnDestroy {
     this.highlightRow(indices[0], 1000); // Highlight first row after 3 seconds
     this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
     this.highlightRow(indices[2], 4000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[3], 4500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[4], 5000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[6], 7000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[7], 9000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
     const indices = [];
     const usedIndices = new Set<number>();
 
-    while (indices.length < 3) {
+    while (indices.length < 8) {
       const randomIndex = Math.floor(Math.random() * this.userList.length);
       if (!usedIndices.has(randomIndex)) {
         indices.push(randomIndex);
         usedIndices.add(randomIndex);
       }
     }
-
     return indices;
   }
 

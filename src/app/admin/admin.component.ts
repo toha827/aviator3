@@ -50,7 +50,7 @@ export class AdminComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    // this.getRooms();
+    this.getRooms();
   }
 
   ngOnDestroy(): void {
