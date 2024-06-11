@@ -20,6 +20,9 @@ import {BetComponent} from "../bet/bet.component";
 
 export class GameComponent implements OnInit, OnDestroy {
 
+  public currentTabType: string = '1';
+  public isClickedHistory: boolean = false;
+
   private roomService = inject(RoomService);
   private router = inject(Router);
 
@@ -285,7 +288,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.stopBg();
         }
         /// OLD CODE
-        this.coefficientList = res;
+        this.coefficientList = [...res, ...res];
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
         this.firstStatus = res[0].status;
@@ -490,30 +493,14 @@ export class GameComponent implements OnInit, OnDestroy {
     this.currentBtnType = 'cancel';
   }
 
-  // public onShowAlert(event: any): void {
-  //   if (event.coeff) {
-  //     this.isShowAlert = true
-  //     if (!this.isChecked) {
-  //       this.windCoeff = event.coeff;
-  //       this.winSum = event.sum
-  //     } else {
-  //       this.windCoeff = this.inputCoeff;
-  //       // this.winSum = this.inputCoeff *
-  //     }
-  //     setTimeout(() => {
-  //       this.isShowAlert = false;
-  //     }, 4000);
-  //   }
-  // }
+  public handleClickHistory(): void {
+    this.isClickedHistory = !this.isClickedHistory;
+  }
 
-  // public onGetIsChecked(event: any): void {
-  //   this.isChecked = event.isChecked;
-  //   this.inputCoeff = event.startCoeff;
-  // }
-
-  // public closeAlert(): void {
-  //   this.isShowAlert = false;
-  // }
+  public handleTab(event: any): void {
+    // event.isActive = !event.isActive;
+    this.currentTabType = event;
+  }
 
   ngOnDestroy(): void {
     clearInterval(this.interRoom);

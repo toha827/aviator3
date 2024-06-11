@@ -1,24 +1,56 @@
 <div class="header">
   <div><img src="https://aviator-demo.spribegaming.com/aviator-logo.cafbd29233306bf7.svg" alt=""></div>
+  <div class="how-to-play">
+    <img src="https://aviator-demo.spribegaming.com/question-brown.7770399d23b5438d.svg" alt="">
+    <span>Cómo jugar?</span>
+  </div>
   <div class="balance ml-auto"><span>{{balance}}</span> USD</div>
-  <div class="title" (click)="admin()">Admin</div>
 </div>
 <div class="body">
   <div class="graph-body">
-    <div class="coefficient">
-      <ng-container *ngFor="let coeff of coefficientList">
-        <div class="item" [ngClass]="{
-      'low': coeff.coefficient < 2,
-      'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
-      'high': coeff.coefficient >= 10}">
-          {{coeff.coefficient | number: '1.2-2'}}x
+    <div class="coefficient" style="display: flex; align-items: center">
+      <ng-container *ngIf="!isClickedHistory">
+        <div class="coeff-list-test">
+        <ng-container *ngFor="let coeff of coefficientList">
+          <div class="item" [ngClass]="{
+        'low': coeff.coefficient < 2,
+        'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
+        'high': coeff.coefficient >= 10}">
+            {{coeff.coefficient | number: '1.2-2'}}x
+          </div>
+        </ng-container>
         </div>
       </ng-container>
+      <ng-container *ngIf="isClickedHistory">
+        <div class="opened-history">
+          <div class="header-history">
+            <span>HOSTORIA DE LA RONDA</span>
+            <div class="history-btn" *ngIf="isClickedHistory" (click)="handleClickHistory()">
+              <img src="https://aviator-demo.spribegaming.com/history-h.0950ae774061ee87.svg" alt="">
+              <img class="arrow" src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
+            </div>
+          </div>
+          <div class="body-history">
+            <ng-container *ngFor="let coeff of coefficientList">
+              <div class="item" [ngClass]="{
+        'low': coeff.coefficient < 2,
+        'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
+        'high': coeff.coefficient >= 10}">
+                {{coeff.coefficient | number: '1.2-2'}}x
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+      <div class="history-btn" *ngIf="!isClickedHistory" (click)="handleClickHistory()">
+        <img src="https://aviator-demo.spribegaming.com/history-h.0950ae774061ee87.svg" alt="">
+        <img class="arrow {{isClickedHistory ? 'rot' : ''}}" src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
+      </div>
     </div>
     <div class="graph" style="margin-top: 10px;">
-      <div *ngIf="isFlewAway" class="flex-away" style="z-index: 10;display: flex;flex-direction: column;font-size: 50px">
-        VOLÓ LEJOS! <br>
-        <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}</span>
+      <div *ngIf="isFlewAway" class="flex-away" style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
+        <span style="font-size: 30px">VOLÓ LEJOS! </span>
+        <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
         <ng-container *ngIf="!isFlewAway && !showLoading && isGameStarting">
@@ -31,6 +63,8 @@
           <img src="/assets/images/loading.svg" alt="" style="width: 50px; height: 50px;">
         </div>
       </ng-container>
+      <div class="lottie-new-container">
+      <div class="fun-mode">MODO DIVERTIDO</div>
       <div style="position: relative" id="lottie-container">
         <ng-lottie
           style="position: relative;z-index: 2"
@@ -45,6 +79,7 @@
           height="220px"
           (animationCreated)="animationBgCreated($event)">
         </ng-lottie>
+      </div>
       </div>
     </div>
     <div class="bet-buttons-1">
@@ -80,26 +115,35 @@
                (isBetExist)="onIsBetExist($event)"></app-bet>
     </div>
   </div>
-  <div class="first-block class-table" style="width: 30%;height: 750px;">
+  <div class="first-block class-table" style="width: 30%;height: 870px;">
+    <div class="tabs" style="display: flex; cursor: pointer; align-items: center; justify-content: space-around">
+      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">Todas las apuestas</div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">Mis apuestas</div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')">Arriba</div>
+    </div>
     <table style="margin-bottom: auto;">
       <thead>
       <tr style="font-size: 12px">
-        <th style="padding: 10px;width: 30px;">Fecha</th>
+<!--        <th style="padding: 10px;width: 30px;">Fecha</th>-->
         <th style="width: 30px;">Usuario</th>
-        <th style="width: 30px;">Apuesta USD</th>
+        <th style="width: 110px;">Apuesta USD</th>
         <th></th>
         <th style="width: 80px;">Retiro de efectivo USD</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
-        <td style="padding: 10px">{{bet.date}}</td>
-        <td>{{bet.user}}</td>
+      <tr style="background-color: #101112;  border-radius: 10px" *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
+<!--        <td style="padding: 10px">{{bet.date}}</td>-->
+        <td class="left-radius">{{bet.user}}</td>
         <td>{{bet.amount}}</td>
         <td>{{highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : ''}}</td>
-        <td>{{highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : ''}}</td>
+        <td class="right-radius">{{highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : ''}}</td>
       </tr>
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="powered">
+  <span style="margin-left: 10px">Este juego es</span> <img style="margin-left: 10px" src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg" alt=""> <span style="color: white; margin-left: 10px">Provably Fair</span> <span style="margin-left: auto; margin-right: 10px">Powered by SPRIBE</span>
 </div>

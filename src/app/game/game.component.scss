@@ -88,5 +88,111 @@ button {
 }
 
 .highlight {
-  background-color: #427f00; /* or any color you prefer */
+  background-color: #427f00 !important;
+  //td {
+  // border: 1px solid #123405 !important;
+  //}
+}
+
+.tabs {
+  display: flex;
+  position: relative;
+  background-color: #141516;
+  width: 300px;
+  border-radius: 99px;
+}
+
+.tab-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #9ea0a3;
+}
+
+.isActive {
+  background-color: rgb(44, 45, 48);
+  border-radius: 10px;
+}
+
+.how-to-play {
+  padding: 3px 5px;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  color: #5f3816;
+  background-color: #e69308;
+  font-size: 14px;
+  border-radius: 20px;
+  width: 118px;
+  span {
+    margin-left: 10px;
+  }
+}
+
+.history-btn {
+  margin-left: auto;
+  position: relative;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 22px;
+  border-radius: 13px;
+  border: solid 1px #414148;
+  background: #252528;
+  cursor: pointer;
+  .arrow {
+    margin-left: 5px;
+  }
+}
+
+.fun-mode {
+  color: white;
+  height: 20px;
+  background: rgba(229, 148, 7, .8);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  width: 100%;
+  border-radius: 20px 20px 0 0;
+  border: 1px solid #e59407;
+}
+
+.opened-history {
+  .header-history {
+    padding: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    display: flex;
+    background-color: #1f2128;
+    span {
+      color: white;
+      font-size: 14px;
+    }
+  }
+  .body-history {
+    background-color: #262830;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    .item {
+      background-color: #00000080;
+      padding: 2px 11px;
+      border-radius: 11px;
+      margin: 0;
+    }
+  }
+}
+.rot {
+  transform: rotate(180deg);
+}
+
+.coeff-list-test {
+  display: flex;
 }

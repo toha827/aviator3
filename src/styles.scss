@@ -30,7 +30,6 @@ table {
   tr td {
     color: #BBBFC5;
     text-align: center;
-    border-bottom: 1px solid gray;
   }
 }
 
@@ -236,7 +235,7 @@ th, td {
   }
 
   .body {
-    height: 100vh !important;
+    height: 110vh !important;
   }
 
   .lottie-svg-class {
@@ -253,6 +252,17 @@ th, td {
     max-width: 1000px !important;
     height: calc(66vh) !important;
     max-height: 550px !important;
+    margin-top: -4px;
+  }
+
+  .fun-mode {
+    width: calc(74vw) !important;
+    max-width: 1750px !important;
+  }
+
+  .opened-history {
+    width: calc(74vw) !important;
+    max-width: 1750px !important;
   }
 
   #lottie-container {
@@ -262,16 +272,49 @@ th, td {
     height: 436px;
   }
 }
+@media (width <= 370px) {
+  .lottie-svg-class1 {
+    margin-top: -45px;
+  }
+}
+
+@media (width <= 404px) {
+  .body {
+    width: 109% !important;
+  }
+  .lottie-svg-class1 {
+    margin-top: -7px !important;
+  }
+}
 
 @media (280px <= width <= 650px) {
+
+  .lottie-new-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .coeff-list-test {
+    overflow: hidden;
+    flex-wrap: nowrap;
+    width: 342px;
+  }
+  .flex-away {
+    top: 60% !important;
+  }
   #lottie-container {
+    display: flex;
     div {
       height: 200px !important;
     }
   }
 
   .body {
-    height: 160vh !important;
+    width: 100%;
+    height: 170vh !important;
+  }
+
+  .header {
+    width: 105%;
   }
 
   .graph-body {
@@ -285,7 +328,7 @@ th, td {
 
   .class-table {
     width: 90% !important;
-    margin-top: 30px !important;
+    margin-top: 50px !important;
   }
 
   #lottie-container {
@@ -294,7 +337,7 @@ th, td {
   }
 
   .lottie-svg-class {
-    width: calc(85vw) !important;
+    width: calc(95vw) !important;
     max-width: 1950px !important;
     height: calc(23vh) !important;
     max-height: 550px !important;
@@ -307,6 +350,21 @@ th, td {
     max-width: 385px !important;
     height: calc(86vh) !important;
     max-height: 205px !important;
+    //margin-left: 37px;
+    margin-top: 2px;
+  }
+
+  .fun-mode {
+    width: calc(95vw) !important;
+    max-width: 1950px !important;
+  }
+
+  .opened-history {
+    width: calc(85vw) !important;
+    max-width: 1950px !important;
+  }
+  .powered {
+    width: 90% !important;
   }
 }
 
@@ -331,4 +389,31 @@ th, td {
   .sidebar {
     width: 30%;
   }
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0px 6px;
+  .left-radius {
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+  .right-radius {
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+}
+
+.powered {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  width: 355px;
+  background-color: #000;
+  border: 1px solid #2a2b2e;
+  font-size: 11px;
+  color: #5e6269;
+  left: 20px;
+  height: 40px;
 }
