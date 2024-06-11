@@ -77,6 +77,7 @@ export class BetComponent implements OnInit {
   set isAutoReached(value) {
     this._isAutoReached = value;
     if (value) {
+      // this.withDraw();
       // this.makeBet('withdraw');
     }
   }
@@ -99,11 +100,14 @@ export class BetComponent implements OnInit {
   set currentGame(value) {
     this._currentGame = value;
     if (this.currentBet != null){
+
     }
     if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame.id && this._currentGame.status === "FINISHED") {
       this.currentBet = null;
     }
   }
+
+
 
   get currentGame() {
     return this._currentGame;
@@ -262,77 +266,6 @@ export class BetComponent implements OnInit {
       ).subscribe(res => {
       this.isBet = true;
     });
-  }
-
-
-  public makeBet2(type: string) {
-    if (!this.isGameStarting && this.currentBtnType === 'bet') {
-      //make bet
-      // show orange widthdraw
-    } else if (this.isGameStarting && this.currentBtnType === 'bet') {
-      // make bet next round show cancel
-    } else if (this.isGameStarting) {
-
-    }
-    this.currentBtnType = type;
-    // if (!this.isGameStarting && this.currentBtnType === 'bet') {
-    //   this.currentBtnType = 'withdraw'
-    //   //make width
-    // } else if (this.isGameStarting && this.currentBtnType === 'cancel') {
-    //   this.currentBtnType = 'bet';
-    //     // this.roomService.cancelBet(this.betId)
-    //     //   .pipe(
-    //     //     takeUntil(this.#destroyed$)
-    //     //   )
-    //     //   .subscribe(res => {
-    //     //     this.isBet = false;
-    //     //   });
-    // } else if (this.isGameStarting) {
-    //   this.currentBtnType = 'cancel';
-    // }
-
-    // this.isBet = !this.isBet;
-    //
-    // if (!this.isGameStarting && this.currentStatus === 'FINISHED' && this.isBet) {
-    //   this.roomService.makeBet({ amount: this.amount })
-    //     .pipe(
-    //       exhaustMap((response: any) => this.roomService
-    //         .getBalance()
-    //         .pipe(
-    //           tap(res => this.passBalance.emit(res.balance)),
-    //           tap(res => this.roomService.setIsCheckedAuto({ isChecked: this.isChecked, coeff: this.inputCoeff }))
-    //         )
-    //       ),
-    //       takeUntil(this.#destroyed$)
-    //     ).subscribe(res => {
-    //     this.isBet = true;
-    //   });
-    // } else if (this.isGameStarting && this.currentStatus === 'PLAYING' && !this.isBet) {
-    //   this.roomService.withdraw()
-    //     .pipe(
-    //       takeUntil(this.#destroyed$),
-    //       exhaustMap(res => this.roomService.getBalance().pipe(tap(res => this.passBalance.emit(res.balance))))
-    //     )
-    //     .subscribe(res => {
-    //       this.isBet = false;
-    //     });
-    // } else if (!this.isGameStarting && this.currentStatus === 'FINISHED') {
-    //   this.roomService.cancelBet(this.betId)
-    //     .pipe(
-    //       takeUntil(this.#destroyed$)
-    //     )
-    //     .subscribe(res => {
-    //       this.isBet = false;
-    //     });
-    // }
-    //
-    // if (this.isGameStarting && this.currentStatus === 'PLAYING') {
-    //   this.showCancel = true;
-    // } else if (!this.isGameStarting && this.currentStatus === 'FINISHED') {
-    //   this.showCancel = true;
-    // } else if (!this.isGameStarting) {
-    //   this.showCancel = false;
-    // }
   }
 
   public handleCheckbox(event: any): void {

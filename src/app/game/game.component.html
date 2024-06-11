@@ -7,13 +7,13 @@
   <div class="win" *ngIf="isShowAlert">
     <div class="win-text">
       Has cobrado <br>
-      <span>{{windCoeff}}x</span>
+      <span>{{windCoeff.toFixed(2)}}x</span>
     </div>
     <div class="win-box">
       Win USD <br>
-      <span>{{winSum}}</span>
+      <span>{{winSum.toFixed(2)}}</span>
     </div>
-    <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer">
+    <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer" (click)="closeAlert()">
       X
     </div>
   </div>
@@ -28,12 +28,13 @@
         </div>
       </ng-container>
     </div>
-    <div class="graph" style="margin-top: 10px">
-      <div *ngIf="isFlewAway" class="flex-away">
-        VOLÓ LEJOS!
+    <div class="graph" style="margin-top: 10px;">
+      <div *ngIf="isFlewAway" class="flex-away" style="z-index: 10;display: flex;flex-direction: column">
+        VOLÓ LEJOS! <br>
+        <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
-        <ng-container *ngIf="!showLoading">
+        <ng-container *ngIf="!isFlewAway && !showLoading && isGameStarting">
           {{startCoefficient.toFixed(2)}}x
         </ng-container>
       </div>

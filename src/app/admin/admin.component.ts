@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RoomService} from "../service/room.service";
-import {exhaustMap, ReplaySubject, takeUntil, tap} from "rxjs";
+import {exhaustMap, ReplaySubject, take, takeUntil, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {CommonModule} from "@angular/common";
 
@@ -27,9 +27,10 @@ export class AdminComponent implements OnInit, OnDestroy{
       .pipe(
         exhaustMap(res => this.roomService.getRoomsList()
           .pipe(
-            tap(res => this.coeffList = res)
+            tap(res => this.coeffList = [...res])
           )
         ),
+        take(2),
         takeUntil(this.#destroyed$)
       )
       .subscribe()

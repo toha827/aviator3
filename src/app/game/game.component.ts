@@ -166,7 +166,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public coefficientList: any[] = []
   public coeffRow: any[] = [];
 
-  public showLoading: boolean = false;
+  public showLoading: boolean = true;
 
   public isBet: boolean = false;
   public isBet2: boolean = false;
@@ -196,6 +196,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   intervalId: any;
 
+  isGameStarted: boolean = false;
   highlightedRows: number[] = [];
   intervalIds: any[] = [];
   mainIntervalId: any;
@@ -211,6 +212,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   isBetExit: boolean = false;
 
+  public hasAlertBeenShown: boolean = true;
   interRoom: any;
   public gameStatus: string = 'waiting';
   private obs: Subject<boolean> = new Subject<boolean>();
@@ -225,7 +227,7 @@ export class GameComponent implements OnInit, OnDestroy {
       )
     this.interRoom = setInterval(() => {
       this.getRooms();
-    }, 1000);
+    }, 1500);
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
@@ -249,46 +251,59 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
+  showAlert: boolean = true;
   private getRooms(): void {
 
     this.roomService.getRoomsList()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
         /// NEW CODE
+        this.endCoefficient = res[1].coefficient;
         if (res[1].status === 'PLAYING'){
           this.nextGame = res[0];
           this.currentGame = res[1];
+          this.play();
+          this.showLoading = false;
+          this.isGameStarted = true;
+          this.hasAlertBeenShown = false;
+          this.showAlert = false;
         } else if (res[1].status === "FINISHED") {
+          if (!this.showAlert) {
+            this.isFlewAway = true;
+            setTimeout(() => {
+              this.isFlewAway = false;
+              this.showLoading = true;
+              this.clearAllIntervals()
+              this.clearHighlightedRows()
+            },2000);
+          }
+          this.showAlert = true;
           this.nextGame = res[0];
           this.currentGame = res[1];
+          this.isGameStarted = false;
+          this.stop();
+          this.stopBg();
         }
         /// OLD CODE
         this.coefficientList = res;
-        this.coefficientList = this.coefficientList.slice(1).slice(0,-3);
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
         this.firstStatus = res[0].status;
-        this.endCoefficient = res[1].coefficient;
-        this.showLoading = true;
         this.isBet = false;
         if (res[1].status === 'PLAYING') {
           this.gameStatus = 'playing';
-          this.showLoading = false;
           this.isGameStarting = true;
           this.isBet = this.currentBtnType === 'cancel';
-          this.play();
         } else if (res[1].status === 'FINISHED') {
           this.gameStatus = 'waiting';
           this.isBet = this.currentBtnType === 'cancel';// Retry every second
-          this.stop(); // Stop the main animation
-          this.stopBg();
         }
       })
   }
 
   public changeCoefficientAutomatically(): void {
     const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    const totalDuration = 15500; // Total duration in milliseconds
+    const totalDuration = 15000; // Total duration in milliseconds
     const intervalTime = totalDuration / this.steps; // Time per step
 
     // Ensure interval ID is cleared in case of multiple calls
@@ -301,11 +316,15 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this.intervalId = setInterval(() => {
       // Check if the current index has reached the total steps
-      if (this.currentIndex >= this.steps) {
-        this.stop(); // Stop the main animation
-        this.stopBg(); // Stop the background animation
+      if (this.currentIndex >= this.steps + 20) {
+        // this.isFlewAway = true;
+        // this.stop(); // Stop the main animation
+        // this.stopBg(); // Stop the background animation
         this.firstLoading = false;
-        this.obs.next(true); // Emit the observer event
+        // setTimeout(() => {
+        //   this.isFlewAway = false
+        // }, 2000);
+        // Emit the observer event
         clearInterval(this.intervalId); // Clear the interval to stop execution
       } else {
         // Increment the startCoefficient by the step size
@@ -320,11 +339,12 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       }
     }, intervalTime);
+
   }
 
   public animationCreated(animationItem: AnimationItem): void {
     this.animationItem = animationItem;
-    this.play();
+    // this.play();
     setTimeout(() => {
       // this.changeCoefficientAutomatically();
     }, 100);
@@ -348,12 +368,12 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public play(): void {
-    if (this.animationItem) {
-      this.startHighlightingSequence();
-      this.isFlewAway = false;
+    if (this.animationItem && !this.isGameStarted) {
+      // this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
       this.changeCoefficientAutomatically();
+      this.startHighlightingSequence();
     }
   }
 
@@ -365,12 +385,12 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public stop(): void {
     if (this.animationItem) {
-      this.isFlewAway = true;
       this.animationItem.stop();
     }
   }
 
   public restart(): void {
+    this.isFlewAway = true;
     if (this.animationItem) {
       this.isBet = false;
       this.stop();
@@ -421,20 +441,22 @@ export class GameComponent implements OnInit, OnDestroy {
     const indices = this.generateRandomIndices();
     this.highlightRow(indices[0], 1000); // Highlight first row after 3 seconds
     this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
-    this.highlightRow(indices[2], 4000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[3], 4500); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[4], 5000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[2], 3000); // Highlight third row after 5 seconds
+    this.highlightRow(indices[3], 4000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
     this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[6], 7000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[7], 9000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[6], 5000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[7], 7000); // Highlight fifth row after 7 seconds
     this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[9], 9000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[10], 10000); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
     const indices = [];
     const usedIndices = new Set<number>();
 
-    while (indices.length < 8) {
+    while (indices.length < 10) {
       const randomIndex = Math.floor(Math.random() * this.userList.length);
       if (!usedIndices.has(randomIndex)) {
         indices.push(randomIndex);
@@ -475,7 +497,14 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isShowAlert = true
       this.windCoeff = event.coeff;
       this.winSum = event.sum
+      setTimeout(() => {
+        this.isShowAlert = false;
+      }, 4000);
     }
+  }
+
+  public closeAlert(): void {
+    this.isShowAlert = false;
   }
 
   ngOnDestroy(): void {
