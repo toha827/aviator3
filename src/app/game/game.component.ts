@@ -303,6 +303,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public changeCoefficientAutomatically(): void {
     const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
+    console.log(this.endCoefficient, (this.endCoefficient - this.startCoefficient) , (this.endCoefficient - this.startCoefficient) / this.steps)
     const totalDuration = 15000; // Total duration in milliseconds
     const intervalTime = totalDuration / this.steps; // Time per step
 
@@ -321,6 +322,7 @@ export class GameComponent implements OnInit, OnDestroy {
         // this.stop(); // Stop the main animation
         // this.stopBg(); // Stop the background animation
         this.firstLoading = false;
+        this.startCoefficient = 1.01;
         // setTimeout(() => {
         //   this.isFlewAway = false
         // }, 2000);
@@ -329,14 +331,16 @@ export class GameComponent implements OnInit, OnDestroy {
       } else {
         // Increment the startCoefficient by the step size
         this.startCoefficient += stepSize;
+        console.log(stepSize);
+        this.roomService.setCoeff(this.startCoefficient);
         this.currentIndex++;
 
-        if (this.isChecked) {
-          // Check if auto coefficient is reached and update the flag
-          if (this.startCoefficient.toFixed(1) === this.inputCoeff.toFixed(1)) {
-            this.isAutoReached = true;
-          }
-        }
+        // if (this.isChecked) {
+        //   // Check if auto coefficient is reached and update the flag
+        //   if (this.startCoefficient.toFixed(1) === this.inputCoeff.toFixed(1)) {
+        //     this.isAutoReached = true;
+        //   }
+        // }``
       }
     }, intervalTime);
 
@@ -422,12 +426,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.balance = event;
   }
 
-  public onGetIsChecked(event: any): void {
-    this.isChecked = event.isChecked;
-    this.inputCoeff = event.startCoeff;
-  }
-
-
   startHighlightingSequence() {
     this.startHighlighting();
     // this.mainIntervalId = setInterval(() => {
@@ -492,20 +490,30 @@ export class GameComponent implements OnInit, OnDestroy {
     this.currentBtnType = 'cancel';
   }
 
-  public onShowAlert(event: any): void {
-    if (event.coeff) {
-      this.isShowAlert = true
-      this.windCoeff = event.coeff;
-      this.winSum = event.sum
-      setTimeout(() => {
-        this.isShowAlert = false;
-      }, 4000);
-    }
-  }
+  // public onShowAlert(event: any): void {
+  //   if (event.coeff) {
+  //     this.isShowAlert = true
+  //     if (!this.isChecked) {
+  //       this.windCoeff = event.coeff;
+  //       this.winSum = event.sum
+  //     } else {
+  //       this.windCoeff = this.inputCoeff;
+  //       // this.winSum = this.inputCoeff *
+  //     }
+  //     setTimeout(() => {
+  //       this.isShowAlert = false;
+  //     }, 4000);
+  //   }
+  // }
 
-  public closeAlert(): void {
-    this.isShowAlert = false;
-  }
+  // public onGetIsChecked(event: any): void {
+  //   this.isChecked = event.isChecked;
+  //   this.inputCoeff = event.startCoeff;
+  // }
+
+  // public closeAlert(): void {
+  //   this.isShowAlert = false;
+  // }
 
   ngOnDestroy(): void {
     clearInterval(this.interRoom);

@@ -17,6 +17,7 @@ export class BetComponent implements OnInit {
   private _isBet = false;
   @Input() isGameStarting: boolean = false;
   @Input() firstStatus: string = '';
+  @Input() className: string = '';
 
   @Input()
   set currentStatus(value) {
@@ -52,8 +53,27 @@ export class BetComponent implements OnInit {
     return this._isBet;
   }
 
+  public isShowAlert: boolean = false;
+
   private _isAutoReached: boolean = false;
+
+  @Input() finalCoeff: number = 1.01;
+  private _startCoefficient: number = 1.01;
   @Input() startCoefficient: number = 1.01;
+  // set startCoefficient(value) {
+  //   this._startCoefficient = value;
+  //   if (this.isChecked && this.inputCoeff == +value.toFixed(1)) {
+  //     this.isShowAlert = true;
+  //     setTimeout(() => {
+  //       this.isShowAlert = false;
+  //     }, 2000);
+  //     this.withDraw();
+  //   }
+  // }
+  //
+  // get startCoefficient() {
+  //   return this._startCoefficient;
+  // }
   @Input() gameId: number = 0;
   betId: number = 0;
 
@@ -164,6 +184,15 @@ export class BetComponent implements OnInit {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.roomService.getCoeff().subscribe(res => {
+      if (this.isChecked && this.inputCoeff == +this.startCoefficient.toFixed(1)) {
+            this.isShowAlert = true;
+            setTimeout(() => {
+              this.isShowAlert = false;
+            }, 2000);
+            this.withDraw();
+      }
+    })
     this.autoId = `${this.id}-auto`;
     this.apuestaId = `${this.id2}-apuesta`;
     this.gliderId = `${this.id}-glider`;
@@ -206,6 +235,10 @@ export class BetComponent implements OnInit {
             ///response withdraw bet;
             this.winCoefficient = this.startCoefficient;
             this.winSum = this.amount * this.winCoefficient;
+            this.isShowAlert = true;
+            setTimeout(() => {
+              this.isShowAlert = false;
+            }, 2000);
             this.currentBet = null;
             this.showAlert.emit({
               coeff: this.winCoefficient,

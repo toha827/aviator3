@@ -1,3 +1,16 @@
+<div class="win {{className}}" *ngIf="isShowAlert">
+  <div class="win-text">
+    Has cobrado <br>
+    <span>{{winCoefficient.toFixed(2)}}x</span>
+  </div>
+  <div class="win-box">
+    Win USD <br>
+    <span>{{winSum.toFixed(2)}}</span>
+  </div>
+  <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer">
+    X
+  </div>
+</div>
 <div class="first-block" style="margin-top: 20px;">
   <div class="container" *ngIf="id && id2">
     <div class="tabs" style="display: flex; align-items: center; justify-content: space-around">

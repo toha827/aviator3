@@ -4,19 +4,6 @@
   <div class="title" (click)="admin()">Admin</div>
 </div>
 <div class="body">
-  <div class="win" *ngIf="isShowAlert">
-    <div class="win-text">
-      Has cobrado <br>
-      <span>{{windCoeff.toFixed(2)}}x</span>
-    </div>
-    <div class="win-box">
-      Win USD <br>
-      <span>{{winSum.toFixed(2)}}</span>
-    </div>
-    <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer" (click)="closeAlert()">
-      X
-    </div>
-  </div>
   <div class="graph-body">
     <div class="coefficient">
       <ng-container *ngFor="let coeff of coefficientList">
@@ -29,7 +16,7 @@
       </ng-container>
     </div>
     <div class="graph" style="margin-top: 10px;">
-      <div *ngIf="isFlewAway" class="flex-away" style="z-index: 10;display: flex;flex-direction: column">
+      <div *ngIf="isFlewAway" class="flex-away" style="z-index: 10;display: flex;flex-direction: column;font-size: 50px">
         VOLÓ LEJOS! <br>
         <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}</span>
       </div>
@@ -62,6 +49,7 @@
     </div>
     <div class="bet-buttons-1">
       <app-bet style="width: 100%"
+               className="win-1"
                [currentGame]="currentGame"
                [nextGame]="nextGame"
                [gameStatus]="gameStatus"
@@ -74,10 +62,9 @@
                [startCoefficient]="startCoefficient"
                [isGameStarting]="isGameStarting"
                (passBalance)="onGetBalance($event)"
-               (passIsChecked)="onGetIsChecked($event)"
-               (showAlert)="onShowAlert($event)"
                (isBetExist)="onIsBetExist($event)"></app-bet>
       <app-bet style="width: 100%"
+               className="win-2"
                [currentGame]="currentGame"
                [nextGame]="nextGame"
                [gameStatus]="gameStatus"
@@ -90,8 +77,6 @@
                [startCoefficient]="startCoefficient"
                [isGameStarting]="isGameStarting"
                (passBalance)="onGetBalance($event)"
-               (passIsChecked)="onGetIsChecked($event)"
-               (showAlert)="onShowAlert($event)"
                (isBetExist)="onIsBetExist($event)"></app-bet>
     </div>
   </div>

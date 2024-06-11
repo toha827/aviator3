@@ -43,44 +43,6 @@
   color: red;
 }
 
-.win {
-  cursor: default;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  z-index: 10;
-  color: white;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 300px;
-  background-color: #123405;
-  border: 1px solid #427f00;
-  border-radius: 26px;
-  padding: 5px;
-  .win-text {
-    font-size: 12px;
-    text-align: center;
-    margin-left: 10px;
-    span {
-      font-size: 20px;
-    }
-  }
-  .win-box {
-    text-align: center;
-    border-radius: 26px;
-    background-color: #427f00;
-    font-size: 16px;
-    margin-left: auto;
-    padding: 5px 10px;
-    width: 150px;
-    span {
-      font-size: 20px;
-    }
-  }
-}
-
 .graph {
   margin-left: 10px;
   //border-left: 1px solid white;

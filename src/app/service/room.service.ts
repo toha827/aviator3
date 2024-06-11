@@ -52,11 +52,11 @@ export class RoomService {
     this.checkIsAuto$.next(value);
   }
 
-  public setShowOver(value: any) {
+  public setCoeff(value: any) {
     this.checkShowOver.next(value);
   }
 
-  public getShowOver() {
+  public getCoeff() {
     return this.checkShowOver.asObservable();
   }
 }
