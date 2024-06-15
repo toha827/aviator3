@@ -19,6 +19,7 @@ export class AdminComponent implements OnInit, OnDestroy{
   public coeffList: any[] = [];
 
   public coefficient: number = 1.01;
+  public balance: number = 10000;
 
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -33,6 +34,12 @@ export class AdminComponent implements OnInit, OnDestroy{
         take(2),
         takeUntil(this.#destroyed$)
       )
+      .subscribe()
+  }
+
+  public setBalance(): void {
+    this.roomService.setBalance({amount: this.balance})
+      .pipe()
       .subscribe()
   }
 

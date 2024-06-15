@@ -1,11 +1,22 @@
 <div class="container">
   <div class="title">Admin panel</div>
-  <div class="body-1">
+  <div class="body-1" style="width: 380px;">
     <div class="input">
       <input type="number" [(ngModel)]="coefficient" step="0.01" min="0">
     </div>
-    <div class="set-btn" style="cursor: pointer" (click)="setCoefficient()">
+    <div class="set-btn" style="cursor: pointer;width: 120px;text-align: center" (click)="setCoefficient()">
       Set Coefficient
+    </div>
+    <div class="red-btn" style="cursor: pointer" (click)="cancel()">
+      Go back
+    </div>
+  </div>
+  <div class="body-1" style="margin-top: 20px;width: 380px;">
+    <div class="input">
+      <input type="number" [(ngModel)]="balance" min="0">
+    </div>
+    <div class="set-btn" style="cursor: pointer; width: 120px;text-align: center" (click)="setBalance()">
+      Set Balance
     </div>
     <div class="red-btn" style="cursor: pointer" (click)="cancel()">
       Go back

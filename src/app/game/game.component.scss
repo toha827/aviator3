@@ -196,3 +196,24 @@ button {
 .coeff-list-test {
   display: flex;
 }
+
+#gear{
+  animation-name: ckw;
+  animation-duration: 1.5s;
+  /* Things added */
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
+  /* <--- */
+}
+@keyframes ckw {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'https://a455-217-11-73-237.ngrok-free.app';
+  private readonly baseUrl = 'http://209.250.233.190:80';
   private http = inject(HttpClient);
   checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   checkShowOver: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -42,6 +42,10 @@ export class RoomService {
 
   public getBalance(): Observable<any> {
     return this.http.get(`${this.baseUrl}/v1/bets/balance`);
+  }
+
+  public setBalance(body: {amount: number}): Observable<any> {
+    return this.http.post(`${this.baseUrl}/v1/bets/set-balance`, body);
   }
 
   public getIsCheckedAuto() {

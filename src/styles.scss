@@ -289,6 +289,11 @@ th, td {
 
 @media (280px <= width <= 650px) {
 
+  #gear {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
   .lottie-new-container {
     display: flex;
     flex-direction: column;

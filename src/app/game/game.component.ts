@@ -188,6 +188,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public showLogin = false;
   private animationItem: AnimationItem | undefined;
   private animationBgItem: AnimationItem | undefined;
+  private animationLoadingItem: AnimationItem | undefined;
   private firstLoading: boolean = true;
   public balance: number = 0;
 
