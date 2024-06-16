@@ -174,7 +174,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public isBet: boolean = false;
   public isBet2: boolean = false;
   public isFlewAway: boolean = false;
-  public startCoefficient: number = 1.01;
+  public startCoefficient: number = 1;
   private endCoefficient: number = 2;
   private steps: number = 100;
   private intervalTime: number = 60000; // Time interval in milliseconds
@@ -289,7 +289,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.stopBg();
         }
         /// OLD CODE
-        this.coefficientList = [...res, ...res];
+        this.coefficientList = [...res.slice(1), ...res];
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
         this.firstStatus = res[0].status;
@@ -306,10 +306,17 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public changeCoefficientAutomatically(): void {
-    const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
+    // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
     console.log(this.endCoefficient, (this.endCoefficient - this.startCoefficient) , (this.endCoefficient - this.startCoefficient) / this.steps)
-    const totalDuration = 15000; // Total duration in milliseconds
-    const intervalTime = totalDuration / this.steps; // Time per step
+    const startDate = new Date(this.currentGame.playing_from);
+    const endDate = new Date(this.currentGame.playing_until);
+    const totalSteps = Math.ceil((this.currentGame.coefficient - this.startCoefficient) / 0.1); // Total number of steps
+    const totalDuration = endDate.getTime() - startDate.getTime() - 1000; // Total duration in milliseconds
+    const intervalTime = totalDuration / totalSteps; // Time per step
+
+    const intervalDuration = totalDuration / totalSteps; // Interval duration per step
+    const stepSize = (this.currentGame.coefficient - this.startCoefficient) / totalSteps; // Step increment
+
 
     // Ensure interval ID is cleared in case of multiple calls
     if (this.intervalId) {
@@ -326,7 +333,7 @@ export class GameComponent implements OnInit, OnDestroy {
         // this.stop(); // Stop the main animation
         // this.stopBg(); // Stop the background animation
         this.firstLoading = false;
-        this.startCoefficient = 1.01;
+        this.startCoefficient = 1;
         // setTimeout(() => {
         //   this.isFlewAway = false
         // }, 2000);
@@ -334,7 +341,7 @@ export class GameComponent implements OnInit, OnDestroy {
         clearInterval(this.intervalId); // Clear the interval to stop execution
       } else {
         // Increment the startCoefficient by the step size
-        this.startCoefficient += stepSize;
+        this.startCoefficient += 0.1;
         console.log(stepSize);
         this.roomService.setCoeff(this.startCoefficient);
         this.currentIndex++;
