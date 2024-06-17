@@ -307,7 +307,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public changeCoefficientAutomatically(): void {
     // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    console.log(this.endCoefficient, (this.endCoefficient - this.startCoefficient) , (this.endCoefficient - this.startCoefficient) / this.steps)
+    console.log(this.currentGame.coefficient, (this.currentGame.coefficient - this.startCoefficient) , (this.currentGame.coefficient - this.startCoefficient) / this.steps)
     const startDate = new Date(this.currentGame.playing_from);
     const endDate = new Date(this.currentGame.playing_until);
     const totalSteps = Math.ceil((this.currentGame.coefficient - this.startCoefficient) / 0.1); // Total number of steps
@@ -319,9 +319,11 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
     // Ensure interval ID is cleared in case of multiple calls
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
+    // if (this.intervalId) {
+    //   console.log('DDDDDD');
+    //   clearInterval(this.intervalId);
+    //   this.stop();
+    // }
 
     // Reset currentIndex to ensure proper counting from the start
     this.currentIndex = 0;
@@ -342,7 +344,7 @@ export class GameComponent implements OnInit, OnDestroy {
       } else {
         // Increment the startCoefficient by the step size
         this.startCoefficient += 0.1;
-        console.log(stepSize);
+        console.log(this.startCoefficient, stepSize);
         this.roomService.setCoeff(this.startCoefficient);
         this.currentIndex++;
 
@@ -399,6 +401,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public stop(): void {
+    clearInterval(this.intervalId)
     if (this.animationItem) {
       this.animationItem.stop();
     }
@@ -410,6 +413,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isBet = false;
       this.stop();
       clearInterval(this.mainIntervalId);
+      this.startCoefficient = 1;
       this.isGameStarting = false;
       this.clearAllIntervals();
       this.resetCoefficients();
@@ -512,6 +516,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     clearInterval(this.interRoom);
+    this.startCoefficient = 1;
     this.clearAllIntervals();
     this.#destroyed$.next(true);
     this.#destroyed$.complete();

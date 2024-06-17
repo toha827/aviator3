@@ -78,17 +78,20 @@ button {
   position: relative;
   width: 90%;
   flex-direction: column;
-  justify-content: center;
+  // почему то ломает верстку
+  // justify-content: center;
   align-items: center;
   border-radius: 10px;
   background-color: #1b1c1d;
   z-index: 0;
   margin: 0 auto;
   border: solid 1px transparent;
+  overflow: scroll;
 }
 
 .highlight {
-  background-color: #427f00 !important;
+  background-color: #123405 !important;
+  border: solid 1px #427f00;
   //td {
   // border: 1px solid #123405 !important;
   //}
