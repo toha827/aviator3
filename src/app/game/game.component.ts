@@ -279,7 +279,7 @@ export class GameComponent implements OnInit, OnDestroy {
               this.showLoading = true;
               this.clearAllIntervals()
               this.clearHighlightedRows()
-            },2000);
+            },5000);
           }
           this.showAlert = true;
           this.nextGame = res[0];
