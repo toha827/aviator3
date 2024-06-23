@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {RoomService} from "../service/room.service";
 import {AnimationOptions, LottieComponent} from "ngx-lottie";
 import {AnimationItem} from "lottie-web";
@@ -25,6 +25,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private roomService = inject(RoomService);
   private router = inject(Router);
+  private ngZone = inject(NgZone);
 
   public userList = [
     {
@@ -223,6 +224,26 @@ export class GameComponent implements OnInit, OnDestroy {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    // let interval = 1000; // initial interval in milliseconds
+    // let count = 0;
+    //
+    // const intervalId = setInterval(() => {
+    //   count++;
+    //   console.log("Count:", count);
+    //
+    //   // Decrease interval every second
+    //   if (count % 1 === 0) { // Decrease interval every 1 second
+    //     interval -= 100; // Decrease interval by 100 milliseconds
+    //     interval = Math.max(interval, 50); // Ensure interval does not go below 50 milliseconds
+    //     console.log("Interval:", interval);
+    //   }
+    //
+    //   // Stop the interval after 10 seconds
+    //   if (count >= 10) {
+    //     clearInterval(intervalId);
+    //     console.log("Interval stopped.");
+    //   }
+    // }, interval);
     this.roomService.getBalance()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
@@ -231,7 +252,7 @@ export class GameComponent implements OnInit, OnDestroy {
       )
     this.interRoom = setInterval(() => {
       this.getRooms();
-    }, 1500);
+    }, 200);
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
@@ -242,6 +263,45 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     });
     this.getBets();
+
+    // setTimeout(() => {
+    //   const svgElement = document.getElementsByTagName('svg')[0];
+    //
+    //   svgElement.children[1].children[2].id='12';
+    //   const s = document.getElementById('12');
+    //   if (s) {
+    //     s.style.opacity = String(0);
+    //   }
+    //   // console.log(svgElement.children[1].children[2]);
+    //   (svgElement.children[1].children[3] as any).style.opacity = 0;
+    // }, 1000);
+
+    // setTimeout(() => {
+    //   const svgElement = document.getElementsByTagName('svg')[0];
+    //   // console.log(svgElement.children[1].children[0]);
+    //   // console.log(svgElement.children[1].children[1]);
+    //   // console.log(svgElement.children[1].children[4]);
+    //
+    //   svgElement.children[1].children[0].id='chi-0';
+    //   svgElement.children[1].children[1].id='chi-1';
+    //   svgElement.children[1].children[4].id='chi-4';
+    //
+    //   const cc1 = document.getElementById('chi-0')
+    //   const cc2 = document.getElementById('chi-1')
+    //   const cc3 = document.getElementById('chi-4')
+    //   console.log(cc1);
+    //
+    //   if (cc1 && cc2 && cc3) {
+    //     let i = 0;
+    //     setInterval(() => {
+    //       i++;
+    //       console.log(i);
+    //       cc1.style.transform = `translate(${i}%, 30%)`;
+    //       cc2.style.transform = `translate(${i}%, 30%)`;
+    //       cc3.style.transform = `translate(${i}%, 30%)`;
+    //     }, 60);
+    //   }
+    // }, 3000);
   }
 
   private getBets(): void {
@@ -256,6 +316,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   showAlert: boolean = true;
+  nextGameTimeout: any;
   private getRooms(): void {
 
     this.roomService.getRoomsList()
@@ -263,10 +324,10 @@ export class GameComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         /// NEW CODE
         this.endCoefficient = res[1].coefficient;
+
         if (res[1].status === 'PLAYING'){
           this.nextGame = res[0];
           this.currentGame = res[1];
-          this.play();
           this.showLoading = false;
           this.isGameStarted = true;
           this.hasAlertBeenShown = false;
@@ -287,7 +348,29 @@ export class GameComponent implements OnInit, OnDestroy {
           this.isGameStarted = false;
           this.stop();
           this.stopBg();
+          if (this.nextGameTimeout == null) {
+            const initialDate = new Date(this.nextGame.playing_from);
+            const initialTime = initialDate.getTime();
+            const addedTime = 5 * 60 * 60 * 1000;
+            const newTime = initialTime + addedTime;
+
+            const newDate = new Date(newTime);
+            const diff = newDate.getTime() - new Date().getTime();
+            console.log("Current diff " + diff);
+            this.nextGameTimeout = setTimeout(() => {
+              this.play();
+              console.log('SDDASD')
+              this.nextGameTimeout = null;
+            }, diff);
+            console.log(this.nextGameTimeout)
+          }
         }
+
+        // console.log(newDate.getTime());
+        // console.log(new Date().getTime());
+        // if (newDate.getTime() === new Date().getTime()) {
+        //   this.play();
+        // }
         /// OLD CODE
         this.coefficientList = [...res.slice(1), ...res];
         this.betId = res[0].id;
@@ -305,57 +388,195 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
+  getTimeForCoefficient(coefficient: any) {
+    if (coefficient >= 1.01 && coefficient < 1.2) {
+      return 1;
+    } else if (coefficient >= 1.2 && coefficient < 1.4) {
+      return 1.5;
+    } else if (coefficient >= 1.4 && coefficient < 3) {
+      return 2;
+    } else if (coefficient >= 3 && coefficient < 5) {
+      return 3;
+    } else if (coefficient >= 5 && coefficient < 10) {
+      return 7;
+    } else if (coefficient >= 10 && coefficient < 15) {
+      return 9;
+    } else {
+      return 13;
+    }
+  }
+
   public changeCoefficientAutomatically(): void {
-    // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    console.log(this.currentGame.coefficient, (this.currentGame.coefficient - this.startCoefficient) , (this.currentGame.coefficient - this.startCoefficient) / this.steps)
-    const startDate = new Date(this.currentGame.playing_from);
+    const startDate = new Date();
+
+    const addedTime = 5 * 60 * 60 * 1000;
     const endDate = new Date(this.currentGame.playing_until);
-    const totalSteps = Math.ceil((this.currentGame.coefficient - this.startCoefficient) / 0.1); // Total number of steps
-    const totalDuration = endDate.getTime() - startDate.getTime() - 1000; // Total duration in milliseconds
-    const intervalTime = totalDuration / totalSteps; // Time per step
+    const totalDuration = startDate.getTime() - (endDate.getTime() + addedTime);
+    let interval = 500; // initial interval in milliseconds
+    const steps = Math.ceil(totalDuration / interval);
+    let increment = (this.currentGame.coefficient - 1) / steps;
+    console.log("Current endDate:", (endDate.getTime() + addedTime));
+    console.log("Current startDate:", startDate.getTime());
+    console.log("Current totalDuration:", totalDuration);
+    console.log("Current steps:", steps);
+    console.log("Current increment:", increment);
 
-    const intervalDuration = totalDuration / totalSteps; // Interval duration per step
-    const stepSize = (this.currentGame.coefficient - this.startCoefficient) / totalSteps; // Step increment
+    let currentCoefficient = this.startCoefficient;
+    let currentStep = 0;
 
+    const intervalId = setInterval(() => {
+      if (currentStep >= steps || this.startCoefficient >= this.currentGame.coefficient) {
+        clearInterval(intervalId);
+        this.startCoefficient = this.currentGame.coefficient;
+        console.log(this.startCoefficient);
+        return;
+      }
 
-    // Ensure interval ID is cleared in case of multiple calls
+      this.startCoefficient += increment;
+      currentStep++;
+
+      if (this.startCoefficient > this.currentGame.coefficient) {
+        this.startCoefficient = this.currentGame.coefficient;
+      }
+
+      console.log(this.startCoefficient); // You can replace this with your update logic (e.g., updating UI)
+
+      // Optional: dynamically adjust the interval (if needed)
+      // interval = someNewIntervalValue;
+      // clearInterval(intervalId);
+      // setInterval(callback, interval);
+    }, interval);
+    // const time = this.getTimeForCoefficient(this.endCoefficient) * 2000; // convert to milliseconds
+    // let interval = 2000; // initial interval in milliseconds
+    // const steps = Math.ceil(time / interval);
+    // const increment = 0.01;
+    //
+    // let currentCoefficient = this.startCoefficient;
+    //
+    // const intervalId = setInterval(() => {
+    //   currentCoefficient += increment;
+    //   this.startCoefficient = currentCoefficient;
+    //
+    //   if (interval > 50) {
+    //     interval -= 1000; // Decrease interval by 100 milliseconds every second
+    //   }
+    //
+    //   console.log("Current Coefficient:", currentCoefficient); // Update your UI with the currentCoefficient here
+    //
+    //   if (currentCoefficient >= this.endCoefficient) {
+    //     clearInterval(intervalId);
+    //     this.firstLoading = false;
+    //     this.startCoefficient = 1;
+    //     console.log("Animation ended."); // Ensure the final value is set
+    //   }
+    // }, 500); // Update every second
+    // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
+    // console.log(this.currentGame.coefficient, (this.currentGame.coefficient - this.startCoefficient) , (this.currentGame.coefficient - this.startCoefficient) / this.steps)
+
+    // const time = this.getTimeForCoefficient(this.endCoefficient) * 100; // convert to milliseconds
+    // let interval = 1500; // initial interval in milliseconds
+    // const steps = time / interval;
+    // const increment = (this.endCoefficient - this.startCoefficient) / steps;
+    //
+    // let currentCoefficient = this.startCoefficient;
+    // let stepCount = 0;
+    //
+    // const updateCoefficient = () => {
+    //   currentCoefficient += 0.01;
+    //   this.startCoefficient = currentCoefficient;
+    //   stepCount++;
+    //
+    //   // Update startCoefficient in the template
+    //   this.ngZone.run(() => {
+    //     this.startCoefficient = this.startCoefficient;
+    //   });
+    //
+    //   // Decrease interval every second
+    //   if (stepCount % 10 === 0) { // Decrease interval every 10 steps (1 second)
+    //     interval -= 100; // Decrease interval by 100 milliseconds
+    //     interval = Math.max(interval, 50); // Ensure interval does not go below 50 milliseconds
+    //   }
+    //
+    //   if (stepCount >= steps) {
+    //     clearInterval(intervalId);
+    //     this.firstLoading = false;
+    //     this.startCoefficient = 1;
+    //     console.log(this.endCoefficient); // ensure the final value is set
+    //   }
+    // };
+    //
+    // const intervalId = setInterval(updateCoefficient, interval);
+
+    // const time = this.getTimeForCoefficient(this.endCoefficient) * 1000; // convert to milliseconds
+    // const interval = 1000; // update every 10 milliseconds
+    // const steps = time / interval;
+    // const increment = (this.endCoefficient - this.startCoefficient) / steps;
+    //
+    // let currentCoefficient = this.startCoefficient;
+    // let stepCount = 0;
+    //
+    // const intervalId = setInterval(() => {
+    //   currentCoefficient += .0;
+    //   this.startCoefficient = currentCoefficient;
+    //   stepCount++;
+    //   // this.startCoefficient += 0.01;
+    //   this.roomService.setCoeff(this.startCoefficient);
+    //   console.log(currentCoefficient); // update your UI with the currentCoefficient here
+    //
+    //   if (stepCount >= steps) {
+    //     clearInterval(intervalId);
+    //     this.firstLoading = false;
+    //     this.startCoefficient = 1;
+    //     console.log(this.endCoefficient); // ensure the final value is set
+    //   }
+    // }, interval);
+    // const startDate = new Date(this.currentGame.playing_from);
+    // const endDate = new Date(this.currentGame.playing_until);
+    // const totalSteps = Math.ceil((this.currentGame.coefficient - this.startCoefficient) / 0.1); // Total number of steps
+    // const totalDuration = endDate.getTime() - startDate.getTime() - 1000; // Total duration in milliseconds
+    // const intervalTime = totalDuration / totalSteps; // Time per step
+    //
+    // const intervalDuration = totalDuration / totalSteps; // Interval duration per step
+    // const stepSize = (this.currentGame.coefficient - this.startCoefficient) / totalSteps; // Step increment
+    //
+    //
+    // // Ensure interval ID is cleared in case of multiple calls
     // if (this.intervalId) {
     //   console.log('DDDDDD');
     //   clearInterval(this.intervalId);
     //   this.stop();
     // }
+    //
+    // // Reset currentIndex to ensure proper counting from the start
+    // this.currentIndex = 0;
 
-    // Reset currentIndex to ensure proper counting from the start
-    this.currentIndex = 0;
-
-    this.intervalId = setInterval(() => {
-      // Check if the current index has reached the total steps
-      if (this.currentIndex >= this.steps + 20) {
-        // this.isFlewAway = true;
-        // this.stop(); // Stop the main animation
-        // this.stopBg(); // Stop the background animation
-        this.firstLoading = false;
-        this.startCoefficient = 1;
-        // setTimeout(() => {
-        //   this.isFlewAway = false
-        // }, 2000);
-        // Emit the observer event
-        clearInterval(this.intervalId); // Clear the interval to stop execution
-      } else {
-        // Increment the startCoefficient by the step size
-        this.startCoefficient += 0.1;
-        console.log(this.startCoefficient, stepSize);
-        this.roomService.setCoeff(this.startCoefficient);
-        this.currentIndex++;
-
-        // if (this.isChecked) {
-        //   // Check if auto coefficient is reached and update the flag
-        //   if (this.startCoefficient.toFixed(1) === this.inputCoeff.toFixed(1)) {
-        //     this.isAutoReached = true;
-        //   }
-        // }``
-      }
-    }, intervalTime);
+    // this.intervalId = setInterval(() => {
+    //   // Check if the current index has reached the total steps
+    //   if (this.currentIndex >= this.steps + 20) {
+    //     // this.isFlewAway = true;
+    //     // this.stop(); // Stop the main animation
+    //     // this.stopBg(); // Stop the background animation
+    //     this.firstLoading = false;
+    //     this.startCoefficient = 1;
+    //     // setTimeout(() => {
+    //     //   this.isFlewAway = false
+    //     // }, 2000);
+    //     // Emit the observer event
+    //     clearInterval(this.intervalId); // Clear the interval to stop execution
+    //   } else {
+    //     // Increment the startCoefficient by the step size
+    //     this.startCoefficient += 0.01;
+    //     this.roomService.setCoeff(this.startCoefficient);
+    //     this.currentIndex++;
+    //
+    //     // if (this.isChecked) {
+    //     //   // Check if auto coefficient is reached and update the flag
+    //     //   if (this.startCoefficient.toFixed(1) === this.inputCoeff.toFixed(1)) {
+    //     //     this.isAutoReached = true;
+    //     //   }
+    //     // }``
+    //   }
+    // }, intervalTime);
 
   }
 
