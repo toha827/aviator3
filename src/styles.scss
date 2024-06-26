@@ -219,6 +219,11 @@ th, td {
 }
 
 @media (700px <= width <= 1990px) {
+  .coeff-list-test {
+    overflow: hidden;
+    flex-wrap: nowrap;
+    width: 1045px;
+  }
   .win-1 {
     margin-top: -70vh;
   }

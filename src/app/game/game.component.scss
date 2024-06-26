@@ -31,8 +31,10 @@
 .coefficient {
   display: flex;
   //justify-content: space-between;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  //margin-left: 10px;
+  //margin-right: 10px;
   gap: 2px;
   .item {
     font-weight: 700;
