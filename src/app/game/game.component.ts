@@ -224,26 +224,6 @@ export class GameComponent implements OnInit, OnDestroy {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
-    // let interval = 1000; // initial interval in milliseconds
-    // let count = 0;
-    //
-    // const intervalId = setInterval(() => {
-    //   count++;
-    //   console.log("Count:", count);
-    //
-    //   // Decrease interval every second
-    //   if (count % 1 === 0) { // Decrease interval every 1 second
-    //     interval -= 100; // Decrease interval by 100 milliseconds
-    //     interval = Math.max(interval, 50); // Ensure interval does not go below 50 milliseconds
-    //     console.log("Interval:", interval);
-    //   }
-    //
-    //   // Stop the interval after 10 seconds
-    //   if (count >= 10) {
-    //     clearInterval(intervalId);
-    //     console.log("Interval stopped.");
-    //   }
-    // }, interval);
     this.roomService.getBalance()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
@@ -252,56 +232,18 @@ export class GameComponent implements OnInit, OnDestroy {
       )
     this.interRoom = setInterval(() => {
       this.getRooms();
-    }, 500);
+    }, 1000);
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
     }
     this.obs.asObservable().subscribe(res => {
       if (!this.firstLoading && res) {
+        console.log('FUCK OFF')
         this.restart();
       }
     });
     this.getBets();
-
-    // setTimeout(() => {
-    //   const svgElement = document.getElementsByTagName('svg')[0];
-    //
-    //   svgElement.children[1].children[2].id='12';
-    //   const s = document.getElementById('12');
-    //   if (s) {
-    //     s.style.opacity = String(0);
-    //   }
-    //   // console.log(svgElement.children[1].children[2]);
-    //   (svgElement.children[1].children[3] as any).style.opacity = 0;
-    // }, 1000);
-
-    // setTimeout(() => {
-    //   const svgElement = document.getElementsByTagName('svg')[0];
-    //   // console.log(svgElement.children[1].children[0]);
-    //   // console.log(svgElement.children[1].children[1]);
-    //   // console.log(svgElement.children[1].children[4]);
-    //
-    //   svgElement.children[1].children[0].id='chi-0';
-    //   svgElement.children[1].children[1].id='chi-1';
-    //   svgElement.children[1].children[4].id='chi-4';
-    //
-    //   const cc1 = document.getElementById('chi-0')
-    //   const cc2 = document.getElementById('chi-1')
-    //   const cc3 = document.getElementById('chi-4')
-    //   console.log(cc1);
-    //
-    //   if (cc1 && cc2 && cc3) {
-    //     let i = 0;
-    //     setInterval(() => {
-    //       i++;
-    //       console.log(i);
-    //       cc1.style.transform = `translate(${i}%, 30%)`;
-    //       cc2.style.transform = `translate(${i}%, 30%)`;
-    //       cc3.style.transform = `translate(${i}%, 30%)`;
-    //     }, 60);
-    //   }
-    // }, 3000);
   }
 
   private getBets(): void {
@@ -329,26 +271,20 @@ export class GameComponent implements OnInit, OnDestroy {
         if (res[1].status === 'PLAYING') {
           this.nextGame = res[0];
           this.currentGame = res[1];
-          this.showLoading = false;
+          console.log(`PLAYING GAME ${this.currentGame.id} ${this.currentGame.coefficient}`)
           this.isGameStarted = true;
           this.hasAlertBeenShown = false;
           this.showAlert = false;
-        } else if (res[1].status === "FINISHED") {
-          if (!this.showAlert) {
-            this.isFlewAway = true;
-            setTimeout(() => {
-              this.isFlewAway = false;
-              this.showLoading = true;
-              this.clearAllIntervals()
-              this.clearHighlightedRows()
-            }, 5000);
+          if (!this.isGameStarted) {
+            this.showLoading = true;
           }
+        } else if (res[1].status === "FINISHED") {
+
           this.showAlert = true;
           this.nextGame = res[0];
           this.currentGame = res[1];
           this.isGameStarted = false;
-          this.stop();
-          this.stopBg();
+
           if (this.nextGameTimeout == null) {
             const initialDate = new Date(this.nextGame.playing_from);
             const initialTime = initialDate.getTime();
@@ -360,6 +296,7 @@ export class GameComponent implements OnInit, OnDestroy {
             console.log("Current diff " + diff);
             this.nextGameTimeout = setTimeout(() => {
               this.play();
+              this.showLoading = false;
               this.nextGameTimeout = null;
             }, diff);
           }
@@ -387,82 +324,93 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
-  getTimeForCoefficient(coefficient: any) {
-    if (coefficient >= 1.01 && coefficient < 1.2) {
-      return 1;
-    } else if (coefficient >= 1.2 && coefficient < 1.4) {
-      return 1.5;
-    } else if (coefficient >= 1.4 && coefficient < 3) {
-      return 2;
-    } else if (coefficient >= 3 && coefficient < 5) {
-      return 3;
-    } else if (coefficient >= 5 && coefficient < 10) {
-      return 7;
-    } else if (coefficient >= 10 && coefficient < 15) {
-      return 9;
-    } else {
-      return 13;
-    }
-  }
+  gameRuntimeCalculator(endCoef: number) {
+    // Initial parameters
+    let initialCoef = 1.0;
+    let currentCoef = initialCoef;
 
-  calculateTotalSteps() {
-    let currentCoefficient = 1.0;
-    let interval = 1000;
-    let totalSteps = 0;
-    let stepThreshold = 2;
+    let initialDuration = 1000.0;  // initial duration in milliseconds
+    let increment = 0.1;  // coefficient increment
+    let stepDecrement = 25.0;  // duration decrement per 2s step in milliseconds
+    let stepThreshold = 1000.0;  // threshold for applying step decrement in milliseconds
 
-    while (currentCoefficient < this.currentGame.coefficient) {
-      totalSteps++;
-      currentCoefficient += (this.currentGame.coefficient - 1.0) / ((this.currentGame.coefficient -  1.0) / (interval / 1000));
+    let totalDuration = 0.0;
+    let currentDuration = initialDuration;
 
-      if (totalSteps >= stepThreshold) {
-        interval -= 50;
-        stepThreshold += 2;
-        if (interval <= 0) {
-          interval = 50; // Set a minimum interval threshold (50 milliseconds)
+    // Calculation loop
+    while (currentCoef < endCoef) {
+      totalDuration += currentDuration;
+      currentCoef += increment;
+
+      // Check if we have passed a 2s threshold and adjust duration
+      if (totalDuration >= stepThreshold) {
+        if (currentDuration - stepDecrement <= 1) {
+          currentDuration = 1;
+          stepThreshold += 1000.0;  // update the next threshold
+          continue;
+        } else {
+          currentDuration -= stepDecrement;
+          stepThreshold += 1000.0;  // update the next threshold
         }
       }
     }
 
-    return totalSteps;
+    console.log(`Total duration: ${totalDuration} milliseconds`);
+    return totalDuration;
   }
 
-  generateIntervals(totalDuration: number, initialInterval: number, decrement: number): number[] {
-    const intervals: number[] = [];
-    let currentInterval = initialInterval;
-    let totalSum = 0;
+  generateIntervals(totalDuration: number) {
+    console.log(`Total Duration ${totalDuration}`)
+    let initialDuration = 100.0;  // initial duration in milliseconds
+    let stepDecrement = 2.5;  // duration decrement every 10 steps in milliseconds
+    let steps = 10;  // steps to apply the decrement
 
-    while (totalSum < totalDuration) {
-      intervals.push(currentInterval);
-      totalSum += currentInterval;
+    let intervals = [];
+    let currentDuration = initialDuration;
+    let stepCounter = 0;
+    let remainingDuration = totalDuration;
 
-      // Decrement every second step
-      if (intervals.length % 2 === 0) {
-        currentInterval -= decrement;
-        // Ensure the interval doesn't go below a reasonable minimum value (e.g., 50 milliseconds)
-        if (currentInterval < 50) {
-          currentInterval = 50;
+    while (remainingDuration > 0) {
+      intervals.push(currentDuration);
+      remainingDuration -= currentDuration;
+      stepCounter++;
+
+      // Check if we need to decrement the duration
+      if (stepCounter === steps) {
+        stepCounter = 0;  // reset step counter
+        if (currentDuration - stepDecrement <= 1) {
+          currentDuration = 1;
+        } else {
+          currentDuration -= stepDecrement;
         }
+      }
+
+      // Ensure we don't add more duration than remaining
+      if (remainingDuration < currentDuration) {
+        intervals.push(remainingDuration);
+        break;
       }
     }
 
-    // Adjust the last interval if the total sum exceeds the totalDuration
-    if (totalSum > totalDuration) {
-      const lastInterval = intervals.pop()!;
-      intervals.push(lastInterval - (totalSum - totalDuration));
-    }
-
+    console.log(`Intervals: ${intervals.length}`);
     return intervals;
   }
 
   public async changeCoefficientAutomatically(): Promise<void> {
+    const currentGamePlayingUntil = new Date(this.currentGame.playing_until);
+    var useNextGame = false;
+    if (currentGamePlayingUntil.getTime() < (new Date()).getTime()) {
+      useNextGame = true;
+    }
     const startDate = new Date();
+    console.log(`STARTED GAME ${this.currentGame.id} ${this.currentGame.coefficient} ${startDate}`)
     const addedTime = 5 * 60 * 60 * 1000;
-    const endDate = new Date(this.currentGame.playing_until);
-    const totalDuration = startDate.getTime() - (endDate.getTime() + addedTime);
-    const intervals = this.generateIntervals(totalDuration, 100, 5);
+    const endDate = new Date(useNextGame ? this.nextGame.playing_until : this.currentGame.playing_until);
+    // const totalDuration = (endDate.getTime() + addedTime) - startDate.getTime();
+    const totalDuration = this.gameRuntimeCalculator(useNextGame ? this.currentGame.coefficient : this.nextGame.coefficient);
+    const intervals = this.generateIntervals(totalDuration);
     let startCoefficient = 1.0;
-    const endCoefficient = this.currentGame.coefficient;
+    const endCoefficient = useNextGame ? this.nextGame.coefficient : this.currentGame.coefficient;
     const increment = 0.01;
 
     // Calculate the number of steps required to reach the end coefficient
@@ -481,13 +429,76 @@ export class GameComponent implements OnInit, OnDestroy {
     while (this.startCoefficient < endCoefficient) {
       await this.delay(intervals[currentStep]);
       this.startCoefficient += increment;
-      console.log('Current Coefficient:', this.startCoefficient);
+      // console.log('Current Coefficient:', this.startCoefficient, currentStep, endCoefficient);
       currentStep++;
     }
 
-    stop();
+    await this.flyawayAnimation();
+
+    if (!this.showAlert) {
+      this.isFlewAway = true;
+      setTimeout(() => {
+        this.isFlewAway = false;
+        this.showLoading = true;
+        this.clearAllIntervals()
+        this.clearHighlightedRows()
+        console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
+      }, 5000);
+    }
+    this.showAlert = true;
+    this.isGameStarted = false;
+    this.stop();
+    this.stopBg();
+    console.log('Final Coefficient:', this.startCoefficient, this.currentGame.coefficient);
     this.startCoefficient = 1.0
-    console.log('Final Coefficient:', this.startCoefficient);
+  }
+
+  private flyawayAnimation(): Promise<any> {
+    var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+
+    var plane: SVGGElement[] = [];
+
+    for (var i = 0; i < lottieSvg.length; i++) {
+      if (lottieSvg[i].classList.contains('ai')) {
+        plane.push(lottieSvg[i])
+      } else {
+        lottieSvg[i].style.display = 'none'
+      }
+    }
+
+    const svgMatrix1 = plane[0].transform.animVal[0].matrix
+    const initialTransform1 = getComputedStyle(plane[0]).transform;
+    const initialTransform2 = getComputedStyle(plane[1]).transform;
+    const initialTransform3 = getComputedStyle(plane[2]).transform;
+
+
+    const keyframes1 = [
+      { transform: initialTransform1 },
+      { transform: 'translateX(100vw) translateY(0vh)' }
+    ];
+
+    const keyframes2 = [
+      { transform: initialTransform2 },
+      { transform: 'translateX(100vw) translateY(0vh)' }];
+
+    const keyframes3 = [
+      { transform: initialTransform3 },
+      { transform: 'translateX(100vw) translateY(0vh)' }];
+
+    // Define the animation options
+    const options = {
+      duration: 300, // Animation duration in milliseconds
+      easing: 'ease-in-out' // Easing function
+    };
+
+    // Start the animation
+    plane[0].animate(keyframes1, options);
+    plane[1].animate(keyframes2, options);
+    plane[2].animate(keyframes3, options);
+    if (this.animationItem) {
+      this.animationItem.stop();
+    }
+    return new Promise(resolve => setTimeout(resolve, 300));
   }
 
   private delay(ms: number): Promise<void> {
@@ -523,6 +534,7 @@ export class GameComponent implements OnInit, OnDestroy {
       // this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
+      this.flyawayAnimationRevert()
       this.changeCoefficientAutomatically();
       this.startHighlightingSequence();
     }
@@ -543,6 +555,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public restart(): void {
     this.isFlewAway = true;
+    console.log('FUCKKKKK OFFFF')
     if (this.animationItem) {
       this.isBet = false;
       this.stop();
@@ -553,7 +566,6 @@ export class GameComponent implements OnInit, OnDestroy {
       this.resetCoefficients();
       this.coeffRow = [];
       this.clearHighlightedRows();
-      this.getRooms();
     }
   }
 
@@ -654,5 +666,19 @@ export class GameComponent implements OnInit, OnDestroy {
     this.clearAllIntervals();
     this.#destroyed$.next(true);
     this.#destroyed$.complete();
+  }
+
+  private flyawayAnimationRevert() {
+    var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+
+    var plane: SVGGElement[] = [];
+
+    for (var i = 0; i < lottieSvg.length; i++) {
+      if (lottieSvg[i].classList.contains('ai')) {
+        plane.push(lottieSvg[i])
+      } else {
+        lottieSvg[i].style.display = 'block'
+      }
+    }
   }
 }

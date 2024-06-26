@@ -53,7 +53,7 @@
         <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
-        <ng-container *ngIf="!isFlewAway && !showLoading && isGameStarting">
+        <ng-container *ngIf="!isFlewAway && !showLoading">
           {{startCoefficient.toFixed(2)}}x
         </ng-container>
       </div>
