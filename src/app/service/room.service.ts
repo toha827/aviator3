@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'http://167.179.81.43:81';
+  private readonly baseUrl = 'http://167.179.81.43:80';
   private http = inject(HttpClient);
 
   public checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
