@@ -116,6 +116,8 @@ export class BetComponent implements OnInit {
   _currentGame: any;
   currentBet: any;
 
+  private withdrawAudio = new Audio('/assets/sounds/withdraw.mp3');
+
   @Input()
   set currentGame(value) {
     this._currentGame = value;
@@ -184,6 +186,7 @@ export class BetComponent implements OnInit {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.withdrawAudio.load()
     this.roomService.getCoeff().subscribe(res => {
       if (this.isChecked && this.inputCoeff == +this.startCoefficient.toFixed(1)) {
             this.isShowAlert = true;
@@ -240,6 +243,7 @@ export class BetComponent implements OnInit {
               this.isShowAlert = false;
             }, 2000);
             this.currentBet = null;
+            this.withdrawAudio.play()
             this.showAlert.emit({
               coeff: this.winCoefficient,
               sum: this.winSum

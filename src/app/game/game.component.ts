@@ -143,6 +143,9 @@ export class GameComponent implements OnInit, OnDestroy {
       coeff: 1.01
     },
   ];
+  private bgAudio = new Audio('/assets/sounds/bg_music.mp3');
+  private flyAwayAudio = new Audio('/assets/sounds/flyaway.mp3');
+  private flyReadyAudio = new Audio('/assets/sounds/fly_ready.mp3');
 
   startCoefficients: number[] = this.userList.map(() => 1.01);
 
@@ -224,12 +227,18 @@ export class GameComponent implements OnInit, OnDestroy {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.bgAudio.load()
+    this.flyReadyAudio.load()
+    this.flyAwayAudio.load()
     this.roomService.getBalance()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
           this.balance = res.balance;
         }
       )
+    setTimeout(() => {
+      // this.bgAudio.play()
+    }, 1000,)
     this.interRoom = setInterval(() => {
       this.getRooms();
     }, 1000);
@@ -437,11 +446,13 @@ export class GameComponent implements OnInit, OnDestroy {
 
     if (!this.showAlert) {
       this.isFlewAway = true;
+      this.toggleHidePlane(true)
       setTimeout(() => {
         this.isFlewAway = false;
         this.showLoading = true;
         this.clearAllIntervals()
-        this.clearHighlightedRows()
+        this.clearHighlightedRows();
+        this.toggleHidePlane(false)
         console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
       }, 5000);
     }
@@ -451,6 +462,16 @@ export class GameComponent implements OnInit, OnDestroy {
     this.stopBg();
     console.log('Final Coefficient:', this.startCoefficient, this.currentGame.coefficient);
     this.startCoefficient = 1.0
+  }
+
+  private toggleHidePlane(hide: Boolean) {
+    var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+
+    var plane: SVGGElement[] = [];
+
+    for (var i = 0; i < lottieSvg.length; i++) {
+        lottieSvg[i].style.display = hide ? 'none' : 'block'
+    }
   }
 
   private flyawayAnimation(): Promise<any> {
@@ -473,31 +494,29 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
     const keyframes1 = [
-      { transform: initialTransform1 },
-      { transform: 'translateX(100vw) translateY(0vh)' }
+      {transform: initialTransform1},
+      {transform: 'translateX(1000vw) translateY(-100vh)'}
     ];
 
     const keyframes2 = [
-      { transform: initialTransform2 },
-      { transform: 'translateX(100vw) translateY(0vh)' }];
+      {transform: initialTransform2},
+      {transform: 'translateX(1000vw) translateY(-100vh)'}];
 
     const keyframes3 = [
-      { transform: initialTransform3 },
-      { transform: 'translateX(100vw) translateY(0vh)' }];
+      {transform: initialTransform3},
+      {transform: 'translateX(1000vw) translateY(-100vh)'}];
 
     // Define the animation options
     const options = {
       duration: 300, // Animation duration in milliseconds
-      easing: 'ease-in-out' // Easing function
+      easing: 'linear' // Easing function
     };
 
     // Start the animation
     plane[0].animate(keyframes1, options);
     plane[1].animate(keyframes2, options);
     plane[2].animate(keyframes3, options);
-    if (this.animationItem) {
-      this.animationItem.stop();
-    }
+
     return new Promise(resolve => setTimeout(resolve, 300));
   }
 
@@ -534,6 +553,7 @@ export class GameComponent implements OnInit, OnDestroy {
       // this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
+      this.flyReadyAudio.play();
       this.flyawayAnimationRevert()
       this.changeCoefficientAutomatically();
       this.startHighlightingSequence();
@@ -548,6 +568,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public stop(): void {
     clearInterval(this.intervalId)
+    this.flyAwayAudio.play();
     if (this.animationItem) {
       this.animationItem.stop();
     }
