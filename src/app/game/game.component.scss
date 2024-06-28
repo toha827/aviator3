@@ -43,6 +43,7 @@
 }
 .color-red {
   color: red;
+  font-size: 85px;
 }
 
 .graph {
@@ -63,7 +64,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 50px;
+    font-size: 85px;
     z-index: 99999;
     font-weight: bold;
   }
