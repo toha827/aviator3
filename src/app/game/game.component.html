@@ -51,7 +51,7 @@
     <div class="graph">
       <div *ngIf="isFlewAway" class="flex-away"
            style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
-        <span style="font-size: 30px">VOLÓ LEJOS! </span>
+        <span style="font-size: 30px;color: white">VOLÓ LEJOS! </span>
         <span class="color-red" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
