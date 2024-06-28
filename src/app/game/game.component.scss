@@ -93,7 +93,7 @@ button {
 
 .highlight {
   background-color: #123405 !important;
-  border: solid 1px #427f00;
+  outline: thin solid #427f00;
   //td {
   // border: 1px solid #123405 !important;
   //}
@@ -111,7 +111,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 22px;
   width: 100%;
   text-align: center;
   font-size: 12px;

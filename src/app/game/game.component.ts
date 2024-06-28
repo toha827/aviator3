@@ -451,7 +451,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
     if (!this.showAlert) {
       this.isFlewAway = true;
-      this.toggleHidePlane(true)
+      setTimeout(() => {
+        this.toggleHidePlane(true)
+      }, 1200)
       setTimeout(() => {
         this.isFlewAway = false;
         this.showLoading = true;
@@ -513,7 +515,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // Define the animation options
     const options = {
-      duration: 300, // Animation duration in milliseconds
+      duration: 1300, // Animation duration in milliseconds
       easing: 'linear' // Easing function
     };
 
@@ -522,7 +524,7 @@ export class GameComponent implements OnInit, OnDestroy {
     plane[1].animate(keyframes2, options);
     plane[2].animate(keyframes3, options);
 
-    return new Promise(resolve => setTimeout(resolve, 300));
+    return new Promise(resolve => setTimeout(resolve, 1300));
   }
 
   private delay(ms: number): Promise<void> {

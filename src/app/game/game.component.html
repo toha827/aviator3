@@ -4,21 +4,21 @@
     <img src="https://aviator-demo.spribegaming.com/question-brown.7770399d23b5438d.svg" alt="">
     <span>Cómo jugar?</span>
   </div>
-  <div class="balance ml-auto"><span>{{balance}}</span> USD</div>
+  <div class="balance ml-auto"><span>{{ balance }}</span> USD</div>
 </div>
 <div class="body">
   <div class="graph-body">
     <div class="coefficient" style="display: flex; align-items: center;">
       <ng-container *ngIf="!isClickedHistory">
         <div class="coeff-list-test">
-        <ng-container *ngFor="let coeff of coefficientList">
-          <div class="item" [ngClass]="{
+          <ng-container *ngFor="let coeff of coefficientList">
+            <div class="item" [ngClass]="{
         'low': coeff.coefficient < 2,
         'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
         'high': coeff.coefficient >= 10}">
-            {{coeff.coefficient | number: '1.2-2'}}x
-          </div>
-        </ng-container>
+              {{ coeff.coefficient | number: '1.2-2' }}x
+            </div>
+          </ng-container>
         </div>
       </ng-container>
       <ng-container *ngIf="isClickedHistory">
@@ -36,7 +36,7 @@
         'low': coeff.coefficient < 2,
         'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
         'high': coeff.coefficient >= 10}">
-                {{coeff.coefficient | number: '1.2-2'}}x
+                {{ coeff.coefficient | number: '1.2-2' }}x
               </div>
             </ng-container>
           </div>
@@ -44,42 +44,45 @@
       </ng-container>
       <div class="history-btn" *ngIf="!isClickedHistory" (click)="handleClickHistory()">
         <img src="https://aviator-demo.spribegaming.com/history-h.0950ae774061ee87.svg" alt="">
-        <img class="arrow {{isClickedHistory ? 'rot' : ''}}" src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
+        <img class="arrow {{isClickedHistory ? 'rot' : ''}}"
+             src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
       </div>
     </div>
     <div class="graph" style="margin-top: 10px;">
-      <div *ngIf="isFlewAway" class="flex-away" style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
+      <div *ngIf="isFlewAway" class="flex-away"
+           style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
         <span style="font-size: 30px">VOLÓ LEJOS! </span>
-        <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}x</span>
+        <span class="color-red" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
         <ng-container *ngIf="!isFlewAway && !showLoading">
-          {{startCoefficient.toFixed(2)}}x
+          {{ startCoefficient.toFixed(2) }}x
         </ng-container>
       </div>
       <ng-container *ngIf="showLoading">
-        <div class="sum" style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
+        <div class="sum"
+             style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
           <span style="font-size: 18px;text-align: center">Esperando la próxima ronda</span>
           <img id="gear" src="/assets/images/prop.svg" alt="" style="margin-top: 20px;width: 50px; height: 50px;">
         </div>
       </ng-container>
       <div class="lottie-new-container">
-      <!-- <div class="fun-mode">MODO DIVERTIDO</div> -->
-      <div style="position: relative" id="lottie-container">
-        <ng-lottie
-          style="position: relative;z-index: 2"
-          [options]="options"
-          width="100%"
-          height="460px"
-          (animationCreated)="animationCreated($event)" />
-        <ng-lottie
-          style="position: absolute;top:0"
-          [options]="optionBg"
-          width="100%"
-          height="220px"
-          (animationCreated)="animationBgCreated($event)">
-        </ng-lottie>
-      </div>
+        <!-- <div class="fun-mode">MODO DIVERTIDO</div> -->
+        <div style="position: relative" id="lottie-container">
+          <ng-lottie
+            style="position: relative;z-index: 2"
+            [options]="options"
+            width="100%"
+            height="460px"
+            (animationCreated)="animationCreated($event)"/>
+          <ng-lottie
+            style="position: absolute;top:0"
+            [options]="optionBg"
+            width="100%"
+            height="220px"
+            (animationCreated)="animationBgCreated($event)">
+          </ng-lottie>
+        </div>
       </div>
     </div>
     <div class="bet-buttons-1">
@@ -117,34 +120,38 @@
   </div>
   <div class="first-block class-table" style="width: 30%;height: 870px;">
     <div class="tabs" style="display: flex; cursor: pointer; align-items: center; justify-content: space-around">
-      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">Todas las apuestas</div>
-      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">Mis apuestas</div>
+      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">Apuestas</div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">Mis apuestas
+      </div>
       <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')">Arriba</div>
     </div>
     <table style="margin-bottom: auto;">
       <thead>
       <tr style="font-size: 12px">
-<!--        <th style="padding: 10px;width: 30px;">Fecha</th>-->
+        <!--        <th style="padding: 10px;width: 30px;">Fecha</th>-->
         <th style="width: 50px;">Usuario</th>
         <th style="width: 110px;">Apuesta USD</th>
         <th></th>
-        <th style="width: 80px;">Retiro de efectivo USD</th>
+        <th style="width: 80px;">Cambiar USD</th>
       </tr>
       </thead>
       <tbody>
-      <tr style="background-color: #101112;  border-radius: 10px" *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
-<!--        <td style="padding: 10px">{{bet.date}}</td>-->
-        <td class="left-radius" style="display: flex;">
+      <tr style="background-color: #101112;  border-radius: 10px; height: 34px"
+          *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
+        <!--        <td style="padding: 10px">{{bet.date}}</td>-->
+        <td class="left-radius" style="display: flex; align-items: center;">
 
           <img style="
             width: 30px;
             height: 30px;
             border-radius: 100px;
             " src="https://i.pravatar.cc/150?img={{i}}"/>
-          <span>{{bet.user}}</span></td>
-        <td>{{bet.amount}}</td>
-        <td>{{highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : ''}}</td>
-        <td class="right-radius">{{highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : ''}}</td>
+          <span>{{ bet.user }}</span></td>
+        <td>{{ bet.amount }}</td>
+        <td>{{ highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : '' }}</td>
+        <td
+          class="right-radius">{{ highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : '' }}
+        </td>
       </tr>
       </tbody>
     </table>
@@ -152,5 +159,8 @@
 </div>
 
 <div class="powered">
-  <span style="margin-left: 10px">Este juego es</span> <img style="margin-left: 10px" src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg" alt=""> <span style="color: white; margin-left: 10px">Provably Fair</span> <span style="margin-left: auto; margin-right: 10px">Powered by SPRIBE</span>
+  <span style="margin-left: 10px">Este juego es</span> <img style="margin-left: 10px"
+                                                            src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg"
+                                                            alt=""> <span style="color: white; margin-left: 10px">Provably Fair</span>
+  <span style="margin-left: auto; margin-right: 10px">Powered by SPRIBE</span>
 </div>

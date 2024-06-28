@@ -213,9 +213,13 @@ table {
 }
 
 th, td {
-  padding: 10px;
+
   text-align: left;
   font-size: 12px;
+}
+
+td img{
+  padding-right: 10px;
 }
 
 @media (700px <= width <= 1990px) {
