@@ -317,7 +317,12 @@ export class GameComponent implements OnInit, OnDestroy {
         //   this.play();
         // }
         /// OLD CODE
-        this.coefficientList = [...res.slice(1), ...res];
+        if (res.some((e: any) => e.status === 'PLAYING')) {
+          this.coefficientList = [...res.slice(2), ...res];
+        } else {
+          this.coefficientList = [...res.slice(1), ...res];
+        }
+
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
         this.firstStatus = res[0].status;
@@ -435,7 +440,7 @@ export class GameComponent implements OnInit, OnDestroy {
     let currentStep = 0;
 
     console.log(intervals);
-    while (this.startCoefficient < endCoefficient) {
+    while (this.startCoefficient < endCoefficient - 0.1) {
       await this.delay(intervals[currentStep]);
       this.startCoefficient += increment;
       // console.log('Current Coefficient:', this.startCoefficient, currentStep, endCoefficient);

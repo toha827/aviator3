@@ -303,6 +303,12 @@ th, td {
   }
 }
 
+@media (280px <= width <= 450px) {
+
+  .coefficient {
+    flex-wrap: nowrap;
+  }
+}
 @media (280px <= width <= 650px) {
 
   .win-1 {
