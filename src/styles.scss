@@ -133,7 +133,7 @@ table {
 .body {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
 }
 
 .main-content {
@@ -315,6 +315,20 @@ td img{
 }
 @media (280px <= width <= 650px) {
 
+  .p {
+    font-size: 20px !important;
+  }
+  .s {
+    margin-top: 30px !important;
+    font-size: 60px !important;
+  }
+  .sum {
+    font-size: 60px !important;
+  }
+  .loading-text {
+    font-size: 20px !important;
+  }
+
   .win-1 {
     margin-top: -30vh;
     //margin-left: 65px !important;
@@ -331,8 +345,8 @@ td img{
   }
 
   #gear {
-    width: 30px !important;
-    height: 30px !important;
+    width: 40px !important;
+    height: 40px !important;
   }
 
   .lottie-new-container {
@@ -345,7 +359,7 @@ td img{
     width: 342px;
   }
   .flex-away {
-    top: 60% !important;
+    top: 45% !important;
   }
   #lottie-container {
     display: flex;
@@ -360,7 +374,7 @@ td img{
   }
 
   .header {
-    width: 105%;
+    width: 100%;
   }
 
   .graph-body {
@@ -421,7 +435,7 @@ td img{
   }
 
   .class-table {
-    margin-top: 20px!important;
+    margin-top: 0 !important;
   }
 
   .graph-body {
@@ -487,3 +501,38 @@ table {
     transform: translate(100%, 30%)
   }
 }
+
+.mdc-linear-progress__buffer-bar {
+  background-color: rgb(44, 45, 48) !important;
+}
+
+.mdc-linear-progress__bar-inner {
+  border-radius: 20px;
+}
+md-progress-linear .md-container {
+  height: 100px !important;
+}
+.mdc-linear-progress__buffer-bar {
+  border-radius: 20px;
+}
+.mdc-linear-progress__buffer {
+  border-radius: 20px;
+}
+
+.mat-mdc-progress-bar {
+  border-radius: 10px;
+  --mdc-linear-progress-track-height: 7px;
+  --mdc-linear-progress-active-indicator-height: 7px;
+}
+
+md-progress-linear .md-container .md-bar {
+  height: 100px !important;
+}
+
+//:host ::ng-deep .mat-progress-bar {
+//  height: 20px !important;
+//}
+//
+//:host ::ng-deep .mat-progress-bar .mdc-linear-progress__bar-inner {
+//  border-top-width: 20px !important;
+//}

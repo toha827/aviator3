@@ -8,17 +8,28 @@ import {Router, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BetComponent} from "../bet/bet.component";
+import {ProgressBarMode, MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [RouterOutlet, LottieComponent, CommonModule, FormsModule, BetComponent],
+  imports: [RouterOutlet, LottieComponent, CommonModule, FormsModule, BetComponent, MatProgressBarModule],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
 
 
 export class GameComponent implements OnInit, OnDestroy {
+
+  color: any = 'warn';
+  mode: any = 'determinate';
+  bufferValue = 75;
+
+  value: number = 100;
+  decrementValue: number = 1;
+  totalDuration: number = 0;
+  numberOfDecrements: number = 100;
+  intervalDuration: number = 0;
 
   public currentTabType: string = '1';
   public isClickedHistory: boolean = false;
@@ -284,6 +295,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.isGameStarted = true;
           this.hasAlertBeenShown = false;
           this.showAlert = false;
+          this.value = 100;
           if (!this.isGameStarted) {
             this.showLoading = true;
           }
@@ -303,6 +315,17 @@ export class GameComponent implements OnInit, OnDestroy {
             const newDate = new Date(newTime);
             const diff = newDate.getTime() - new Date().getTime();
             console.log("Current diff " + diff);
+            this.totalDuration = diff;
+            this.intervalDuration = this.totalDuration / this.numberOfDecrements;
+            let decrementsLeft = this.numberOfDecrements;
+            const intervalId = setInterval(() => {
+              if (decrementsLeft > 0) {
+                this.value -= this.decrementValue;
+                decrementsLeft--;
+              } else {
+                clearInterval(intervalId);
+              }
+            }, this.intervalDuration);
             this.nextGameTimeout = setTimeout(() => {
               this.play();
               this.showLoading = false;

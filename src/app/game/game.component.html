@@ -51,8 +51,8 @@
     <div class="graph">
       <div *ngIf="isFlewAway" class="flex-away"
            style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
-        <span style="font-size: 30px;color: white">VOLÓ LEJOS! </span>
-        <span class="color-red" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
+        <span class="p" style="font-size: 30px;color: white">VOLÓ LEJOS! </span>
+        <span class="color-red s" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
         <ng-container *ngIf="!isFlewAway && !showLoading">
@@ -63,7 +63,15 @@
         <div class="sum"
              style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
           <img id="gear" src="/assets/images/prop.svg" alt="" style="margin-top: 20px;width: 120px; height: 120px;">
-          <span style="font-size: 32px;text-align: center;margin-top: 10px;">ESPERANDO LA PRÓXIMA RONDA</span>
+          <span class="loading-text" style="font-size: 32px;text-align: center;margin-top: 30px;">ESPERANDO LA PRÓXIMA RONDA</span>
+          <mat-progress-bar
+            style="margin-top: 20px;width: 200px; height: 30px;"
+            class="example-margin"
+            [color]="color"
+            [mode]="mode"
+            [value]="value"
+            [bufferValue]="bufferValue">
+          </mat-progress-bar>
         </div>
       </ng-container>
       <div class="lottie-new-container">
