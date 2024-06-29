@@ -156,7 +156,17 @@
             " src="https://i.pravatar.cc/150?img={{i}}"/>
           <span>{{ bet.user }}</span></td>
         <td>{{ bet.amount }}</td>
-        <td>{{ highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : '' }}</td>
+        <td>
+          <div *ngIf="highlightedRows.includes(i)" _ngcontent-jdu-c28="" appcoloredmultiplier="" class="bubble-multiplier font-weight-bold" style="width: 50px; padding: 2px 11px; border-radius: 11px; background-color: #00000080"
+               [ngClass]="{
+        'low': startCoefficients[i] < 2,
+        'middle': startCoefficients[i] >= 2 && startCoefficients[i] < 10,
+        'high': startCoefficients[i] >= 10}"
+          >
+
+            {{ highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : '' }}
+          </div>
+        </td>
         <td
           class="right-radius">{{ highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : '' }}
         </td>

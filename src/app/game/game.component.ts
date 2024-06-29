@@ -476,7 +476,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isFlewAway = true;
       setTimeout(() => {
         this.toggleHidePlane(true)
-      }, 1200)
+      }, 1400)
       setTimeout(() => {
         this.isFlewAway = false;
         this.showLoading = true;
