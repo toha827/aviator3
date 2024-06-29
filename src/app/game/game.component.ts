@@ -248,7 +248,7 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       )
     setTimeout(() => {
-      // this.bgAudio.play()
+      this.bgAudio.play()
     }, 1000,)
     this.interRoom = setInterval(() => {
       this.getRooms();
