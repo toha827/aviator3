@@ -508,6 +508,9 @@ table {
 
 .mdc-linear-progress__bar-inner {
   border-radius: 20px;
+  //background-color: #f44336 !important;
+  //background-color: red !important;
+  border-color: red !important;
 }
 md-progress-linear .md-container {
   height: 100px !important;
@@ -518,6 +521,8 @@ md-progress-linear .md-container {
 .mdc-linear-progress__buffer {
   border-radius: 20px;
 }
+
+
 
 .mat-mdc-progress-bar {
   border-radius: 10px;
