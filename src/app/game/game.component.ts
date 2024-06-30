@@ -463,7 +463,7 @@ export class GameComponent implements OnInit, OnDestroy {
     let currentStep = 0;
 
     console.log(intervals);
-    while (this.startCoefficient < endCoefficient - 0.1) {
+    while (this.startCoefficient < endCoefficient) {
       await this.delay(intervals[currentStep]);
       this.startCoefficient += increment;
       // console.log('Current Coefficient:', this.startCoefficient, currentStep, endCoefficient);
@@ -476,7 +476,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isFlewAway = true;
       setTimeout(() => {
         this.toggleHidePlane(true)
-      }, 1400)
+      }, 400)
       setTimeout(() => {
         this.isFlewAway = false;
         this.showLoading = true;
@@ -547,7 +547,7 @@ export class GameComponent implements OnInit, OnDestroy {
     plane[1].animate(keyframes2, options);
     plane[2].animate(keyframes3, options);
 
-    return new Promise(resolve => setTimeout(resolve, 1300));
+    return new Promise(resolve => setTimeout(resolve, 900));
   }
 
   private delay(ms: number): Promise<void> {
