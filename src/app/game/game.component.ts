@@ -21,6 +21,9 @@ import {ProgressBarMode, MatProgressBarModule} from '@angular/material/progress-
 
 export class GameComponent implements OnInit, OnDestroy {
 
+  styles = {
+    maxHeight: '800px',
+  }
   color: any = 'warn';
   mode: any = 'determinate';
   bufferValue = 75;

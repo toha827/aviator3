@@ -11,12 +11,11 @@
     X
   </div>
 </div>
-<div class="first-block"
+<div class="first-block mt-20"
     [ngClass]="{
       'orange': currentBet && currentBet!.aviator_room_id === currentGame?.id,
       'red': currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id
-    }"
-    style="margin-top: 20px;">
+    }">
   <div class="container" *ngIf="id && id2">
     <div class="tabs" style="display: flex; align-items: center; justify-content: space-around">
         <div class="tab-item l" [ngClass]="{'isActive': currentType === 'bet'}" (click)="handleTab('bet')">Apuesta</div>
