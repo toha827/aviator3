@@ -252,7 +252,7 @@ export class GameComponent implements OnInit, OnDestroy {
       )
     setTimeout(() => {
       this.bgAudio.play()
-    }, 1000,)
+    }, 1500)
     this.interRoom = setInterval(() => {
       this.getRooms();
     }, 1000);
@@ -583,6 +583,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public play(): void {
     if (this.animationItem && !this.isGameStarted) {
+      console.log(123)
       // this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
@@ -656,13 +657,13 @@ export class GameComponent implements OnInit, OnDestroy {
     this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
     this.highlightRow(indices[2], 3000); // Highlight third row after 5 seconds
     this.highlightRow(indices[3], 4000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[6], 5000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[7], 7000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[9], 9000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[10], 10000); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[6], 5000); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[7], 7000); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[9], 9000); // Highlight fifth row after 7 seconds
+    // this.highlightRow(indices[10], 10000); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
