@@ -321,9 +321,6 @@ export class GameComponent implements OnInit, OnDestroy {
               this.play();
               this.showLoading = false;
             }, diff);
-            setTimeout(() => {
-              console.log('time');
-            }, diff);
           }
         }
 
