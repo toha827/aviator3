@@ -222,6 +222,18 @@ td img{
   padding-right: 10px;
 }
 
+@media (1280px <= width <= 1444px) {
+  .coeff-list-test {
+    width: 900px !important;
+  }
+}
+
+@media (1000px <= width <= 1279px) {
+  .coeff-list-test {
+    width: 750px !important;
+  }
+}
+
 @media (800px <= width <= 2490px) {
   .graph {
     //height: 100% !important;
@@ -235,16 +247,16 @@ td img{
   .coeff-list-test {
     overflow: hidden;
     flex-wrap: nowrap;
-    width: 870px;
-    max-width: 1045px;
-    min-width: 879px;
+    //width: 1140px;
+    max-width: 1300px;
+    min-width: 750px;
   }
   .win-1 {
     margin-top: -70vh;
   }
 
   .win-2 {
-    margin-top: -80vh;
+    margin-top: -60vh;
   }
 
   .bet-buttons-1 {
@@ -325,6 +337,12 @@ td img{
   }
 }
 @media (280px <= width <= 1150px) {
+  .example-margin {
+    margin-top: 0 !important;
+  }
+  ::ng-deep .mat-mdc-progress-bar.mat-warn {
+    margin-top: 0 !important;
+  }
   .mt-20 {
     margin-top: 10px !important;
   }

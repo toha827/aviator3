@@ -1,14 +1,14 @@
-import {Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {RoomService} from "../service/room.service";
 import {AnimationOptions, LottieComponent} from "ngx-lottie";
 import {AnimationItem} from "lottie-web";
-import {ReplaySubject, Subject, takeUntil} from "rxjs";
+import {filter, map, ReplaySubject, Subject, takeUntil} from "rxjs";
 import {v4 as uuidv4} from "uuid";
 import {Router, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BetComponent} from "../bet/bet.component";
-import {ProgressBarMode, MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-game',
@@ -39,7 +39,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private roomService = inject(RoomService);
   private router = inject(Router);
-  private ngZone = inject(NgZone);
 
   public userList = [
     {
@@ -190,12 +189,9 @@ export class GameComponent implements OnInit, OnDestroy {
   public showLoading: boolean = true;
 
   public isBet: boolean = false;
-  public isBet2: boolean = false;
   public isFlewAway: boolean = false;
   public startCoefficient: number = 1;
   private endCoefficient: number = 2;
-  private steps: number = 100;
-  private intervalTime: number = 60000; // Time interval in milliseconds
   private currentIndex: number = 0;
   public betId: number = 0;
   firstStatus: string = '';
@@ -206,15 +202,8 @@ export class GameComponent implements OnInit, OnDestroy {
   public showLogin = false;
   private animationItem: AnimationItem | undefined;
   private animationBgItem: AnimationItem | undefined;
-  private animationLoadingItem: AnimationItem | undefined;
   private firstLoading: boolean = true;
   public balance: number = 0;
-
-  public isChecked: boolean = false;
-  public inputCoeff: number = 0;
-
-  public windCoeff: number = 0;
-  public winSum: number = 0;
 
   intervalId: any;
 
@@ -232,8 +221,6 @@ export class GameComponent implements OnInit, OnDestroy {
   //
   public currentBtnType: string = 'bet';
 
-  isBetExit: boolean = false;
-
   public hasAlertBeenShown: boolean = true;
   interRoom: any;
   public gameStatus: string = 'waiting';
@@ -241,6 +228,7 @@ export class GameComponent implements OnInit, OnDestroy {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.roomService.connect();
     this.bgAudio.load()
     this.flyReadyAudio.load()
     this.flyAwayAudio.load()
@@ -253,16 +241,14 @@ export class GameComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.bgAudio.play()
     }, 1500)
-    this.interRoom = setInterval(() => {
-      this.getRooms();
-    }, 1000);
+    this.getRooms();
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
     }
     this.obs.asObservable().subscribe(res => {
       if (!this.firstLoading && res) {
-        console.log('FUCK OFF')
+        // console.log('FUCK OFF')
         this.restart();
       }
     });
@@ -285,16 +271,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private getRooms(): void {
 
-    this.roomService.getRoomsList()
-      .pipe(takeUntil(this.#destroyed$))
+    this.roomService.getRoomsWS()
+      .pipe(
+        map(res => JSON.parse(res))
+      )
       .subscribe(res => {
-        /// NEW CODE
+        console.log(res);
         this.endCoefficient = res[1].coefficient;
 
         if (res[1].status === 'PLAYING') {
           this.nextGame = res[0];
           this.currentGame = res[1];
-          console.log(`PLAYING GAME ${this.currentGame.id} ${this.currentGame.coefficient}`)
+          // console.log(`PLAYING GAME ${this.currentGame.id} ${this.currentGame.coefficient}`)
           this.isGameStarted = true;
           this.hasAlertBeenShown = false;
           this.showAlert = false;
@@ -317,7 +305,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
             const newDate = new Date(newTime);
             const diff = newDate.getTime() - new Date().getTime();
-            console.log("Current diff " + diff);
+            // console.log("Current diff " + diff);
             this.totalDuration = diff;
             this.intervalDuration = this.totalDuration / this.numberOfDecrements;
             let decrementsLeft = this.numberOfDecrements;
@@ -332,7 +320,9 @@ export class GameComponent implements OnInit, OnDestroy {
             this.nextGameTimeout = setTimeout(() => {
               this.play();
               this.showLoading = false;
-              this.nextGameTimeout = null;
+            }, diff);
+            setTimeout(() => {
+              console.log('time');
             }, diff);
           }
         }
@@ -361,7 +351,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.gameStatus = 'waiting';
           this.isBet = this.currentBtnType === 'cancel';// Retry every second
         }
-      })
+    })
   }
 
   gameRuntimeCalculator(endCoef: number) {
@@ -395,12 +385,12 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log(`Total duration: ${totalDuration} milliseconds`);
+    // console.log(`Total duration: ${totalDuration} milliseconds`);
     return totalDuration;
   }
 
   generateIntervals(totalDuration: number) {
-    console.log(`Total Duration ${totalDuration}`)
+    // console.log(`Total Duration ${totalDuration}`)
     let initialDuration = 100.0;  // initial duration in milliseconds
     let stepDecrement = 2.5;  // duration decrement every 10 steps in milliseconds
     let steps = 10;  // steps to apply the decrement
@@ -432,7 +422,7 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log(`Intervals: ${intervals.length}`);
+    // console.log(`Intervals: ${intervals.length}`);
     return intervals;
   }
 
@@ -443,7 +433,7 @@ export class GameComponent implements OnInit, OnDestroy {
       useNextGame = true;
     }
     const startDate = new Date();
-    console.log(`STARTED GAME ${this.currentGame.id} ${this.currentGame.coefficient} ${startDate}`)
+    // console.log(`STARTED GAME ${this.currentGame.id} ${this.currentGame.coefficient} ${startDate}`)
     const addedTime = 5 * 60 * 60 * 1000;
     const endDate = new Date(useNextGame ? this.nextGame.playing_until : this.currentGame.playing_until);
     // const totalDuration = (endDate.getTime() + addedTime) - startDate.getTime();
@@ -459,13 +449,13 @@ export class GameComponent implements OnInit, OnDestroy {
     // Calculate the interval for each step
     const interval = totalDuration / steps;
 
-    console.log('Total Duration:', totalDuration);
+    /*console.log('Total Duration:', totalDuration);
     console.log('Steps:', steps);
-    console.log('Interval per step:', interval);
+    console.log('Interval per step:', interval);*/
 
     let currentStep = 0;
 
-    console.log(intervals);
+    // console.log(intervals);
     while (this.startCoefficient < endCoefficient) {
       await this.delay(intervals[currentStep]);
       this.startCoefficient += increment;
@@ -486,14 +476,14 @@ export class GameComponent implements OnInit, OnDestroy {
         this.clearAllIntervals()
         this.clearHighlightedRows();
         this.toggleHidePlane(false)
-        console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
+        // console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
       }, 5000);
     }
     this.showAlert = true;
     this.isGameStarted = false;
     this.stop();
     this.stopBg();
-    console.log('Final Coefficient:', this.startCoefficient, this.currentGame.coefficient);
+    // console.log('Final Coefficient:', this.startCoefficient, this.currentGame.coefficient);
     this.startCoefficient = 1.0
   }
 
@@ -583,13 +573,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public play(): void {
     if (this.animationItem && !this.isGameStarted) {
-      console.log(123)
+      // console.log(123)
       // this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
       this.flyReadyAudio.play();
       this.flyawayAnimationRevert()
       this.changeCoefficientAutomatically();
+      console.log('play');
       this.startHighlightingSequence();
     }
   }
@@ -610,7 +601,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public restart(): void {
     this.isFlewAway = true;
-    console.log('FUCKKKKK OFFFF')
+    // console.log('FUCKKKKK OFFFF')
     if (this.animationItem) {
       this.isBet = false;
       this.stop();
@@ -653,12 +644,13 @@ export class GameComponent implements OnInit, OnDestroy {
 
   startHighlighting() {
     const indices = this.generateRandomIndices();
+    console.log(indices, 'index');
     this.highlightRow(indices[0], 1000); // Highlight first row after 3 seconds
     this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
     this.highlightRow(indices[2], 3000); // Highlight third row after 5 seconds
     this.highlightRow(indices[3], 4000); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
     // this.highlightRow(indices[6], 5000); // Highlight fifth row after 7 seconds
     // this.highlightRow(indices[7], 7000); // Highlight fifth row after 7 seconds
     // this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
@@ -681,6 +673,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   highlightRow(rowIndex: number, timeout: number) {
+    console.log(123);
     const intervalId = setTimeout(() => {
       if (this.highlightedRows.includes(rowIndex)) {
         this.highlightedRows = this.highlightedRows.filter(row => row !== rowIndex);
@@ -721,6 +714,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.clearAllIntervals();
     this.#destroyed$.next(true);
     this.#destroyed$.complete();
+    this.roomService.close();
   }
 
   private flyawayAnimationRevert() {

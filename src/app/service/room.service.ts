@@ -1,6 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
+import {Socket} from "ngx-socket-io";
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,46 @@ import {BehaviorSubject, Observable} from "rxjs";
 export class RoomService {
   private readonly baseUrl = 'http://167.179.81.43:80';
   private http = inject(HttpClient);
+  private socket: any;
 
+  public receiveRooms$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public checkShowOver: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+  public getRoomsWS(): Observable<any> {
+    return this.receiveRooms$.asObservable();
+  }
+
+  public setRoomsWS(value: any): void {
+    this.receiveRooms$.next(value);
+  }
+
+  close(): void {
+    if (this.socket) {
+      this.socket.complete();
+    }
+  }
+
+  connect(): void {
+    this.socket = new WebSocket('ws://167.179.81.43:80/v1/rooms/websocket');
+
+    this.socket.onopen = () => {
+      console.log('WebSocket connection established.');
+    };
+
+    this.socket.onmessage = (event: any) => {
+      // console.log('Received message:', event.data);
+      this.setRoomsWS(event.data);
+    };
+
+    this.socket.onclose = (event: any) => {
+      console.log('WebSocket connection closed:', event);
+    };
+
+    this.socket.onerror = (error: any) => {
+      console.error('WebSocket error:', error);
+    };
+  }
 
   public getBalance(): Observable<any> {
     return this.http.get(`${this.baseUrl}/v1/bets/balance`);
