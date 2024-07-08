@@ -594,6 +594,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.animationItem) {
       this.animationItem.stop();
     }
+    this.nextGameTimeout = null;
   }
 
   public restart(): void {
