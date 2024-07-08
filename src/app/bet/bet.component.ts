@@ -163,7 +163,7 @@ export class BetComponent implements OnInit {
     },
   ]
   public showAuto: boolean = false;
-  private _amount: number = 1.0;
+  private _amount: number = 1.00;
   public inputCoeff: number = 1.1;
   public currentType: string = 'bet';
   public showCancel: boolean = false;

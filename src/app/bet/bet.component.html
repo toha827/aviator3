@@ -40,14 +40,14 @@
     </div>
     <div class="right-side">
       <div *ngIf="!currentBet" class="bet-btn green-btn" (click)="makeBet()">
-        Apuesta <br>
-        {{amount}} USD
+        APUESTA <br>
+        {{amount | number: '1.2-2'}} USD
       </div>
       <div *ngIf="currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id" class="bet-btn red-btn" (click)="cancel()">
-        Сancelar
+        СANCELAR
       </div>
       <div *ngIf="currentBet && currentBet!.aviator_room_id === currentGame?.id" class="bet-btn orange-btn" (click)="withDraw()">
-        Cobrar <br> {{(amount * startCoefficient).toFixed(2)}} USD
+        COBRAR <br> {{(amount * startCoefficient).toFixed(2)}} USD
       </div>
     </div>
   </div>
