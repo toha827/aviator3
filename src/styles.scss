@@ -228,13 +228,19 @@ td img{
   }
 }
 
+@media (200px <= width <= 404px) {
+  #lottie-container div {
+    height: 104% !important;
+  }
+}
+
 @media (1000px <= width <= 1279px) {
   .coeff-list-test {
     width: 750px !important;
   }
 }
 
-@media (1150px <= width <= 2490px) {
+@media (1150px <= width <= 2890px) {
   .graph {
     //height: 100% !important;
   }
@@ -325,9 +331,9 @@ td img{
   .header {
     // width: 113% !important;
   }
-  .lottie-svg-class1 {
-    margin-top: -7px !important;
-  }
+  //.lottie-svg-class1 {
+  //  margin-top: -7px !important;
+  //}
 }
 
 @media (280px <= width <= 450px) {
