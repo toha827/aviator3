@@ -124,7 +124,7 @@ export class BetComponent implements OnInit {
     if (this.currentBet != null){
 
     }
-    if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame.id && this._currentGame.status === "FINISHED") {
+    if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame?.id && this._currentGame?.status === "FINISHED") {
       this.currentBet = null;
     }
   }

@@ -447,6 +447,10 @@ export class GameComponent implements OnInit, OnDestroy {
       currentStep++;
     }
 
+    this.currentGame = {
+      ...this.currentGame,
+      'status': 'FINISHED',
+    };
     this.flyawayAnimation();
 
     if (!this.showAlert) {
@@ -557,6 +561,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public play(): void {
+    this.flyawayAnimationRevert()
     if (this.animationItem && !this.isGameStarted) {
       // console.log(123)
       // this.isFlewAway = false;
