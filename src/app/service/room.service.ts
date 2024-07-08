@@ -1,7 +1,6 @@
 import {inject, Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Socket} from "ngx-socket-io";
 
 @Injectable({
   providedIn: 'root'
