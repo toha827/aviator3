@@ -18,8 +18,8 @@
     }">
   <div class="container" *ngIf="id && id2">
     <div class="tabs" style="display: flex; align-items: center; justify-content: space-around">
-        <div class="tab-item l" [ngClass]="{'isActive': currentType === 'bet'}" (click)="handleTab('bet')">Apuesta</div>
-        <div class="tab-item r" [ngClass]="{'isActive': currentType === 'auto'}" (click)="handleTab('auto')">Automático</div>
+        <div class="tab-item l" [ngClass]="{'isActive white': currentType === 'bet'}" (click)="handleTab('bet')">Apuesta</div>
+        <div class="tab-item r" [ngClass]="{'isActive white': currentType === 'auto'}" (click)="handleTab('auto')">Automático</div>
       </div>
   </div>
   <div class="div-buttons">
@@ -27,7 +27,7 @@
       <div class="main-input">
         <div class="input">
           <div class="minus" (click)="subtractAmount()" [ngClass]="{'pointer-none': amount === 1}">-</div>
-          <input type="number" [(ngModel)]="amount" oninput="this.value = this.value > 100 ? 100 : this.value" step="0.01" min="0" max="100" [max]="100">
+          <input type="number" placeholder="1.00" [(ngModel)]="amount" oninput="this.value = this.value > 100 ? 100 : this.value" step="0.01" min="0" max="100" [max]="100">
           <div class="minus" (click)="addAmount()" [ngClass]="{'pointer-none': amount === 100}">+</div>
         </div>
         <div class="buttons">
