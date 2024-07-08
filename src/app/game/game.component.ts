@@ -504,16 +504,16 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const keyframes1 = [
       {transform: initialTransform1},
-      {transform: 'translateX(1000vw) translateY(-100vh)'}
+      {transform: 'translateX(1000vw) translateY(-500vh)'}
     ];
 
     const keyframes2 = [
       {transform: initialTransform2},
-      {transform: 'translateX(1000vw) translateY(-100vh)'}];
+      {transform: 'translateX(1000vw) translateY(-500vh)'}];
 
     const keyframes3 = [
       {transform: initialTransform3},
-      {transform: 'translateX(1000vw) translateY(-100vh)'}];
+      {transform: 'translateX(1000vw) translateY(-500vh)'}];
 
     // Define the animation options
     const options = {
