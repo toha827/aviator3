@@ -142,19 +142,7 @@ export class GameComponent implements OnInit, OnDestroy {
       amount: 1,
       user: 'pe**6',
       coeff: 1.01
-    },
-    {
-      date: '18:30',
-      amount: 99,
-      user: 'pa**6',
-      coeff: 1.01
-    },
-    {
-      date: '18:30',
-      amount: 99,
-      user: 'pa**6',
-      coeff: 1.01
-    },
+    }
   ];
   private bgAudio = new Audio('/assets/sounds/bg_music.mp3');
   private flyAwayAudio = new Audio('/assets/sounds/flyaway.mp3');
@@ -276,7 +264,6 @@ export class GameComponent implements OnInit, OnDestroy {
         map(res => JSON.parse(res))
       )
       .subscribe(res => {
-        console.log(res);
         this.endCoefficient = res[1].coefficient;
 
         if (res[1].status === 'PLAYING') {
@@ -642,25 +629,28 @@ export class GameComponent implements OnInit, OnDestroy {
 
   startHighlighting() {
     const indices = this.generateRandomIndices();
-    console.log(indices, 'index');
-    this.highlightRow(indices[0], 1000); // Highlight first row after 3 seconds
-    this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
-    this.highlightRow(indices[2], 3000); // Highlight third row after 5 seconds
-    this.highlightRow(indices[3], 4000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[6], 5000); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[7], 7000); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[9], 9000); // Highlight fifth row after 7 seconds
-    // this.highlightRow(indices[10], 10000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[0], 500); // Highlight first row after 3 seconds
+    this.highlightRow(indices[1], 1000); // Highlight third row after 5 seconds
+    this.highlightRow(indices[2], 1500); // Highlight third row after 5 seconds
+    this.highlightRow(indices[3], 1500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[4], 1900); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[5], 2000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[6], 2100); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[7], 2500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[8], 2500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[9], 3050); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[10], 3100); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[11], 3100); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[12], 3500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[13], 3550); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[14], 3950); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
     const indices = [];
     const usedIndices = new Set<number>();
 
-    while (indices.length < 10) {
+    while (indices.length < 15) {
       const randomIndex = Math.floor(Math.random() * this.userList.length);
       if (!usedIndices.has(randomIndex)) {
         indices.push(randomIndex);
@@ -671,7 +661,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   highlightRow(rowIndex: number, timeout: number) {
-    console.log(123);
     const intervalId = setTimeout(() => {
       if (this.highlightedRows.includes(rowIndex)) {
         this.highlightedRows = this.highlightedRows.filter(row => row !== rowIndex);
