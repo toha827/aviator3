@@ -44,10 +44,10 @@
         {{amount}} USD
       </div>
       <div *ngIf="currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id" class="bet-btn red-btn" (click)="cancel()">
-        Сancelación
+        Сancelar
       </div>
       <div *ngIf="currentBet && currentBet!.aviator_room_id === currentGame?.id" class="bet-btn orange-btn" (click)="withDraw()">
-        Retiro de efectivo <br> {{(amount * startCoefficient).toFixed(2)}} USD
+        Cobrar <br> {{(amount * startCoefficient).toFixed(2)}} USD
       </div>
     </div>
   </div>
