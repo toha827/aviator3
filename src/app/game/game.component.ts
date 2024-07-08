@@ -8,7 +8,7 @@ import {Router, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BetComponent} from "../bet/bet.component";
-import { MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-game',
@@ -335,7 +335,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.gameStatus = 'waiting';
           this.isBet = this.currentBtnType === 'cancel';// Retry every second
         }
-    })
+      })
   }
 
   gameRuntimeCalculator(endCoef: number) {
@@ -447,13 +447,11 @@ export class GameComponent implements OnInit, OnDestroy {
       currentStep++;
     }
 
-    await this.flyawayAnimation();
+    this.flyawayAnimation();
 
     if (!this.showAlert) {
       this.isFlewAway = true;
-      setTimeout(() => {
-        this.toggleHidePlane(true)
-      }, 400)
+
       setTimeout(() => {
         this.isFlewAway = false;
         this.showLoading = true;
@@ -477,11 +475,11 @@ export class GameComponent implements OnInit, OnDestroy {
     var plane: SVGGElement[] = [];
 
     for (var i = 0; i < lottieSvg.length; i++) {
-        lottieSvg[i].style.display = hide ? 'none' : 'block'
+      lottieSvg[i].style.display = hide ? 'none' : 'block'
     }
   }
 
-  private flyawayAnimation(): Promise<any> {
+  private flyawayAnimation() {
     var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
 
     var plane: SVGGElement[] = [];
@@ -519,12 +517,15 @@ export class GameComponent implements OnInit, OnDestroy {
       easing: 'linear' // Easing function
     };
 
+    this.flyAwayAudio.play()
     // Start the animation
-    plane[0].animate(keyframes1, options);
+    var planeAnimation = plane[0].animate(keyframes1, options);
     plane[1].animate(keyframes2, options);
     plane[2].animate(keyframes3, options);
 
-    return new Promise(resolve => setTimeout(resolve, 900));
+    planeAnimation.onfinish = (event) => {
+      this.toggleHidePlane(true)
+    }
   }
 
   private delay(ms: number): Promise<void> {
@@ -577,7 +578,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public stop(): void {
     clearInterval(this.intervalId)
-    this.flyAwayAudio.play();
     if (this.animationItem) {
       this.animationItem.stop();
     }
@@ -644,13 +644,15 @@ export class GameComponent implements OnInit, OnDestroy {
     this.highlightRow(indices[12], 3500); // Highlight fifth row after 7 seconds
     this.highlightRow(indices[13], 3550); // Highlight fifth row after 7 seconds
     this.highlightRow(indices[14], 3950); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[15], 4150); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[16], 4250); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
     const indices = [];
     const usedIndices = new Set<number>();
 
-    while (indices.length < 15) {
+    while (indices.length < 17) {
       const randomIndex = Math.floor(Math.random() * this.userList.length);
       if (!usedIndices.has(randomIndex)) {
         indices.push(randomIndex);
