@@ -230,12 +230,13 @@ export class GameComponent implements OnInit, OnDestroy {
     this.bgAudio.addEventListener("canplaythrough", (event) => {
       /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
       this.bgAudio.play();
-      this.bgAudio.autoplay = true
     });
 
     this.bgAudio.addEventListener("onended", (event) => {
       /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+      this.bgAudio.load();
       this.bgAudio.play();
+      console.log('BG AUDIO ENDED')
     });
 
     this.getRooms();
@@ -581,6 +582,10 @@ export class GameComponent implements OnInit, OnDestroy {
   public play(): void {
     this.flyawayAnimationRevert()
     this.toggleHidePlane(false)
+    if (this.bgAudio.paused) {
+      this.bgAudio.play()
+    }
+
     if (this.animationItem && !this.isGameStarted) {
       // console.log(123)
       // this.isFlewAway = false;
