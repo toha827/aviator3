@@ -1,13 +1,32 @@
 <div class="container">
   <div class="title">Admin panel</div>
-  <div class="body-1">
-    <div class="input">
-      <input type="number" [(ngModel)]="coefficient" step="0.01" min="0">
+  <div class="body-12">
+    <div class="input" style="width: 100%">
+      <mat-form-field class="example-chip-list" style="width: 100%;">
+        <mat-chip-grid #chipGrid aria-label="Enter fruits">
+          <mat-chip-row *ngFor="let fruit of fruits"
+                        (removed)="remove(fruit)"
+                        [editable]="true"
+                        (edited)="edit(fruit, $event)"
+                        [aria-description]="'press enter to edit ' + fruit.name">
+            {{fruit}}
+            <button matChipRemove [attr.aria-label]="'remove ' + fruit.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input type="number" [matChipInputFor]="chipGrid"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)"/>
+        </mat-chip-grid>
+      </mat-form-field>
+<!--      <input type="number" [(ngModel)]="coefficient" step="0.01" min="0">-->
+<!--      <tag-input [(ngModel)]="items"></tag-input>-->
     </div>
     <div class="set-btn" style="cursor: pointer;width: 120px;text-align: center" (click)="setCoefficient()">
       Set Coefficient
     </div>
-    <div class="red-btn" style="cursor: pointer" (click)="cancel()">
+    <div class="red-btn" style="cursor: pointer; text-align: center" (click)="cancel()">
       Go back
     </div>
   </div>
@@ -16,7 +35,7 @@
       <input type="number" [(ngModel)]="balance" min="0">
     </div>
     <div class="set-btn" style="cursor: pointer; width: 120px;text-align: center" (click)="setBalance()">
-      Set Balance
+      Set <br> Balance
     </div>
     <div class="red-btn" style="cursor: pointer" (click)="cancel()">
       Go back

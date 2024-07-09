@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -603,3 +603,7 @@ md-progress-linear .md-container .md-bar {
 //:host ::ng-deep .mat-progress-bar .mdc-linear-progress__bar-inner {
 //  border-top-width: 20px !important;
 //}
+//
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}

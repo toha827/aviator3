@@ -10,18 +10,23 @@
     margin-bottom: 20px;
     font-size: 25px;
   }
+  .body-12 {
+    display: flex;
+    background-color: #1b1c1d;
+    padding: 20px;
+
+    width: 80%;
+  }
   .body-1 {
     display: flex;
     background-color: #1b1c1d;
     padding: 20px;
-    min-width: 350px;
-    width: 360px;
-    max-width: 380px;
+    width: 80%;
   }
   .input {
     display: flex;
     background-color: black;
-    width: 100px;
+    //width: 100px;
     input {
       text-align: center;
       width: 100%;
@@ -39,6 +44,9 @@
     padding: 5px;
     border-radius: 10px;
     color: #ffffff;
+    height: 40px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
   .red-btn {
     margin-left: 20px;
@@ -46,6 +54,9 @@
     padding: 5px;
     border-radius: 10px;
     color: #ffffff;
+    height: 40px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
   .coefficient-list {
     margin-top: 20px;
