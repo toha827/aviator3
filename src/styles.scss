@@ -290,8 +290,12 @@ td img{
     max-width: 1750px !important;
     height: 480px !important;
     max-height: 1450px !important;
-    border-left: 1px solid white;
-    border-bottom: 1px solid white;
+    border-left: 1px solid rgba(255, 255, 2555, .3);
+    border-bottom: 1px solid rgba(255, 255, 2555, .3);
+    -webkit-background-clip: padding-box; /* for Safari */
+    background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
+    //border-left: 1px solid white;
+    //border-bottom: 1px solid white;
   }
 
   .lottie-svg-class1 {
@@ -457,8 +461,10 @@ td img{
     max-width: 1950px !important;
     height: calc(23vh) !important;
     max-height: 550px !important;
-    border-left: 1px solid white;
-    border-bottom: 1px solid white;
+    border-left: 1px solid rgba(255, 255, 2555, .01);
+    border-bottom: 1px solid rgba(255, 255, 2555, .01);
+    -webkit-background-clip: padding-box; /* for Safari */
+    background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
   }
 
   .lottie-svg-class1 {

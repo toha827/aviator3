@@ -50,11 +50,15 @@
   .coefficient-list {
     margin-top: 20px;
     display: flex;
-    flex-direction: column;
+    gap: 5px;
+    flex-wrap: wrap;
     align-items: center;
     width: 330px;
     .item-coeff {
       color: white;
+      background-color: black;
+      border-radius: 22px;
+      padding: 5px;
     }
   }
 }
