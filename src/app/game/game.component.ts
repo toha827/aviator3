@@ -480,11 +480,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
     for (var i = 0; i < lottieSvg.length; i++) {
       lottieSvg[i].style.display = hide ? 'none' : 'block'
+      var paths = lottieSvg[i].getElementsByTagName('path')
+      if (paths.length > 0) {
+        paths[0].style.display = hide ? 'none' : 'block'
+      }
     }
   }
 
   private flyawayAnimation() {
     var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+    var ngLottie = document.getElementsByTagName('ng-lottie')[0] as HTMLElement
+    var ngLottieSvg = document.getElementsByTagName('ng-lottie')[0].getElementsByTagName('svg')[0]
+    var LottieNewContainer = document.getElementsByClassName('lottie-new-container')[0] as HTMLElement
 
     var plane: SVGGElement[] = [];
 
@@ -504,31 +511,33 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const keyframes1 = [
       {transform: initialTransform1},
-      {transform: 'translateX(1000vw) translateY(-500vh)'}
+      {transform: 'translateX(500vw) translateY(20px)'}
     ];
 
     const keyframes2 = [
       {transform: initialTransform2},
-      {transform: 'translateX(1000vw) translateY(-500vh)'}];
+      {transform: 'translateX(500vw) translateY(20px)'}];
 
     const keyframes3 = [
       {transform: initialTransform3},
-      {transform: 'translateX(1000vw) translateY(-500vh)'}];
+      {transform: 'translateX(500vw) translateY(20px)'}];
 
     // Define the animation options
     const options = {
       duration: 1300, // Animation duration in milliseconds
       easing: 'linear' // Easing function
     };
+    ngLottieSvg.classList.add('flyaway')
 
+    console.log(ngLottieSvg)
     this.flyAwayAudio.play()
     // Start the animation
     var planeAnimation = plane[0].animate(keyframes1, options);
     plane[1].animate(keyframes2, options);
     plane[2].animate(keyframes3, options);
-
     planeAnimation.onfinish = (event) => {
       this.toggleHidePlane(true)
+      this.flyawayAnimationRevert();
     }
   }
 
@@ -712,16 +721,29 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private flyawayAnimationRevert() {
-    var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+    try {
+      var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+      var ngLottie = document.getElementsByTagName('ng-lottie')[0] as HTMLElement
+      var ngLottieSvg = document.getElementsByTagName('ng-lottie')[0].getElementsByTagName('svg')[0]
+      var LottieNewContainer = document.getElementsByClassName('lottie-new-container')[0] as HTMLElement
 
-    var plane: SVGGElement[] = [];
+      var plane: SVGGElement[] = [];
 
-    for (var i = 0; i < lottieSvg.length; i++) {
-      if (lottieSvg[i].classList.contains('ai')) {
-        plane.push(lottieSvg[i])
-      } else {
-        lottieSvg[i].style.display = 'block'
+
+      ngLottieSvg.classList.remove('flyaway')
+
+      // LottieNewContainer.style.removeProperty('width')
+      // ngLottie.style.removeProperty('max-width')
+      // ngLottieSvg.style.removeProperty('max-width')
+      for (var i = 0; i < lottieSvg.length; i++) {
+        if (lottieSvg[i].classList.contains('ai')) {
+          plane.push(lottieSvg[i])
+        } else {
+          lottieSvg[i].style.display = 'block'
+        }
       }
+    } catch (e) {
+
     }
   }
 }
