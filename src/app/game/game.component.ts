@@ -571,6 +571,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public play(): void {
     this.flyawayAnimationRevert()
+    this.toggleHidePlane(false)
     if (this.animationItem && !this.isGameStarted) {
       // console.log(123)
       // this.isFlewAway = false;
