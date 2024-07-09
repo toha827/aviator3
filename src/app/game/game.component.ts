@@ -226,9 +226,18 @@ export class GameComponent implements OnInit, OnDestroy {
           this.balance = res.balance;
         }
       )
-    setTimeout(() => {
-      this.bgAudio.play()
-    }, 1500)
+
+    this.bgAudio.addEventListener("canplaythrough", (event) => {
+      /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+      this.bgAudio.play();
+      this.bgAudio.autoplay = true
+    });
+
+    this.bgAudio.addEventListener("onended", (event) => {
+      /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+      this.bgAudio.play();
+    });
+
     this.getRooms();
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
@@ -511,20 +520,20 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const keyframes1 = [
       {transform: initialTransform1},
-      {transform: 'translateX(500vw) translateY(20px)'}
+      {transform: 'translateX(700vw) translateY(20px)'}
     ];
 
     const keyframes2 = [
       {transform: initialTransform2},
-      {transform: 'translateX(500vw) translateY(20px)'}];
+      {transform: 'translateX(700vw) translateY(20px)'}];
 
     const keyframes3 = [
       {transform: initialTransform3},
-      {transform: 'translateX(500vw) translateY(20px)'}];
+      {transform: 'translateX(700vw) translateY(20px)'}];
 
     // Define the animation options
     const options = {
-      duration: 1300, // Animation duration in milliseconds
+      duration: 900, // Animation duration in milliseconds
       easing: 'linear' // Easing function
     };
     ngLottieSvg.classList.add('flyaway')
