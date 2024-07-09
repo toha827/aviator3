@@ -348,6 +348,9 @@ td img{
   }
 }
 @media (280px <= width <= 1150px) {
+  .first-block {
+    margin: 0 auto !important;
+  }
   .example-margin {
     margin-top: 0 !important;
   }
