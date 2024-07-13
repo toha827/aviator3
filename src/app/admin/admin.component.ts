@@ -19,12 +19,9 @@ import {MatIcon} from "@angular/material/icon";
 })
 export class AdminComponent implements OnInit, OnDestroy{
 
-
-
   private roomService = inject(RoomService);
   private router = inject(Router);
   public coeffList: any[] = [];
-  items = [1,2,3]
 
   public coefficient: number = 1.01;
   public balance: number = 10000;
@@ -34,7 +31,7 @@ export class AdminComponent implements OnInit, OnDestroy{
   public setCoefficient(): void {
     this.roomService.addCoefficient({coefficient: this.fruits})
       .pipe(
-        exhaustMap(res => this.roomService.getRoomsList()
+        exhaustMap(res => this.roomService.getCoeffAdmin()
           .pipe(
             tap(res => this.coeffList = [...res]),
             tap(_ => this.fruits = [])
@@ -57,7 +54,7 @@ export class AdminComponent implements OnInit, OnDestroy{
   }
 
   public getRooms(): void {
-    this.roomService.getRoomsList()
+    this.roomService.getCoeffAdmin()
       .pipe(
         takeUntil(this.#destroyed$)
       )
@@ -74,8 +71,6 @@ export class AdminComponent implements OnInit, OnDestroy{
     this.#destroyed$.next(true);
     this.#destroyed$.complete();
   }
-
-
 
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;

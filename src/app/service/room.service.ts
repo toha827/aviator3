@@ -15,6 +15,10 @@ export class RoomService {
   public checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public checkShowOver: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
+  public getCoeffAdmin(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/v1/admin`);
+  }
+
   public getRoomsWS(): Observable<any> {
     return this.receiveRooms$.asObservable();
   }

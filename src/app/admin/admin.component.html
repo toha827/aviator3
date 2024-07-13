@@ -20,11 +20,9 @@
                  (matChipInputTokenEnd)="add($event)"/>
         </mat-chip-grid>
       </mat-form-field>
-<!--      <input type="number" [(ngModel)]="coefficient" step="0.01" min="0">-->
-<!--      <tag-input [(ngModel)]="items"></tag-input>-->
     </div>
     <div class="set-btn" style="cursor: pointer;width: 120px;text-align: center" (click)="setCoefficient()">
-      Set Coefficient
+      Set <br> Coefficient
     </div>
     <div class="red-btn" style="cursor: pointer; text-align: center" (click)="cancel()">
       Go back
@@ -37,14 +35,14 @@
     <div class="set-btn" style="cursor: pointer; width: 120px;text-align: center" (click)="setBalance()">
       Set <br> Balance
     </div>
-    <div class="red-btn" style="cursor: pointer" (click)="cancel()">
-      Go back
+    <div class="red-btn" style="cursor: pointer; text-align: center" (click)="cancel()">
+      Go <br> back
     </div>
   </div>
   <div class="coefficient-list body-1">
     <ng-container *ngFor="let item of coeffList">
       <div class="item-coeff">
-        {{item.coefficient.toFixed(2)}}
+        {{item.coeffient.toFixed(2)}}
       </div>
     </ng-container>
   </div>
