@@ -534,7 +534,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // Define the animation options
     const options = {
-      duration: 900, // Animation duration in milliseconds
+      duration: 1100, // Animation duration in milliseconds
       easing: 'linear' // Easing function
     };
     ngLottieSvg.classList.add('flyaway')
