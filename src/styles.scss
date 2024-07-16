@@ -144,13 +144,14 @@ table {
 
 .coefficient {
   display: flex;
-  flex-wrap: wrap;
+  //flex-wrap: wrap;
   justify-content: center;
   margin-bottom: 10px;
 }
 
 .item {
   margin: 10px;
+  flex-grow: 1;
 }
 
 .graph {
@@ -223,9 +224,9 @@ td img{
 }
 
 @media (1280px <= width <= 1444px) {
-  .coeff-list-test {
-    width: 900px !important;
-  }
+  //.coeff-list-test {
+  //  width: 900px !important;
+  //}
 }
 
 @media (200px <= width <= 404px) {
@@ -235,9 +236,9 @@ td img{
 }
 
 @media (1000px <= width <= 1279px) {
-  .coeff-list-test {
-    width: 750px !important;
-  }
+  //.coeff-list-test {
+  //  width: 750px !important;
+  //}
 }
 
 @media (1150px <= width <= 2890px) {
@@ -254,9 +255,9 @@ td img{
   .coeff-list-test {
     overflow: hidden;
     flex-wrap: nowrap;
-    width: 1050px;
-    max-width: 1230px;
-    min-width: 750px;
+    //width: 1050px;
+    //max-width: 1230px;
+    //min-width: 750px;
   }
   .win-1 {
     margin-top: -70vh;

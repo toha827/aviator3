@@ -10,7 +10,7 @@
   <div class="graph-body">
     <div class="coefficient" style="display: flex; align-items: center;">
       <ng-container *ngIf="!isClickedHistory">
-        <div class="coeff-list-test">
+        <div class="coeff-list-test" style="width: 100%">
           <ng-container *ngFor="let coeff of coefficientList">
             <div class="item" [ngClass]="{
         'low': coeff.coefficient < 2,
