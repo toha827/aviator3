@@ -13,9 +13,9 @@
         <div class="coeff-list-test" style="width: 100%">
           <ng-container *ngFor="let coeff of coefficientList">
             <div class="item" [ngClass]="{
-        'low': coeff.coefficient < 2,
-        'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
-        'high': coeff.coefficient >= 10}">
+        'low': coeff.coefficient < 3,
+        'middle': coeff.coefficient >= 3,
+        'high': coeff.coefficient >= 4}">
               {{ coeff.coefficient | number: '1.2-2' }}x
             </div>
           </ng-container>
