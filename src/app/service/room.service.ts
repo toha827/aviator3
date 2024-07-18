@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'http://136.244.93.165:80';
+  private readonly baseUrl = 'http://136.244.93.165:81';
   private http = inject(HttpClient);
   private socket: any;
 
