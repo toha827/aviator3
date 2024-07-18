@@ -34,7 +34,7 @@ export class RoomService {
   }
 
   connect(): void {
-    this.socket = new WebSocket('ws://136.244.93.165:80/v1/rooms/websocket');
+    this.socket = new WebSocket('ws://136.244.93.165:81/v1/rooms/websocket');
 
     this.socket.onopen = () => {
       console.log('WebSocket connection established.');
