@@ -9,6 +9,7 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatFormField} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
+import {v4 as uuidv4} from "uuid";
 
 @Component({
   selector: 'app-admin',
@@ -64,6 +65,10 @@ export class AdminComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    if (!localStorage.getItem('token')) {
+      const uuid = uuidv4();
+      localStorage.setItem('token', uuid);
+    }
     this.getRooms();
   }
 

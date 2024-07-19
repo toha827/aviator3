@@ -32,7 +32,7 @@
           </div>
           <div class="body-history">
             <ng-container *ngFor="let coeff of coefficientList">
-              <div class="item" [ngClass]="{
+              <div class="item" style="flex-grow: 0" [ngClass]="{
         'low': coeff.coefficient < 2,
         'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
         'high': coeff.coefficient >= 10}">
