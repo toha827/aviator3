@@ -23,6 +23,8 @@ export class AdminComponent implements OnInit, OnDestroy{
   private roomService = inject(RoomService);
   private router = inject(Router);
   public coeffList: any[] = [];
+  public showLoading: boolean = false;
+  public showLoadingBalance: boolean = false;
 
   public coefficient: number = 1.01;
   public balance: number = 10000;
@@ -30,10 +32,12 @@ export class AdminComponent implements OnInit, OnDestroy{
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   public setCoefficient(): void {
+    this.showLoading = true;
     this.roomService.addCoefficient({coefficient: this.fruits})
       .pipe(
         exhaustMap(res => this.roomService.getCoeffAdmin()
           .pipe(
+            tap(_ => this.showLoading = false),
             tap(res => this.coeffList = [...res]),
             tap(_ => this.fruits = [])
           )
@@ -45,8 +49,11 @@ export class AdminComponent implements OnInit, OnDestroy{
   }
 
   public setBalance(): void {
+    this.showLoadingBalance = true;
     this.roomService.setBalance({amount: this.balance})
-      .pipe()
+      .pipe(
+        tap(_ => this.showLoadingBalance = false)
+      )
       .subscribe()
   }
 

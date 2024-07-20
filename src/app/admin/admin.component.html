@@ -21,8 +21,9 @@
         </mat-chip-grid>
       </mat-form-field>
     </div>
-    <div class="set-btn" style="cursor: pointer;width: 120px;text-align: center" (click)="setCoefficient()">
-      Set <br> Coefficient
+    <div class="set-btn" [ngClass]="{'d-flex': showLoading}" style="cursor: pointer;width: 120px;text-align: center" (click)="setCoefficient()">
+      <img *ngIf="showLoading" style="width: 50px"  src="assets/images/loading-admin.gif" alt="">
+      <ng-container *ngIf="!showLoading">Set <br> Coefficient</ng-container>
     </div>
     <div class="red-btn" style="cursor: pointer; text-align: center" (click)="cancel()">
       Go back
@@ -32,8 +33,9 @@
     <div class="input">
       <input type="number" [(ngModel)]="balance" min="0">
     </div>
-    <div class="set-btn" style="cursor: pointer; width: 120px;text-align: center" (click)="setBalance()">
-      Set <br> Balance
+    <div class="set-btn" [ngClass]="{'d-flex': showLoadingBalance}" style="cursor: pointer; width: 120px;text-align: center" (click)="setBalance()">
+      <img *ngIf="showLoadingBalance" style="width: 50px"  src="assets/images/loading-admin.gif" alt="">
+      <ng-container *ngIf="!showLoadingBalance">Set <br> Coefficient</ng-container>
     </div>
     <div class="red-btn" style="cursor: pointer; text-align: center" (click)="cancel()">
       Go <br> back
