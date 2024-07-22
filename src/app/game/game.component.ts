@@ -276,7 +276,7 @@ export class GameComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.endCoefficient = res[1].coefficient;
 
-        if (res[1].status === 'PLAYING') {
+        if (res[1].status === 'PLAYING' || res[0].status === 'PLAYING') {
           this.nextGame = res[0];
           this.currentGame = res[1];
           // console.log(`PLAYING GAME ${this.currentGame.id} ${this.currentGame.coefficient}`)
@@ -302,7 +302,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
             const newDate = new Date(newTime);
             const diff = newDate.getTime() - new Date().getTime();
-            // console.log("Current diff " + diff);
+            console.log("Current diff " + diff);
             this.totalDuration = diff;
             this.intervalDuration = this.totalDuration / this.numberOfDecrements;
             let decrementsLeft = this.numberOfDecrements;
@@ -465,6 +465,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     if (!this.showAlert) {
       this.isFlewAway = true;
+      this.showAlert = true;
 
       setTimeout(() => {
         this.isFlewAway = false;
@@ -473,9 +474,8 @@ export class GameComponent implements OnInit, OnDestroy {
         this.clearHighlightedRows();
         this.toggleHidePlane(false)
         // console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
-      }, 5000);
+      }, 1500);
     }
-    this.showAlert = true;
     this.isGameStarted = false;
     this.stop();
     this.stopBg();
@@ -521,20 +521,20 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const keyframes1 = [
       {transform: initialTransform1},
-      {transform: 'translateX(700vw) translateY(20px)'}
+      {transform: 'translateX(350vw) translateY(20px)'}
     ];
 
     const keyframes2 = [
       {transform: initialTransform2},
-      {transform: 'translateX(700vw) translateY(20px)'}];
+      {transform: 'translateX(350vw) translateY(20px)'}];
 
     const keyframes3 = [
       {transform: initialTransform3},
-      {transform: 'translateX(700vw) translateY(20px)'}];
+      {transform: 'translateX(350vw) translateY(20px)'}];
 
     // Define the animation options
     const options = {
-      duration: 1100, // Animation duration in milliseconds
+      duration: 1300, // Animation duration in milliseconds
       easing: 'linear' // Easing function
     };
     ngLottieSvg.classList.add('flyaway')
