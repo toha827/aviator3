@@ -368,8 +368,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
       // Check if we have passed a 2s threshold and adjust duration
       if (totalDuration >= stepThreshold) {
-        if (currentDuration - stepDecrement <= 1) {
-          currentDuration = 1;
+        if (currentDuration - stepDecrement <= 0.1) {
+          currentDuration = 0.1;
           stepThreshold += 1000.0;  // update the next threshold
           continue;
         } else {
@@ -380,11 +380,13 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // console.log(`Total duration: ${totalDuration} milliseconds`);
+    console.log(`Coef: ${endCoef}`);
+    console.log(`Total duration: ${totalDuration / 1000} seconds`);
     return totalDuration;
   }
 
   generateIntervals(totalDuration: number) {
-    // console.log(`Total Duration ${totalDuration}`)
+    console.log(`Total Duration ${totalDuration}`)
     let initialDuration = 100.0;  // initial duration in milliseconds
     let stepDecrement = 2.5;  // duration decrement every 10 steps in milliseconds
     let steps = 10;  // steps to apply the decrement
@@ -402,8 +404,8 @@ export class GameComponent implements OnInit, OnDestroy {
       // Check if we need to decrement the duration
       if (stepCounter === steps) {
         stepCounter = 0;  // reset step counter
-        if (currentDuration - stepDecrement <= 1) {
-          currentDuration = 1;
+        if (currentDuration - stepDecrement <= 0.1) {
+          currentDuration = 0.1;
         } else {
           currentDuration -= stepDecrement;
         }
@@ -484,7 +486,13 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private toggleHidePlane(hide: Boolean) {
-    var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+    var lottieSvgClass1Elements = document.getElementsByClassName('lottie-svg-class1');
+
+    if (lottieSvgClass1Elements.length <= 0) {
+      return;
+    }
+
+    var lottieSvg = lottieSvgClass1Elements[0].getElementsByTagName('g')[0].getElementsByTagName('g')
 
     var plane: SVGGElement[] = [];
 

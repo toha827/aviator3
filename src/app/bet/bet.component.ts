@@ -241,7 +241,7 @@ export class BetComponent implements OnInit {
             this.isShowAlert = true;
             setTimeout(() => {
               this.isShowAlert = false;
-            }, 2000);
+            }, 3000);
             this.currentBet = null;
             this.withdrawAudio.play()
             this.showAlert.emit({

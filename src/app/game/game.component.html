@@ -4,14 +4,14 @@
     <img src="https://aviator-demo.spribegaming.com/question-brown.7770399d23b5438d.svg" alt="">
     <span>Cómo jugar?</span>
   </div>
-  <div class="balance ml-auto"><span>{{ balance }}</span> USD</div>
+  <div class="balance ml-auto"><span>{{ balance.toFixed(2) }}</span> USD</div>
 </div>
 <div class="body">
   <div class="graph-body">
     <div class="coefficient" style="display: flex; align-items: center;">
       <ng-container *ngIf="!isClickedHistory">
         <div class="coeff-list-test" style="width: 100%">
-          <ng-container *ngFor="let coeff of coefficientList">
+          <ng-container *ngFor="let coeff of coefficientList.slice(0, 16)">
             <div class="item" [ngClass]="{
         'low': coeff.coefficient < 3.1,
         'middle': coeff.coefficient >= 3.1,
