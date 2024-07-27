@@ -50,6 +50,9 @@ export class AdminComponent implements OnInit, OnDestroy{
 
   public setBalance(): void {
     this.showLoadingBalance = true;
+
+    localStorage.setItem('lastBalanceDouble', JSON.stringify(parseInt(this.balance.toFixed(2).substring(this.balance.toFixed(2).length - 2))))
+
     this.roomService.setBalance({amount: this.balance})
       .pipe(
         tap(_ => this.showLoadingBalance = false)

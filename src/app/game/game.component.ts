@@ -28,9 +28,8 @@ export class GameComponent implements OnInit, OnDestroy {
   mode: any = 'determinate';
   bufferValue = 75;
 
-  value: number = 100;
-  decrementValue: number = 1;
-  totalDuration: number = 0;
+  nextGameLoadingValue: number = 100;
+  nextGameLoadingTimer: any;
   numberOfDecrements: number = 100;
   intervalDuration: number = 0;
 
@@ -171,8 +170,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public isGameStarting: boolean = false;
 
-  public coefficientList: any[] = []
-  public coeffRow: any[] = [];
+  public coefficientList: any[] = [];
 
   public showLoading: boolean = true;
 
@@ -180,7 +178,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public isFlewAway: boolean = false;
   public startCoefficient: number = 1;
   private endCoefficient: number = 2;
-  private currentIndex: number = 0;
+
   public betId: number = 0;
   firstStatus: string = '';
   currentStatus: string = '';
@@ -206,11 +204,11 @@ export class GameComponent implements OnInit, OnDestroy {
   // new Code
   public currentGame: any;
   public nextGame: any;
+  public backendTimeDifference: number = JSON.parse(localStorage.getItem('backendTimeDifference') ?? '0');
+
   //
   public currentBtnType: string = 'bet';
 
-  public hasAlertBeenShown: boolean = true;
-  interRoom: any;
   public gameStatus: string = 'waiting';
   private obs: Subject<boolean> = new Subject<boolean>();
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
@@ -264,8 +262,21 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
-  showAlert: boolean = true;
+  showCurrentGameOverAlert: boolean = true;
   nextGameTimeout: any;
+  timeZoneDifference: number = 5 * 60 * 60 * 1000;
+
+  private isGamePlaying(element: any, index: number, array: any) {
+    return element.status === 'PLAYING';
+  }
+
+  private isGameCreated(element: any, index: number, array: any) {
+    return element.status === 'CREATED';
+  }
+
+  private isGameFinished(element: any, index: number, array: any) {
+    return element.status === 'FINISHED';
+  }
 
   private getRooms(): void {
 
@@ -274,64 +285,92 @@ export class GameComponent implements OnInit, OnDestroy {
         map(res => JSON.parse(res))
       )
       .subscribe(res => {
-        this.endCoefficient = res[1].coefficient;
+        let indexPlayingGame = res.findIndex(this.isGamePlaying)
+        let indexCreatedGame = res.findIndex(this.isGameCreated)
+        let indexFinishedGame = res.findIndex(this.isGameFinished)
 
-        if (res[1].status === 'PLAYING' || res[0].status === 'PLAYING') {
-          this.nextGame = res[0];
-          this.currentGame = res[1];
-          // console.log(`PLAYING GAME ${this.currentGame.id} ${this.currentGame.coefficient}`)
-          this.isGameStarted = true;
-          this.hasAlertBeenShown = false;
-          this.showAlert = false;
-          this.value = 100;
-          if (!this.isGameStarted) {
-            this.showLoading = true;
-          }
-        } else if (res[1].status === "FINISHED") {
-
-          this.showAlert = true;
-          this.nextGame = res[0];
-          this.currentGame = res[1];
-          this.isGameStarted = false;
+        /// Set next game
+        /// If nextGame not same
+        if (indexCreatedGame != -1 && this.nextGame?.id != res[indexCreatedGame].id) {
+          console.log('Set next game')
+          this.nextGame = res[indexCreatedGame];
+          this.coefficientList = [...res.slice(2), ...res];
 
           if (this.nextGameTimeout == null) {
-            const initialDate = new Date(this.nextGame.playing_from);
-            const initialTime = initialDate.getTime();
-            const addedTime = 5 * 60 * 60 * 1000;
-            const newTime = initialTime + addedTime;
+            const nextGameStartDateInMillisecond = new Date(this.nextGame.playing_from).getTime() + this.timeZoneDifference;
 
-            const newDate = new Date(newTime);
-            const diff = newDate.getTime() - new Date().getTime();
-            console.log("Current diff " + diff);
-            this.totalDuration = diff;
-            this.intervalDuration = this.totalDuration / this.numberOfDecrements;
-            let decrementsLeft = this.numberOfDecrements;
-            const intervalId = setInterval(() => {
-              if (decrementsLeft > 0) {
-                this.value -= this.decrementValue;
-                decrementsLeft--;
-              } else {
-                clearInterval(intervalId);
-              }
-            }, this.intervalDuration);
+            const nextGameStartDateLocal = new Date(nextGameStartDateInMillisecond);
+            const nextGameStartFromNow = nextGameStartDateLocal.getTime() - new Date().getTime() + this.backendTimeDifference;
+            console.log("Next game start in " + nextGameStartFromNow / 1000 + " sec.");
+            //
+            // this.intervalDuration = nextGameStartFromNow / this.numberOfDecrements;
+            // this.nextGameLoadingValue = this.numberOfDecrements;
+            // this.nextGameLoadingTimer = setInterval(() => {
+            //   if (this.nextGameLoadingValue > 0) {
+            //     this.nextGameLoadingValue -= 1;
+            //   } else {
+            //     clearInterval(this.nextGameLoadingTimer);
+            //   }
+            // }, this.intervalDuration);
+
             this.nextGameTimeout = setTimeout(() => {
-              this.play();
+              this.play(this.nextGame);
+              var nextGameStart = new Date(this.nextGame.playing_from).getTime();
+              var nextGameActualStart = new Date(this.nextGame.playing_from).getTime() + this.backendTimeDifference;
+
+              console.log('GAME START ' + new Date(nextGameStart));
+              console.log('Difference ' + this.backendTimeDifference);
+              console.log('GAME START ACTUAL ' + new Date(nextGameActualStart));
               this.showLoading = false;
-            }, diff);
+              this.nextGameTimeout = null;
+            }, nextGameStartFromNow);
           }
         }
 
-        // console.log(newDate.getTime());
-        // console.log(new Date().getTime());
-        // if (newDate.getTime() === new Date().getTime()) {
-        //   this.play();
-        // }
-        /// OLD CODE
-        if (res.some((e: any) => e.status === 'PLAYING')) {
-          this.coefficientList = [...res.slice(2), ...res];
-        } else {
-          this.coefficientList = [...res.slice(1), ...res];
+
+        /// Set current game
+        /// If currentGame not same
+        if (indexPlayingGame != -1 && this.currentGame?.id != res[indexPlayingGame].id) {
+          console.log('Set current game')
+          if (this.currentGame != null && this.currentGame!.id != res[indexPlayingGame].id) {
+            this.backendTimeDifference = Math.abs(new Date().getTime() - (new Date(res[indexPlayingGame].playing_from).getTime() + this.timeZoneDifference))
+            localStorage.setItem('backendTimeDifference', JSON.stringify(this.backendTimeDifference));
+            console.log('BACKEND time difference \'playing\'' + this.backendTimeDifference / 1000);
+          }
+          this.currentGame = res[indexPlayingGame];
+          this.showCurrentGameOverAlert = false;
         }
+
+        let isCurrentGameFinished = res[indexFinishedGame].id === this.currentGame?.id
+
+        if (isCurrentGameFinished && this.nextGameLoadingTimer == null) {
+          this.nextGameLoadingValue = 100;
+
+          const nextGameStartDateInMillisecond = new Date(this.nextGame.playing_from).getTime() + this.timeZoneDifference;
+
+          const nextGameStartDateLocal = new Date(nextGameStartDateInMillisecond);
+          const nextGameStartFromNow = nextGameStartDateLocal.getTime() - new Date().getTime() + this.backendTimeDifference;
+
+          this.intervalDuration = nextGameStartFromNow / this.numberOfDecrements;
+          this.nextGameLoadingValue = this.numberOfDecrements;
+          this.nextGameLoadingTimer = setInterval(() => {
+            if (this.nextGameLoadingValue > 0) {
+              this.nextGameLoadingValue -= 1;
+            } else {
+              clearInterval(this.nextGameLoadingTimer);
+              this.nextGameLoadingTimer = null;
+            }
+          }, this.intervalDuration);
+        }
+
+        /// Action on current game finished
+        /// set next game timer to start play
+
+        // if (res.some((e: any) => e.status === 'PLAYING')) {
+        //   this.coefficientList = [...res.slice(2), ...res];
+        // } else {
+        //   this.coefficientList = [...res.slice(1), ...res];
+        // }
 
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
@@ -355,7 +394,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     let initialDuration = 1000.0;  // initial duration in milliseconds
     let increment = 0.1;  // coefficient increment
-    let stepDecrement = 25.0;  // duration decrement per 2s step in milliseconds
+    let stepDecrement = 10.0;  // duration decrement per 2s step in milliseconds
     let stepThreshold = 1000.0;  // threshold for applying step decrement in milliseconds
 
     let totalDuration = 0.0;
@@ -368,8 +407,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
       // Check if we have passed a 2s threshold and adjust duration
       if (totalDuration >= stepThreshold) {
-        if (currentDuration - stepDecrement <= 0.1) {
-          currentDuration = 0.1;
+        if (currentDuration - stepDecrement <= 0.01) {
+          currentDuration = 0.01;
           stepThreshold += 1000.0;  // update the next threshold
           continue;
         } else {
@@ -380,15 +419,15 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // console.log(`Total duration: ${totalDuration} milliseconds`);
-    console.log(`Coef: ${endCoef}`);
-    console.log(`Total duration: ${totalDuration / 1000} seconds`);
+    // console.log(`Coef: ${endCoef}`);
+    // console.log(`Total duration: ${totalDuration / 1000} seconds`);
     return totalDuration;
   }
 
   generateIntervals(totalDuration: number) {
     console.log(`Total Duration ${totalDuration}`)
     let initialDuration = 100.0;  // initial duration in milliseconds
-    let stepDecrement = 2.5;  // duration decrement every 10 steps in milliseconds
+    let stepDecrement = 1.0;  // duration decrement every 10 steps in milliseconds
     let steps = 10;  // steps to apply the decrement
 
     let intervals = [];
@@ -404,8 +443,8 @@ export class GameComponent implements OnInit, OnDestroy {
       // Check if we need to decrement the duration
       if (stepCounter === steps) {
         stepCounter = 0;  // reset step counter
-        if (currentDuration - stepDecrement <= 0.1) {
-          currentDuration = 0.1;
+        if (currentDuration - stepDecrement <= 0.01) {
+          currentDuration = 0.01;
         } else {
           currentDuration -= stepDecrement;
         }
@@ -418,56 +457,41 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     }
 
-    // console.log(`Intervals: ${intervals.length}`);
+    console.log(`Intervals: ${intervals.length}`);
     return intervals;
   }
 
-  public async changeCoefficientAutomatically(): Promise<void> {
-    const currentGamePlayingUntil = new Date(this.currentGame.playing_until);
-    var useNextGame = false;
-    if (currentGamePlayingUntil.getTime() < (new Date()).getTime()) {
-      useNextGame = true;
-    }
-    const startDate = new Date();
-    // console.log(`STARTED GAME ${this.currentGame.id} ${this.currentGame.coefficient} ${startDate}`)
-    const addedTime = 5 * 60 * 60 * 1000;
-    const endDate = new Date(useNextGame ? this.nextGame.playing_until : this.currentGame.playing_until);
-    // const totalDuration = (endDate.getTime() + addedTime) - startDate.getTime();
-    const totalDuration = this.gameRuntimeCalculator(useNextGame ? this.currentGame.coefficient : this.nextGame.coefficient);
+  public async changeCoefficientAutomatically(playingGame: any): Promise<void> {
+    const totalDuration = this.gameRuntimeCalculator(playingGame.coefficient);
     const intervals = this.generateIntervals(totalDuration);
     let startCoefficient = 1.0;
-    const endCoefficient = useNextGame ? this.nextGame.coefficient : this.currentGame.coefficient;
+    const endCoefficient = playingGame.coefficient;
     const increment = 0.01;
 
     // Calculate the number of steps required to reach the end coefficient
     const steps = Math.ceil((endCoefficient - startCoefficient) / increment);
 
-    // Calculate the interval for each step
-    const interval = totalDuration / steps;
-
-    /*console.log('Total Duration:', totalDuration);
-    console.log('Steps:', steps);
-    console.log('Interval per step:', interval);*/
-
     let currentStep = 0;
 
-    // console.log(intervals);
+    console.log(playingGame);
     while (this.startCoefficient < endCoefficient) {
       await this.delay(intervals[currentStep]);
       this.startCoefficient += increment;
       // console.log('Current Coefficient:', this.startCoefficient, currentStep, endCoefficient);
       currentStep++;
     }
+    console.log('game ended ' + this.startCoefficient + ' ' + endCoefficient);
 
     this.currentGame = {
       ...this.currentGame,
       'status': 'FINISHED',
     };
+
     this.flyawayAnimation();
 
-    if (!this.showAlert) {
+    if (!this.showCurrentGameOverAlert) {
       this.isFlewAway = true;
-      this.showAlert = true;
+      this.showCurrentGameOverAlert = true;
 
       setTimeout(() => {
         this.isFlewAway = false;
@@ -476,7 +500,7 @@ export class GameComponent implements OnInit, OnDestroy {
         this.clearHighlightedRows();
         this.toggleHidePlane(false)
         // console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
-      }, 1500);
+      }, 3000);
     }
     this.isGameStarted = false;
     this.stop();
@@ -546,8 +570,6 @@ export class GameComponent implements OnInit, OnDestroy {
       easing: 'linear' // Easing function
     };
     ngLottieSvg.classList.add('flyaway')
-
-    console.log(ngLottieSvg)
     this.flyAwayAudio.play()
     // Start the animation
     var planeAnimation = plane[0].animate(keyframes1, options);
@@ -587,7 +609,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  public play(): void {
+  public play(game: any): void {
     this.flyawayAnimationRevert()
     this.toggleHidePlane(false)
     if (this.bgAudio.paused) {
@@ -601,7 +623,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.playBg();
       this.flyReadyAudio.play();
       this.flyawayAnimationRevert()
-      this.changeCoefficientAutomatically();
+      this.changeCoefficientAutomatically(game);
       console.log('play');
       this.startHighlightingSequence();
     }
@@ -618,7 +640,6 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.animationItem) {
       this.animationItem.stop();
     }
-    this.nextGameTimeout = null;
   }
 
   public restart(): void {
@@ -632,14 +653,12 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isGameStarting = false;
       this.clearAllIntervals();
       this.resetCoefficients();
-      this.coeffRow = [];
       this.clearHighlightedRows();
     }
   }
 
   private resetCoefficients(): void {
     this.startCoefficient = 1.0;
-    this.currentIndex = 0;
   }
 
   public login(): void {
@@ -652,7 +671,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public onGetBalance(event: any): void {
-    this.balance = event;
+    this.balance = event + parseFloat(`0.${parseInt(localStorage.getItem('lastBalanceDouble') ?? '0')}`);
   }
 
   startHighlightingSequence() {
@@ -735,7 +754,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.interRoom);
     this.startCoefficient = 1;
     this.clearAllIntervals();
     this.#destroyed$.next(true);

@@ -121,14 +121,13 @@ export class BetComponent implements OnInit {
   @Input()
   set currentGame(value) {
     this._currentGame = value;
-    if (this.currentBet != null){
+    if (this.currentBet != null) {
 
     }
     if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame?.id && this._currentGame?.status === "FINISHED") {
       this.currentBet = null;
     }
   }
-
 
 
   get currentGame() {
@@ -169,7 +168,6 @@ export class BetComponent implements OnInit {
   public showCancel: boolean = false;
 
 
-
   get amount(): number {
     return this._amount;
   }
@@ -189,11 +187,11 @@ export class BetComponent implements OnInit {
     this.withdrawAudio.load()
     this.roomService.getCoeff().subscribe(res => {
       if (this.isChecked && this.inputCoeff == +this.startCoefficient.toFixed(1)) {
-            this.isShowAlert = true;
-            setTimeout(() => {
-              this.isShowAlert = false;
-            }, 2000);
-            this.withDraw();
+        this.isShowAlert = true;
+        setTimeout(() => {
+          this.isShowAlert = false;
+        }, 2000);
+        this.withDraw();
       }
     })
     this.autoId = `${this.id}-auto`;
@@ -236,8 +234,13 @@ export class BetComponent implements OnInit {
         .pipe(
           tap(res => {
             ///response withdraw bet;
+            var lastBalanceDouble = JSON.parse(localStorage.getItem('lastBalanceDouble') ?? '0') % 100
             this.winCoefficient = this.startCoefficient;
             this.winSum = this.amount * this.winCoefficient;
+            console.log(this.winSum.toFixed(2).substring(this.winSum.toFixed(2).length - 2))
+            var result = parseInt(this.winSum.toFixed(2).substring(this.winSum.toFixed(2).length - 2)) + lastBalanceDouble
+
+            localStorage.setItem('lastBalanceDouble', JSON.stringify(result))
             this.isShowAlert = true;
             setTimeout(() => {
               this.isShowAlert = false;
