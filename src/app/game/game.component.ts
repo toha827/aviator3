@@ -225,17 +225,17 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       )
 
-    this.bgAudio.addEventListener("canplaythrough", (event) => {
-      /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
-      this.bgAudio.play();
-    });
-
-    this.bgAudio.addEventListener("onended", (event) => {
-      /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
-      this.bgAudio.load();
-      this.bgAudio.play();
-      console.log('BG AUDIO ENDED')
-    });
+    // this.bgAudio.addEventListener("canplaythrough", (event) => {
+    //   /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+    //   // this.bgAudio.play();
+    // });
+    //
+    // this.bgAudio.addEventListener("onended", (event) => {
+    //   /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+    //   this.bgAudio.load();
+    //   // this.bgAudio.play();
+    //   console.log('BG AUDIO ENDED')
+    // });
 
     this.getRooms();
     this.showLogin = !localStorage.getItem('token');
@@ -333,7 +333,7 @@ export class GameComponent implements OnInit, OnDestroy {
         if (indexPlayingGame != -1 && this.currentGame?.id != res[indexPlayingGame].id) {
           console.log('Set current game')
           if (this.currentGame != null && this.currentGame!.id != res[indexPlayingGame].id) {
-            this.backendTimeDifference = Math.abs(new Date().getTime() - (new Date(res[indexPlayingGame].playing_from).getTime() + this.timeZoneDifference))
+            this.backendTimeDifference = new Date().getTime() - (new Date(res[indexPlayingGame].playing_from).getTime() + this.timeZoneDifference)
             localStorage.setItem('backendTimeDifference', JSON.stringify(this.backendTimeDifference));
             console.log('BACKEND time difference \'playing\'' + this.backendTimeDifference / 1000);
           }
@@ -612,9 +612,9 @@ export class GameComponent implements OnInit, OnDestroy {
   public play(game: any): void {
     this.flyawayAnimationRevert()
     this.toggleHidePlane(false)
-    if (this.bgAudio.paused) {
-      this.bgAudio.play()
-    }
+    // if (this.bgAudio.paused) {
+    //   this.bgAudio.play()
+    // }
 
     if (this.animationItem && !this.isGameStarted) {
       // console.log(123)
