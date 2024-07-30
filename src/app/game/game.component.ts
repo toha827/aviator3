@@ -143,7 +143,7 @@ export class GameComponent implements OnInit, OnDestroy {
       coeff: 1.01
     }
   ];
-  private bgAudio = new Audio('/assets/sounds/bg_music.mp3');
+  public bgAudio = new Audio('/assets/sounds/bg_music.mp3');
   private flyAwayAudio = new Audio('/assets/sounds/flyaway.mp3');
   private flyReadyAudio = new Audio('/assets/sounds/fly_ready.mp3');
 
