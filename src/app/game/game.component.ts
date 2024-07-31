@@ -230,9 +230,11 @@ export class GameComponent implements OnInit, OnDestroy {
 
     });
     var audio = document.getElementsByTagName('audio')[0];
-
+    var audio_play_btn = document.getElementById('audio_play_btn');
+    audio_play_btn?.click();
     audio.addEventListener("canplay", () => {
-      setTimeout(()=>{
+      setTimeout(() => {
+        audio_play_btn?.click();
         audio.play();
       }, 3000)
     });
