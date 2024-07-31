@@ -227,11 +227,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.bgAudio.addEventListener("canplaythrough", (event) => {
       /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
       // this.bgAudio.play();
-      var audio = document.getElementsByTagName('audio')[0];
 
-      audio.addEventListener("canplay", () => {
-        audio.play()
-      });
+    });
+    var audio = document.getElementsByTagName('audio')[0];
+
+    audio.addEventListener("canplay", () => {
+      audio.play()
     });
     //
     // this.bgAudio.addEventListener("onended", (event) => {
