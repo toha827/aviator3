@@ -19,7 +19,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 })
 
 
-export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   styles = {
     maxHeight: '800px',
@@ -213,12 +213,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   private obs: Subject<boolean> = new Subject<boolean>();
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      var audio = document.getElementsByTagName('audio')[0].play();
-    }, 3000);
-  }
-
   ngOnInit(): void {
     this.roomService.connect();
     this.bgAudio.load()
@@ -231,10 +225,11 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       )
 
-    // this.bgAudio.addEventListener("canplaythrough", (event) => {
-    //   /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
-    //   // this.bgAudio.play();
-    // });
+    this.bgAudio.addEventListener("canplaythrough", (event) => {
+      /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+      // this.bgAudio.play();
+      var audio = document.getElementsByTagName('audio')[0].play();
+    });
     //
     // this.bgAudio.addEventListener("onended", (event) => {
     //   /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
