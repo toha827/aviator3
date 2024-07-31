@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {RoomService} from "../service/room.service";
 import {AnimationOptions, LottieComponent} from "ngx-lottie";
 import {AnimationItem} from "lottie-web";
@@ -19,7 +19,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 })
 
 
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   styles = {
     maxHeight: '800px',
@@ -212,6 +212,12 @@ export class GameComponent implements OnInit, OnDestroy {
   public gameStatus: string = 'waiting';
   private obs: Subject<boolean> = new Subject<boolean>();
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      var audio = document.getElementsByTagName('audio')[0].play();
+    }, 3000);
+  }
 
   ngOnInit(): void {
     this.roomService.connect();
