@@ -369,6 +369,9 @@ td img{
   .mt-20 {
     margin-top: 10px !important;
   }
+  .mt-50 {
+    margin-top: 40px !important;
+  }
 
   .p {
     font-size: 20px !important;
@@ -458,23 +461,27 @@ td img{
 
   #lottie-container {
     //height: 23vh;
-    //width: 400px;
+    width: 400px;
   }
-
+  path {
+    width: 100%;
+  }
   .lottie-svg-class {
-    width: calc(95vw) !important;
-    max-width: 1950px !important;
-    height: 24vh !important;
-    max-height: 550px !important;
+    margin-bottom: 50px;
+    //width: calc(95vw) !important;
+    width: 100% !important;
+    //max-width: 1950px !important;
+    height: 30vh !important;
+    //max-height: 550px !important;
     border-left: 1px solid rgba(255, 255, 2555, .01);
     border-bottom: 1px solid rgba(255, 255, 2555, .01);
-    -webkit-background-clip: padding-box; /* for Safari */
-    background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
+    //-webkit-background-clip: padding-box; /* for Safari */
+    //background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
   }
 
   .lottie-svg-class1 {
-    width: calc(100vw)1 !important;
-    max-width: 400px !important;
+    width: 100vw !important;
+    //max-width: 400px !important;
     //height: calc(86vh) !important;
     //max-height: 200px !important;
     //margin-left: 37px;

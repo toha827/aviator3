@@ -22,7 +22,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 export class GameComponent implements OnInit, OnDestroy {
 
   styles = {
-    maxHeight: '800px',
+    // maxHeight: '800px',
+    // height: '100%'
   }
   color: any = 'warn';
   mode: any = 'determinate';
@@ -607,7 +608,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public animationBgCreated(animationItem: AnimationItem): void {
     this.animationBgItem = animationItem;
-    // this.playBg();
   }
 
   public playBg(): void {
