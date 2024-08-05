@@ -16,7 +16,7 @@ import {v4 as uuidv4} from "uuid";
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule, MatChipsModule, MatFormField, MatIcon],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit, OnDestroy{
 
