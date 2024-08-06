@@ -475,7 +475,8 @@ td img{
     height: 100% !important;
     //max-width: 1950px !important;
     //height: 30vh !important;
-    //max-height: 550px !important;
+    max-height: 250px !important;
+    //min-height: 250px !important;
     border-left: 1px solid rgba(255, 255, 2555, .01);
     border-bottom: 1px solid rgba(255, 255, 2555, .01);
     //-webkit-background-clip: padding-box; /* for Safari */
@@ -485,6 +486,8 @@ td img{
   .lottie-svg-class1 {
     display: flex;
     height: 100% !important;
+    //min-height: 250px !important;
+    //max-height: 250px !important;
     //height: 20vh !important;
     //width: 96vw !important;
     //max-width: 400px !important;
