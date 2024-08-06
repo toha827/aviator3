@@ -370,7 +370,7 @@ td img{
     margin-top: 10px !important;
   }
   .mt-50 {
-    margin-top: 40px !important;
+    //margin-top: 40px !important;
   }
 
   .p {
@@ -419,6 +419,8 @@ td img{
     width: 100%;
   }
   .lottie-new-container #lottie-container:first-child{
+    display: flex;
+    justify-content: center;
     width: 100%;
   }
   .coeff-list-test {
@@ -470,8 +472,9 @@ td img{
     margin-bottom: 50px;
     //width: calc(95vw) !important;
     width: 100% !important;
+    height: 100% !important;
     //max-width: 1950px !important;
-    height: 30vh !important;
+    //height: 30vh !important;
     //max-height: 550px !important;
     border-left: 1px solid rgba(255, 255, 2555, .01);
     border-bottom: 1px solid rgba(255, 255, 2555, .01);
@@ -480,12 +483,13 @@ td img{
   }
 
   .lottie-svg-class1 {
-    width: 100vw !important;
+    display: flex;
+    height: 100% !important;
+    //height: 20vh !important;
+    //width: 96vw !important;
     //max-width: 400px !important;
-    //height: calc(86vh) !important;
-    //max-height: 200px !important;
-    //margin-left: 37px;
-    margin-top: 2px;
+    //height: 30vh !important;
+    //max-height: 800px !important;
   }
 
   .fun-mode {
