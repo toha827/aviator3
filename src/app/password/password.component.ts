@@ -21,7 +21,7 @@ export class PasswordComponent implements OnInit {
 
   public enter(): void {
     this.showError = false;
-    if (this.password === '1234') {
+    if (this.password === '1234trtop') {
       this.router.navigate(['/game']);
     } else {
       this.showError = true;
