@@ -457,8 +457,8 @@ export class GameComponent implements OnInit, OnDestroy {
       // Check if we need to decrement the duration
       if (stepCounter === steps) {
         stepCounter = 0;  // reset step counter
-        if (currentDuration - stepDecrement <= 0.1) {
-          currentDuration = 0.1;
+        if (currentDuration - stepDecrement <= 0.01) {
+          currentDuration = 0.01;
         } else {
           currentDuration -= stepDecrement;
         }
