@@ -421,8 +421,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
       // Check if we have passed a 2s threshold and adjust duration
       if (totalDuration >= stepThreshold) {
-        if (currentDuration - stepDecrement <= 0.01) {
-          currentDuration = 0.01;
+        if (currentDuration - stepDecrement <= 0.1) {
+          currentDuration = 0.1;
           stepThreshold += 1000.0;  // update the next threshold
           continue;
         } else {
@@ -457,8 +457,8 @@ export class GameComponent implements OnInit, OnDestroy {
       // Check if we need to decrement the duration
       if (stepCounter === steps) {
         stepCounter = 0;  // reset step counter
-        if (currentDuration - stepDecrement <= 0.01) {
-          currentDuration = 0.01;
+        if (currentDuration - stepDecrement <= 0.1) {
+          currentDuration = 0.1;
         } else {
           currentDuration -= stepDecrement;
         }
