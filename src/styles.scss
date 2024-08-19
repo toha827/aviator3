@@ -258,8 +258,14 @@ td img{
   }
 }
 
-
 @media (1150px <= width <= 2890px) {
+  .win-1 {
+    margin-top: -580px !important;
+  }
+
+  .win-2 {
+    margin-top: -500px !important;
+  }
   .graph {
     //height: 100% !important;
   }
@@ -276,13 +282,6 @@ td img{
     //width: 1050px;
     //max-width: 1230px;
     //min-width: 750px;
-  }
-  .win-1 {
-    margin-top: -70vh;
-  }
-
-  .win-2 {
-    margin-top: -60vh;
   }
 
   .bet-buttons-1 {
