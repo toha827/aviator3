@@ -11,7 +11,7 @@
     X
   </div>
 </div>
-<div class="first-block mt-20 {{className === 'win-1' ? 'mt-50' : '' }}"
+<div class="first-block first-block-bet mt-20 {{className === 'win-1' ? 'mt-50' : '' }}"
     [ngClass]="{
       'orange': currentBet && currentBet!.aviator_room_id === currentGame?.id,
       'red': currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id

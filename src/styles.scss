@@ -245,6 +245,20 @@ td img{
   //}
 }
 
+@media (1150px <= width <= 2300px) {
+  .first-block-bet {
+    width: 97% !important;
+    max-width: 100% !important;
+  }
+}
+@media (2301px <= width <= 3200px) {
+  .first-block-bet {
+    width: 80% !important;
+    max-width: 100% !important;
+  }
+}
+
+
 @media (1150px <= width <= 2890px) {
   .graph {
     //height: 100% !important;
@@ -292,7 +306,7 @@ td img{
 
   .lottie-svg-class {
     width: calc(74vw) !important;
-    max-width: 1750px !important;
+    //max-width: 1750px !important;
     height: 480px !important;
     max-height: 1450px !important;
     border-left: 1px solid rgba(255, 255, 2555, .3);
