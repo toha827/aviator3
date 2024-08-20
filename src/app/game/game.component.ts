@@ -308,7 +308,7 @@ export class GameComponent implements OnInit, OnDestroy {
         if (indexCreatedGame != -1 && this.nextGame?.id != res[indexCreatedGame].id) {
           console.log('Set next game')
           this.nextGame = res[indexCreatedGame];
-          this.coefficientList = [...res.slice(2), ...res];
+          this.coefficientList = [...res.slice(2)];
 
           if (this.nextGameTimeout == null) {
             const nextGameStartDateInMillisecond = new Date(this.nextGame.playing_from).getTime() + this.timeZoneDifference;
@@ -406,10 +406,10 @@ export class GameComponent implements OnInit, OnDestroy {
     let initialCoef = 1.0;
     let currentCoef = initialCoef;
 
-    let initialDuration = 1000.0;  // initial duration in milliseconds
-    let increment = 0.1;  // coefficient increment
-    let stepDecrement = 10.0;  // duration decrement per 2s step in milliseconds
-    let stepThreshold = 1000.0;  // threshold for applying step decrement in milliseconds
+    let initialDuration = 1.0;
+    let increment = 0.1; // coefficient increment
+    let stepDecrement = 0.010; // duration decrement per 2s step
+    let stepThreshold = 1.0; // threshold for applying step decrement
 
     let totalDuration = 0.0;
     let currentDuration = initialDuration;
@@ -421,21 +421,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
       // Check if we have passed a 2s threshold and adjust duration
       if (totalDuration >= stepThreshold) {
-        if (currentDuration - stepDecrement <= 10) {
-          currentDuration = 10;
-          stepThreshold += 1000.0;  // update the next threshold
+        if (currentDuration - stepDecrement <= 0.1) {
+          currentDuration = 0.1;
+          stepThreshold += 1.0; // update the next threshold
           continue;
         } else {
           currentDuration -= stepDecrement;
-          stepThreshold += 1000.0;  // update the next threshold
+          stepThreshold += 1.0; // update the next threshold
         }
       }
     }
 
-    // console.log(`Total duration: ${totalDuration} milliseconds`);
-    // console.log(`Coef: ${endCoef}`);
-    // console.log(`Total duration: ${totalDuration / 1000} seconds`);
-    return totalDuration;
+    return totalDuration * 1000;
   }
 
   generateIntervals(totalDuration: number) {
