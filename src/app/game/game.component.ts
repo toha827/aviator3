@@ -454,8 +454,8 @@ export class GameComponent implements OnInit, OnDestroy {
       // Check if we need to decrement the duration
       if (stepCounter === steps) {
         stepCounter = 0;  // reset step counter
-        if (currentDuration - stepDecrement <= 0.01) {
-          currentDuration = 0.01;
+        if (currentDuration - stepDecrement <= 10) {
+          currentDuration = 10;
         } else {
           currentDuration -= stepDecrement;
         }
@@ -474,7 +474,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public async changeCoefficientAutomatically(playingGame: any): Promise<void> {
     const totalDuration = this.gameRuntimeCalculator(playingGame.coefficient);
-    const intervals = this.generateIntervals(totalDuration);
+    console.log(`asdasd ${new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime()}`)
+    const totalDuration2 = new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime();
+    const intervals = this.generateIntervals(totalDuration2);
     let startCoefficient = 1.0;
     const endCoefficient = playingGame.coefficient;
     const increment = 0.01;
