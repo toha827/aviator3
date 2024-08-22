@@ -185,12 +185,6 @@ export class GameComponent implements OnInit, OnDestroy {
       user: 'me**6',
       coeff: 1.01
     },
-    {
-      date: '04:30',
-      amount: 1,
-      user: 'pe**6',
-      coeff: 1.01
-    }
   ];
   public bgAudio = new Audio('/assets/sounds/bg_music.mp3');
   private flyAwayAudio = new Audio('/assets/sounds/flyaway.mp3');
