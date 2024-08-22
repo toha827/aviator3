@@ -744,6 +744,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   startHighlighting() {
+    console.log(this.userList.length);
     const indices = this.generateRandomIndices();
     this.highlightRow(indices[0], 500); // Highlight first row after 3 seconds
     this.highlightRow(indices[1], 1000); // Highlight third row after 5 seconds
@@ -762,6 +763,15 @@ export class GameComponent implements OnInit, OnDestroy {
     this.highlightRow(indices[14], 3950); // Highlight fifth row after 7 seconds
     this.highlightRow(indices[15], 4150); // Highlight fifth row after 7 seconds
     this.highlightRow(indices[16], 4250); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[17], 4350); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[18], 4450); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[19], 150); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[20], 350); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[21], 250); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[22], 50); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[23], 250); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[24], 350); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[25], 420); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
