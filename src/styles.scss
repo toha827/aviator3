@@ -639,3 +639,19 @@ md-progress-linear .md-container .md-bar {
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: transparent !important;
 }
+
+@media (1800px <= width <= 3200px) {
+  .bet-buttons-1 {
+
+  }
+  .graph {
+    height: 65% !important;
+  }
+  .lottie-svg-class {
+    height: 35vw !important;
+  }
+
+  #lottie-container {
+    height: 33vw !important;
+  }
+}
