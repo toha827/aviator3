@@ -142,6 +142,54 @@ export class GameComponent implements OnInit, OnDestroy {
       amount: 1,
       user: 'pe**6',
       coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
     }
   ];
   public bgAudio = new Audio('/assets/sounds/bg_music.mp3');
