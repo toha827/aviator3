@@ -230,12 +230,15 @@ export class BetComponent implements OnInit {
   public withDraw() {
     if (this.currentGame.status === 'PLAYING') {
       this.currentBtnType = 'bet';
+
+      var ClickedCoef = this.startCoefficient
+
       this.roomService.withdraw()
         .pipe(
           tap(res => {
             ///response withdraw bet;
             var lastBalanceDouble = JSON.parse(localStorage.getItem('lastBalanceDouble') ?? '0') % 100
-            this.winCoefficient = this.startCoefficient;
+            this.winCoefficient = ClickedCoef;
             this.winSum = this.amount * this.winCoefficient;
             console.log(this.winSum.toFixed(2).substring(this.winSum.toFixed(2).length - 2))
             var result = parseInt(this.winSum.toFixed(2).substring(this.winSum.toFixed(2).length - 2)) + lastBalanceDouble
