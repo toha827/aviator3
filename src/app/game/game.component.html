@@ -2,7 +2,12 @@
   <div><img src="https://aviator-demo.spribegaming.com/aviator-logo.cafbd29233306bf7.svg" alt=""></div>
   <div class="how-to-play">
     <img src="https://aviator-demo.spribegaming.com/question-brown.7770399d23b5438d.svg" alt="">
-    <span>Кантип ойнойт?</span>
+    <span>{{
+        {
+          'es': 'Cómo jugar?',
+          'kg':'Кантип ойнойт?'
+        }[locale]
+      }}</span>
   </div>
   <div class="balance ml-auto"><span>{{ balance.toFixed(2) }}</span> USD</div>
 </div>
@@ -24,7 +29,14 @@
       <ng-container *ngIf="isClickedHistory">
         <div class="opened-history" style="margin-left: 10px">
           <div class="header-history">
-            <span>ТЕГЕРЕК СТОЛ МЕЙМАНКАНАСЫ</span>
+            <span>
+              {{
+                {
+                  'es': 'HOSTORIA DE LA RONDA',
+                  'kg':'ТЕГЕРЕК СТОЛ МЕЙМАНКАНАСЫ'
+                }[locale]
+              }}
+              </span>
             <div class="history-btn" *ngIf="isClickedHistory" (click)="handleClickHistory()">
               <img src="https://aviator-demo.spribegaming.com/history-h.0950ae774061ee87.svg" alt="">
               <img class="arrow" src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
@@ -51,7 +63,12 @@
     <div class="graph">
       <div *ngIf="isFlewAway" class="flex-away"
            style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
-        <span class="p" style="font-size: 30px;color: white">¡АЛ УЧУП КЕТТИ! </span>
+        <span class="p" style="font-size: 30px;color: white"> {{
+            {
+              'es': '¡SE FUE VOLANDO!',
+              'kg':'¡АЛ УЧУП КЕТТИ!'
+            }[locale]
+          }}</span>
         <span class="color-red s" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
@@ -63,7 +80,12 @@
         <div class="sum"
              style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
           <img id="gear" src="/assets/images/prop.svg" alt="" style="margin-top: 20px;width: 120px; height: 120px;">
-          <span class="loading-text" style="font-size: 32px;text-align: center;margin-top: 30px;line-height: 34px;">КИЙИНКИ РАУНДДУ КҮТҮҮ</span>
+          <span class="loading-text" style="font-size: 32px;text-align: center;margin-top: 30px;line-height: 34px;">{{
+              {
+                'es': 'ESPERANDO LA PRÓXIMA RONDA',
+                'kg':'КИЙИНКИ РАУНДДУ КҮТҮҮ'
+              }[locale]
+            }}</span>
           <mat-progress-bar
             style="margin-top: 20px;width: 200px; height: 30px;"
             class="example-margin"
@@ -132,18 +154,49 @@
   </div>
   <div class="first-block class-table" style="width: 30%;height: 745px; overflow: hidden">
     <div class="tabs" style="display: flex; cursor: pointer; align-items: center; justify-content: space-around">
-      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">Баалар</div>
-      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">Менин коюмдар
+      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">{{
+          {
+            'es': 'Apuestas',
+            'kg':'Баалар'
+          }[locale]
+        }}</div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">
+        {{
+          {
+            'es': 'Mis apuestas',
+            'kg':'Менин коюмдар'
+          }[locale]
+        }}
       </div>
-      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')">Өйдө</div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')"> {{
+          {
+            'es': 'Arriba',
+            'kg':'Өйдө'
+          }[locale]
+        }}</div>
     </div>
     <table style="margin-bottom: auto;">
       <thead>
       <tr style="font-size: 12px">
-        <th style="width: 50px;">Колдонуучу</th>
-        <th style="width: 110px;">Баасы USD</th>
+        <th style="width: 50px;">{{
+            {
+              'es': 'Usuario',
+              'kg':'Колдонуучу'
+            }[locale]
+          }}</th>
+        <th style="width: 110px;">{{
+            {
+              'es': 'Apuesta',
+              'kg':'Баасы'
+            }[locale]
+          }} USD</th>
         <th></th>
-        <th style="width: 80px;">Өзгөртүү USD</th>
+        <th style="width: 80px;">{{
+            {
+              'es': 'Cambiar',
+              'kg':'Өзгөртүү'
+            }[locale]
+          }} USD</th>
       </tr>
       </thead>
       <tbody>
@@ -181,9 +234,19 @@
 </div>
 
 <div class="powered">
-  <span style="margin-left: 10px">Бул оюн</span> <img style="margin-left: 10px"
+  <span style="margin-left: 10px">{{
+      {
+        'es': 'Este juego es',
+        'kg':'Бул оюн'
+      }[locale]
+    }}</span> <img style="margin-left: 10px"
                                                             src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg"
-                                                            alt=""> <span style="color: white; margin-left: 10px">Provably Fair</span>
+                                                            alt=""> <span style="color: white; margin-left: 10px">{{
+    {
+      'es': 'Provably Fair',
+      'kg':'Далилдүү Адилеттүү'
+    }[locale]
+  }}</span>
   <span style="display:flex;margin-left: auto; margin-right: 10px">Powered by
     <img
       style="margin-left: 5px;"

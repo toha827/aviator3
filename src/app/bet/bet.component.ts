@@ -3,6 +3,7 @@ import {BehaviorSubject, exhaustMap, ReplaySubject, takeUntil, tap} from "rxjs";
 import {RoomService} from "../service/room.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-bet',
@@ -13,6 +14,8 @@ import {FormsModule} from "@angular/forms";
 })
 export class BetComponent implements OnInit {
 
+  private route = inject(ActivatedRoute);
+  public locale = 'es';
   private _currentStatus = '';
   private _isBet = false;
   @Input() isGameStarting: boolean = false;
@@ -184,6 +187,11 @@ export class BetComponent implements OnInit {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.locale = params.get('locale') ?? 'es'; // Получаем значение параметра
+      console.log('Locale from query params:', this.locale);
+    });
+
     this.withdrawAudio.load()
     this.roomService.getCoeff().subscribe(res => {
       if (this.isChecked && this.inputCoeff == +this.startCoefficient.toFixed(1)) {

@@ -1,10 +1,20 @@
 <div class="win {{className}}" *ngIf="isShowAlert">
   <div class="win-text">
-    Сиз накталай акча алдыңыз <br>
+    {{
+      {
+        'es': 'Has cobrado',
+        'kg':'Сиз накталай акча алдыңыз'
+      }[locale]
+    }} <br>
     <span>{{winCoefficient.toFixed(2)}}x</span>
   </div>
   <div class="win-box">
-    Жеңиш USD <br>
+    {{
+      {
+        'es': 'Win',
+        'kg':'Жеңиш'
+      }[locale]
+    }} USD <br>
     <span>{{winSum.toFixed(2)}}</span>
   </div>
   <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer">
@@ -18,8 +28,18 @@
     }">
   <div class="container" *ngIf="id && id2">
     <div class="tabs" style="display: flex; align-items: center; justify-content: space-around">
-        <div class="tab-item l" [ngClass]="{'isActive white': currentType === 'bet'}" (click)="handleTab('bet')">Apuesta</div>
-        <div class="tab-item r" [ngClass]="{'isActive white': currentType === 'auto'}" (click)="handleTab('auto')">Automático</div>
+        <div class="tab-item l" [ngClass]="{'isActive white': currentType === 'bet'}" (click)="handleTab('bet')">{{
+            {
+              'es': 'Apuesta',
+              'kg':'Баасы'
+            }[locale]
+          }}</div>
+        <div class="tab-item r" [ngClass]="{'isActive white': currentType === 'auto'}" (click)="handleTab('auto')">{{
+            {
+              'es': 'Automático',
+              'kg':'Автоматтык'
+            }[locale]
+          }}</div>
       </div>
   </div>
   <div class="div-buttons">
@@ -40,25 +60,50 @@
     </div>
     <div class="right-side">
       <div *ngIf="!currentBet" class="bet-btn green-btn" (click)="makeBet()">
-        Баасы <br>
+        {{
+          {
+            'es': 'APUESTA',
+            'kg':'Баасы'
+          }[locale]
+        }}<br>
         {{amount | number: '1.2-2'}} USD
       </div>
       <div *ngIf="currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id" class="bet-btn red-btn" (click)="cancel()">
-        Жокко чыгаруу
+        {{
+          {
+            'es': 'СANCELAR',
+            'kg':'Чыгаруу'
+          }[locale]
+        }}
       </div>
       <div *ngIf="currentBet && currentBet!.aviator_room_id === currentGame?.id" class="bet-btn orange-btn" (click)="withDraw()">
-        Акы <br> {{(amount * startCoefficient).toFixed(2)}} USD
+        {{
+          {
+            'es': 'COBRAR',
+            'kg':'Акы'
+          }[locale]
+        }} <br> {{(amount * startCoefficient).toFixed(2)}} USD
       </div>
     </div>
   </div>
   <ng-container *ngIf="showAuto">
     <div class="auto-play" style="align-items: center">
       <div class="btn-auto-play" style="text-align: center; font-size: 13px">
-        Авто ойнотуу
+        {{
+          {
+            'es': 'Auto reproducción',
+            'kg':'Авто ойнотуу'
+          }[locale]
+        }}
       </div>
       <div class="auto-cash-out">
         <div class="label">
-          Автоматтык чогултуу
+          {{
+            {
+              'es': 'Cobro automático',
+              'kg':'Автоматтык чогултуу'
+            }[locale]
+          }}
         </div>
         <label class="toggle-switch">
           <input type="checkbox" [(ngModel)]="isChecked" (change)="handleCheckbox($event)">

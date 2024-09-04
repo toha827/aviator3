@@ -4,7 +4,7 @@ import {AnimationOptions, LottieComponent} from "ngx-lottie";
 import {AnimationItem} from "lottie-web";
 import {filter, map, ReplaySubject, Subject, takeUntil} from "rxjs";
 import {v4 as uuidv4} from "uuid";
-import {Router, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BetComponent} from "../bet/bet.component";
@@ -39,6 +39,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private roomService = inject(RoomService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   public userList = [
     {
@@ -189,7 +190,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public bgAudio = new Audio('/assets/sounds/bg_music.mp3');
   private flyAwayAudio = new Audio('/assets/sounds/flyaway.mp3');
   private flyReadyAudio = new Audio('/assets/sounds/fly_ready.mp3');
-
+  public locale = 'es';
   startCoefficients: number[] = this.userList.map(() => 1.01);
 
   public options: AnimationOptions = {
@@ -257,6 +258,11 @@ export class GameComponent implements OnInit, OnDestroy {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.locale = params.get('locale') ?? 'es'; // Получаем значение параметра
+      console.log('Locale from query params:', this.locale);
+    });
+
     this.roomService.connect();
     this.bgAudio.load()
     this.flyReadyAudio.load()
