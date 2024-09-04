@@ -1,10 +1,10 @@
 <div class="win {{className}}" *ngIf="isShowAlert">
   <div class="win-text">
-    Has cobrado <br>
+    Сиз накталай акча алдыңыз <br>
     <span>{{winCoefficient.toFixed(2)}}x</span>
   </div>
   <div class="win-box">
-    Win USD <br>
+    Жеңиш USD <br>
     <span>{{winSum.toFixed(2)}}</span>
   </div>
   <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer">
@@ -40,25 +40,25 @@
     </div>
     <div class="right-side">
       <div *ngIf="!currentBet" class="bet-btn green-btn" (click)="makeBet()">
-        APUESTA <br>
+        Баасы <br>
         {{amount | number: '1.2-2'}} USD
       </div>
       <div *ngIf="currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id" class="bet-btn red-btn" (click)="cancel()">
-        СANCELAR
+        Жокко чыгаруу
       </div>
       <div *ngIf="currentBet && currentBet!.aviator_room_id === currentGame?.id" class="bet-btn orange-btn" (click)="withDraw()">
-        COBRAR <br> {{(amount * startCoefficient).toFixed(2)}} USD
+        Акы <br> {{(amount * startCoefficient).toFixed(2)}} USD
       </div>
     </div>
   </div>
   <ng-container *ngIf="showAuto">
     <div class="auto-play" style="align-items: center">
       <div class="btn-auto-play" style="text-align: center; font-size: 13px">
-        Auto reproducción
+        Авто ойнотуу
       </div>
       <div class="auto-cash-out">
         <div class="label">
-          Cobro automático
+          Автоматтык чогултуу
         </div>
         <label class="toggle-switch">
           <input type="checkbox" [(ngModel)]="isChecked" (change)="handleCheckbox($event)">
