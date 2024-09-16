@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'http://api.1pscpy.com:9900';
+  private readonly baseUrl = 'http://https://api.1pscpy.com';
   private http = inject(HttpClient);
   private socket: any;
 
@@ -34,7 +34,7 @@ export class RoomService {
   }
 
   connect(): void {
-    this.socket = new WebSocket('ws://api.1pscpy.com:9900/v1/rooms/websocket');
+    this.socket = new WebSocket('ws://https://api.1pscpy.com/v1/rooms/websocket');
 
     this.socket.onopen = () => {
       console.log('WebSocket connection established.');
@@ -58,7 +58,7 @@ export class RoomService {
     return this.http.get(`${this.baseUrl}/v1/bets/balance`);
   }
 
-  public setBalance(body: {amount: number}): Observable<any> {
+  public setBalance(body: { amount: number }): Observable<any> {
     return this.http.post(`${this.baseUrl}/v1/bets/set-balance`, body);
   }
 
@@ -102,7 +102,7 @@ export class RoomService {
     return this.http.put(`${this.baseUrl}/v1/bets/cancels/${id}`, {})
   }
 
-  public addCoefficient(body: {coefficient: number[]}): Observable<any> {
+  public addCoefficient(body: { coefficient: number[] }): Observable<any> {
     return this.http.post(`${this.baseUrl}/v1/bets/add-coefficients`, body);
   }
 
