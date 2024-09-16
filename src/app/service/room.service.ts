@@ -7,7 +7,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'http://164.92.255.36:81';
+  private readonly baseUrl = 'http://api.1pscpy.com:9900';
   private http = inject(HttpClient);
   private socket: any;
 
@@ -34,7 +34,7 @@ export class RoomService {
   }
 
   connect(): void {
-    this.socket = new WebSocket('ws://164.92.255.36:81/v1/rooms/websocket');
+    this.socket = new WebSocket('ws://api.1pscpy.com:9900/v1/rooms/websocket');
 
     this.socket.onopen = () => {
       console.log('WebSocket connection established.');
