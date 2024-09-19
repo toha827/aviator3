@@ -5,7 +5,8 @@
     <span>{{
         {
           'es': 'Cómo jugar?',
-          'kg':'Кантип ойнойт?'
+          'kg':'Кантип ойнойт?',
+          'tr':'Nasıl oynanır?'
         }[locale]
       }}</span>
   </div>
@@ -33,7 +34,8 @@
               {{
                 {
                   'es': 'HOSTORIA DE LA RONDA',
-                  'kg':'ТЕГЕРЕК СТОЛ МЕЙМАНКАНАСЫ'
+                  'kg':'ТЕГЕРЕК СТОЛ МЕЙМАНКАНАСЫ',
+                  'tr':'YUVARLAK MASALI OTEL'
                 }[locale]
               }}
               </span>
@@ -66,7 +68,8 @@
         <span class="p" style="font-size: 30px;color: white"> {{
             {
               'es': '¡SE FUE VOLANDO!',
-              'kg':'¡АЛ УЧУП КЕТТИ!'
+              'kg':'¡АЛ УЧУП КЕТТИ!',
+              'tr':'¡UÇUP GİTTİ!'
             }[locale]
           }}</span>
         <span class="color-red s" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
@@ -83,7 +86,8 @@
           <span class="loading-text" style="font-size: 32px;text-align: center;margin-top: 30px;line-height: 34px;">{{
               {
                 'es': 'ESPERANDO LA PRÓXIMA RONDA',
-                'kg':'КИЙИНКИ РАУНДДУ КҮТҮҮ'
+                'kg':'КИЙИНКИ РАУНДДУ КҮТҮҮ',
+                'tr':'BİR SONRAKİ TURU BEKLİYORUM'
               }[locale]
             }}</span>
           <mat-progress-bar
@@ -157,21 +161,24 @@
       <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">{{
           {
             'es': 'Apuestas',
-            'kg':'Баалар'
+            'kg':'Баалар',
+            'tr':'Bahisler'
           }[locale]
         }}</div>
       <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">
         {{
           {
             'es': 'Mis apuestas',
-            'kg':'Менин коюмдар'
+            'kg':'Менин коюмдар',
+            'tr':'Bahislerim'
           }[locale]
         }}
       </div>
       <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')"> {{
           {
             'es': 'Arriba',
-            'kg':'Өйдө'
+            'kg':'Өйдө',
+            'tr':'Yukarı'
           }[locale]
         }}</div>
     </div>
@@ -181,20 +188,23 @@
         <th style="width: 50px;">{{
             {
               'es': 'Usuario',
-              'kg':'Колдонуучу'
+              'kg':'Колдонуучу',
+              'tr':'Kullanıcı'
             }[locale]
           }}</th>
         <th style="width: 110px;">{{
             {
               'es': 'Apuesta',
-              'kg':'Баасы'
+              'kg':'Баасы',
+              'tr':'Bahis'
             }[locale]
           }} USD</th>
         <th></th>
         <th style="width: 80px;">{{
             {
               'es': 'Cambiar',
-              'kg':'Өзгөртүү'
+              'kg':'Өзгөртүү',
+              'tr':'Değişim'
             }[locale]
           }} USD</th>
       </tr>
@@ -237,14 +247,16 @@
   <span style="margin-left: 10px">{{
       {
         'es': 'Este juego es',
-        'kg':'Бул оюн'
+        'kg':'Бул оюн',
+        'tr':'Bu oyun'
       }[locale]
     }}</span> <img style="margin-left: 10px"
                                                             src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg"
                                                             alt=""> <span style="color: white; margin-left: 10px">{{
     {
       'es': 'Provably Fair',
-      'kg':'Далилдүү Адилеттүү'
+      'kg':'Далилдүү Адилеттүү',
+      'tr':'Kanıtlanabilir Derecede Adil'
     }[locale]
   }}</span>
   <span style="display:flex;margin-left: auto; margin-right: 10px">Powered by
