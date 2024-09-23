@@ -10,7 +10,13 @@
         }[locale]
       }}</span>
   </div>
-  <div class="balance ml-auto"><span>{{ balance.toFixed(2) }}</span> USD</div>
+  <div class="balance ml-auto"><span>{{ balance.toFixed(2) }}</span> {{
+      {
+        'es': 'USD',
+        'kg': 'USD',
+        'tr': 'TRY'
+      }[locale]
+    }}</div>
 </div>
 <div class="body">
   <div class="graph-body">
@@ -69,7 +75,7 @@
             {
               'es': '¡SE FUE VOLANDO!',
               'kg':'¡АЛ УЧУП КЕТТИ!',
-              'tr':'¡UÇUP GİTTİ!'
+              'tr':'UZAKLAŞ!'
             }[locale]
           }}</span>
         <span class="color-red s" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
@@ -87,7 +93,7 @@
               {
                 'es': 'ESPERANDO LA PRÓXIMA RONDA',
                 'kg':'КИЙИНКИ РАУНДДУ КҮТҮҮ',
-                'tr':'BİR SONRAKİ TURU BEKLİYORUM'
+                'tr':'SONRAKİ TUR BEKLENİYOR'
               }[locale]
             }}</span>
           <mat-progress-bar
@@ -162,7 +168,7 @@
           {
             'es': 'Apuestas',
             'kg':'Баалар',
-            'tr':'Bahisler'
+            'tr':'Tüm Bahisler'
           }[locale]
         }}</div>
       <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">
@@ -178,7 +184,7 @@
           {
             'es': 'Arriba',
             'kg':'Өйдө',
-            'tr':'Yukarı'
+            'tr':'En İyi'
           }[locale]
         }}</div>
     </div>
@@ -189,7 +195,7 @@
             {
               'es': 'Usuario',
               'kg':'Колдонуучу',
-              'tr':'Kullanıcı'
+              'tr':'Oyuncu'
             }[locale]
           }}</th>
         <th style="width: 110px;">{{
@@ -198,15 +204,27 @@
               'kg':'Баасы',
               'tr':'Bahis'
             }[locale]
-          }} USD</th>
+          }} {{
+            {
+              'es': 'USD',
+              'kg': 'USD',
+              'tr': 'TRY'
+            }[locale]
+          }}</th>
         <th></th>
         <th style="width: 80px;">{{
             {
               'es': 'Cambiar',
               'kg':'Өзгөртүү',
-              'tr':'Değişim'
+              'tr':'Nakit çekme'
             }[locale]
-          }} USD</th>
+          }} {{
+            {
+              'es': 'USD',
+              'kg': 'USD',
+              'tr': 'TRY'
+            }[locale]
+          }}</th>
       </tr>
       </thead>
       <tbody>

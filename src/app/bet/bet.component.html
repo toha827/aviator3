@@ -14,9 +14,15 @@
       {
         'es': 'Win',
         'kg': 'Жеңиш',
-        'tr': 'Kazanmak'
+        'tr': 'Bahis'
       }[locale]
-    }} USD <br>
+    }} {{
+      {
+        'es': 'USD',
+        'kg': 'USD',
+        'tr': 'TRY'
+      }[locale]
+    }} <br>
     <span>{{ winSum.toFixed(2) }}</span>
   </div>
   <div style="margin-left: 5px;color: gray;margin-right: 5px;cursor: pointer">
@@ -42,7 +48,7 @@
           {
             'es': 'Automático',
             'kg': 'Автоматтык',
-            'tr': 'Otomatik'
+            'tr': 'Oto'
           }[locale]
         }}
       </div>
@@ -83,7 +89,7 @@
           {
             'es': 'СANCELAR',
             'kg': 'Чыгаруу',
-            'tr': 'İPTAL ET'
+            'tr': 'İPTAL'
           }[locale]
         }}
       </div>
@@ -93,7 +99,7 @@
           {
             'es': 'COBRAR',
             'kg': 'Акы',
-            'tr': 'TOPLAMAK'
+            'tr': 'Nakit çekme'
           }[locale]
         }} <br> {{ (amount * startCoefficient).toFixed(2) }} USD
       </div>
