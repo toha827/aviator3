@@ -80,7 +80,13 @@
             'tr': 'Bahis'
           }[locale]
         }}<br>
-        {{ amount | number: '1.2-2' }} USD
+        {{ amount | number: '1.2-2' }} {{
+          {
+            'es': 'USD',
+            'kg': 'USD',
+            'tr': 'TRY'
+          }[locale]
+        }}
       </div>
       <div
         *ngIf="currentBet && (currentGame.status === 'PLAYING' || currentGame.status === 'FINISHED') && currentBet!.aviator_room_id !== currentGame?.id"
