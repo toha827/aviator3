@@ -107,7 +107,13 @@
             'kg': 'Акы',
             'tr': 'Nakit çekme'
           }[locale]
-        }} <br> {{ (amount * startCoefficient).toFixed(2) }} USD
+        }} <br> {{ (amount * startCoefficient).toFixed(2) }} {{
+          {
+            'es': 'USD',
+            'kg': 'USD',
+            'tr': 'TRY'
+          }[locale]
+        }}
       </div>
     </div>
   </div>
