@@ -35,6 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
   intervalDuration: number = 0;
 
   public currentTabType: string = '1';
+  public numberOfBets: number = 2;
   public isClickedHistory: boolean = false;
 
   private roomService = inject(RoomService);
@@ -732,6 +733,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public onGetBalance(event: any): void {
     this.balance = event + parseFloat(`0.${parseInt(localStorage.getItem('lastBalanceDouble') ?? '0')}`);
+  }
+
+  public onAddAppBet(event: any): void {
+    this.numberOfBets++;
+  }
+
+  public onRemoveAppBet(event: any): void {
+    this.numberOfBets--;
   }
 
   startHighlightingSequence() {

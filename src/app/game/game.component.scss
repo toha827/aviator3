@@ -8,18 +8,22 @@
   display: flex;
   background-color: #1b1c1d;
   align-items: center;
+
   .title {
     cursor: pointer;
     color: #ffffff;
     font-size: 18px;
   }
+
   .ml-auto {
     margin-left: auto;
   }
+
   .balance {
     color: #ffffff;
     margin-right: 15px;
     font-size: 18px;
+
     span {
       color: #28a909;
     }
@@ -36,11 +40,13 @@
   //margin-left: 10px;
   //margin-right: 10px;
   gap: 2px;
+
   .item {
     font-weight: 700;
     font-size: 14px;
   }
 }
+
 .color-red {
   color: red;
   font-size: 105px;
@@ -52,18 +58,22 @@
   //border-bottom: 1px solid white;
   position: relative;
   display: flex;
+
   .flex-away {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
     .color-red {
       font-weight: 900;
     }
+
     .s {
       margin-top: 55px;
     }
   }
+
   .sum {
     color: white;
     position: absolute;
@@ -140,6 +150,7 @@ button {
   font-size: 14px;
   border-radius: 20px;
   width: 118px;
+
   span {
     margin-left: 10px;
   }
@@ -158,6 +169,7 @@ button {
   border: solid 1px #414148;
   background: #252528;
   cursor: pointer;
+
   .arrow {
     margin-left: 5px;
   }
@@ -182,17 +194,20 @@ button {
     border-top-right-radius: 15px;
     display: flex;
     background-color: #1f2128;
+
     span {
       color: white;
       font-size: 14px;
     }
   }
+
   .body-history {
     background-color: #262830;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px;
+
     .item {
       background-color: #00000080;
       padding: 2px 11px;
@@ -201,6 +216,7 @@ button {
     }
   }
 }
+
 .rot {
   transform: rotate(180deg);
 }
@@ -209,7 +225,7 @@ button {
   display: flex;
 }
 
-#gear{
+#gear {
   animation-name: ckw;
   animation-duration: 1.5s;
   /* Things added */
@@ -218,6 +234,7 @@ button {
   display: inline-block;
   /* <--- */
 }
+
 @keyframes ckw {
   0% {
     transform: rotate(0deg);

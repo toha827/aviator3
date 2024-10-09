@@ -39,6 +39,8 @@ export class BetComponent implements OnInit {
 
   @Input() id: string = '';
   @Input() id2: string = '';
+  @Input() showAddBet: boolean = false;
+  @Input() showRemove: boolean = false;
   // public isBet: boolean = false;
   private _gameStatus: string = '';
 
@@ -147,6 +149,8 @@ export class BetComponent implements OnInit {
   }
 
 
+  @Output() addAppBet: EventEmitter<any> = new EventEmitter<any>();
+  @Output() removeAppBet: EventEmitter<any> = new EventEmitter<any>();
   @Output() passBalance: EventEmitter<any> = new EventEmitter<any>();
   @Output() passIsChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() isBetExist: EventEmitter<any> = new EventEmitter<any>()
