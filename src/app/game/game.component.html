@@ -2,88 +2,144 @@
   <div><img src="https://aviator-demo.spribegaming.com/aviator-logo.cafbd29233306bf7.svg" alt=""></div>
   <div class="how-to-play">
     <img src="https://aviator-demo.spribegaming.com/question-brown.7770399d23b5438d.svg" alt="">
-    <span>Cómo jugar?</span>
+    <span>{{
+        {
+          'es': 'Cómo jugar?',
+          'kg': 'Кантип ойнойт?',
+          'tr': 'Nasıl oynanır?'
+        }[locale]
+      }}</span>
   </div>
-  <div class="balance ml-auto"><span>{{balance}}</span> USD</div>
+  <div class="balance ml-auto"><span>{{ balance.toFixed(2) }}</span> {{
+      {
+        'es': 'USD',
+        'kg': 'USD',
+        'tr': 'TRY'
+      }[locale]
+    }}
+  </div>
 </div>
 <div class="body">
   <div class="graph-body">
-    <div class="coefficient" style="display: flex; align-items: center">
+    <div class="coefficient" style="display: flex; align-items: center;">
       <ng-container *ngIf="!isClickedHistory">
-        <div class="coeff-list-test">
-        <ng-container *ngFor="let coeff of coefficientList">
-          <div class="item" [ngClass]="{
-        'low': coeff.coefficient < 2,
-        'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
-        'high': coeff.coefficient >= 10}">
-            {{coeff.coefficient | number: '1.2-2'}}x
-          </div>
-        </ng-container>
+        <div class="coeff-list-test" style="width: 100%">
+          <ng-container *ngFor="let coeff of coefficientList.slice(0, 16)">
+            <div class="item" [ngClass]="{
+        'low': coeff.coefficient < 3.1,
+        'middle': coeff.coefficient >= 3.1,
+        'high': coeff.coefficient >= 4}">
+              {{ coeff.coefficient | number: '1.2-2' }}x
+            </div>
+          </ng-container>
         </div>
       </ng-container>
       <ng-container *ngIf="isClickedHistory">
-        <div class="opened-history">
+        <div class="opened-history" style="margin-left: 10px">
           <div class="header-history">
-            <span>HOSTORIA DE LA RONDA</span>
+            <span>
+              {{
+                {
+                  'es': 'HOSTORIA DE LA RONDA',
+                  'kg': 'ТЕГЕРЕК СТОЛ МЕЙМАНКАНАСЫ',
+                  'tr': 'YUVARLAK MASALI OTEL'
+                }[locale]
+              }}
+              </span>
             <div class="history-btn" *ngIf="isClickedHistory" (click)="handleClickHistory()">
-              <img src="https://aviator-demo.spribegaming.com/history-h.0950ae774061ee87.svg" alt="">
-              <img class="arrow" src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
-            </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14">
+                <path
+                  d="M7.688.27a6.615 6.615 0 0 0-5.809 3.4L.25 2.043v4.604h4.604L2.871 4.662c.92-1.77 2.692-2.974 4.816-2.974C10.592 1.688 13 4.095 13 7c0 2.904-2.408 5.313-5.313 5.313-2.337 0-4.25-1.488-5.029-3.542H1.171c.779 2.833 3.4 4.958 6.517 4.958 3.754 0 6.729-3.046 6.729-6.729 0-3.683-3.046-6.73-6.73-6.73zM6.625 3.813v3.613l3.33 1.983.566-.92-2.834-1.7V3.811H6.625z"
+                  fill="#767B85"/>
+              </svg>
+
+              <svg class="arrow rot" xmlns="http://www.w3.org/2000/svg" width="10" height="8"><path d="M9.2309 4.001 6.6384 6.9638c-.7273.8313-1.9909.9155-2.8221.1882a1.9998 1.9998 0 0 1-.1882-.1882L1.0357 4.001c-.7274-.8313-.6432-2.0948.1881-2.8222A2 2 0 0 1 2.5408.684h5.185c1.1045 0 2 .8954 2 2a2 2 0 0 1-.495 1.317Z" fill="#9DA1AD" fill-rule="evenodd" opacity=".6"/></svg>
+              </div>
           </div>
           <div class="body-history">
             <ng-container *ngFor="let coeff of coefficientList">
-              <div class="item" [ngClass]="{
+              <div class="item" style="flex-grow: 0" [ngClass]="{
         'low': coeff.coefficient < 2,
         'middle': coeff.coefficient >= 2 && coeff.coefficient < 10,
         'high': coeff.coefficient >= 10}">
-                {{coeff.coefficient | number: '1.2-2'}}x
+                {{ coeff.coefficient | number: '1.2-2' }}x
               </div>
             </ng-container>
           </div>
         </div>
       </ng-container>
       <div class="history-btn" *ngIf="!isClickedHistory" (click)="handleClickHistory()">
-        <img src="https://aviator-demo.spribegaming.com/history-h.0950ae774061ee87.svg" alt="">
-        <img class="arrow {{isClickedHistory ? 'rot' : ''}}" src="https://aviator-demo.spribegaming.com/dd-h.45c1ff176d95fe5d.svg" alt="">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14">
+          <path
+            d="M7.688.27a6.615 6.615 0 0 0-5.809 3.4L.25 2.043v4.604h4.604L2.871 4.662c.92-1.77 2.692-2.974 4.816-2.974C10.592 1.688 13 4.095 13 7c0 2.904-2.408 5.313-5.313 5.313-2.337 0-4.25-1.488-5.029-3.542H1.171c.779 2.833 3.4 4.958 6.517 4.958 3.754 0 6.729-3.046 6.729-6.729 0-3.683-3.046-6.73-6.73-6.73zM6.625 3.813v3.613l3.33 1.983.566-.92-2.834-1.7V3.811H6.625z"
+            fill="#767B85"/>
+        </svg>
+        <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="10" height="8"><path d="M9.2309 4.001 6.6384 6.9638c-.7273.8313-1.9909.9155-2.8221.1882a1.9998 1.9998 0 0 1-.1882-.1882L1.0357 4.001c-.7274-.8313-.6432-2.0948.1881-2.8222A2 2 0 0 1 2.5408.684h5.185c1.1045 0 2 .8954 2 2a2 2 0 0 1-.495 1.317Z" fill="#9DA1AD" fill-rule="evenodd" opacity=".6"/></svg>
       </div>
     </div>
-    <div class="graph" style="margin-top: 10px;">
-      <div *ngIf="isFlewAway" class="flex-away" style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
-        <span style="font-size: 30px">VOLÓ LEJOS! </span>
-        <span class="color-red" style="text-align: center">{{currentGame.coefficient.toFixed(2)}}x</span>
+    <div class="graph">
+      <div *ngIf="isFlewAway" class="flex-away"
+           style="text-align: center;z-index: 10;display: flex;flex-direction: column;font-size: 50px">
+        <span class="p" style="font-size: 30px;color: white"> {{
+            {
+              'es': '¡SE FUE VOLANDO!',
+              'kg': '¡АЛ УЧУП КЕТТИ!',
+              'tr': 'UZAKLAŞ!'
+            }[locale]
+          }}</span>
+        <span class="color-red s" style="text-align: center">{{ currentGame.coefficient.toFixed(2) }}x</span>
       </div>
       <div class="sum" [ngClass]="{'color-red': isFlewAway}">
-        <ng-container *ngIf="!isFlewAway && !showLoading && isGameStarting">
-          {{startCoefficient.toFixed(2)}}x
+        <ng-container *ngIf="!isFlewAway && !showLoading">
+          {{ startCoefficient.toFixed(2) }}x
         </ng-container>
       </div>
       <ng-container *ngIf="showLoading">
-        <div class="sum" style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
-          <span style="font-size: 18px;text-align: center">Esperando la próxima ronda</span>
-          <img id="gear" src="/assets/images/prop.svg" alt="" style="margin-top: 20px;width: 50px; height: 50px;">
+        <div class="sum"
+             style="display: flex;flex-direction: column; align-items: center; justify-content: center; color: #ffffff">
+          <img id="gear" src="/assets/images/prop.svg" alt="" style="margin-top: 20px;width: 120px; height: 120px;">
+          <span class="loading-text" style="font-size: 32px;text-align: center;margin-top: 30px;line-height: 34px;">{{
+              {
+                'es': 'ESPERANDO LA PRÓXIMA RONDA',
+                'kg': 'КИЙИНКИ РАУНДДУ КҮТҮҮ',
+                'tr': 'SONRAKİ TUR BEKLENİYOR'
+              }[locale]
+            }}</span>
+          <mat-progress-bar
+            style="margin-top: 20px;width: 200px; height: 30px;"
+            class="example-margin"
+            [color]="color"
+            [mode]="mode"
+            [value]="nextGameLoadingValue"
+            [bufferValue]="bufferValue">
+          </mat-progress-bar>
         </div>
       </ng-container>
       <div class="lottie-new-container">
-      <div class="fun-mode">MODO DIVERTIDO</div>
-      <div style="position: relative" id="lottie-container">
-        <ng-lottie
-          style="position: relative;z-index: 2"
-          [options]="options"
-          width="100%"
-          height="460px"
-          (animationCreated)="animationCreated($event)" />
-        <ng-lottie
-          style="position: absolute;top:0"
-          [options]="optionBg"
-          width="100%"
-          height="220px"
-          (animationCreated)="animationBgCreated($event)">
-        </ng-lottie>
-      </div>
+        <!-- <div class="fun-mode">MODO DIVERTIDO</div> -->
+        <div style="position: relative" id="lottie-container">
+          <ng-lottie
+            style="position: relative;z-index: 2"
+            [options]="options"
+            width="100%"
+            height="500px"
+            (animationCreated)="animationCreated($event)"/>
+          <ng-lottie
+            style="position: absolute;top:0"
+            [styles]="styles"
+            [options]="optionBg"
+            (animationCreated)="animationBgCreated($event)">
+          </ng-lottie>
+        </div>
       </div>
     </div>
+
+    <audio autoplay loop #audio>
+      <source [src]=bgAudio.src type="audio/mp3">
+    </audio>
+    <button id="audio_play_btn" style="visibility: hidden"></button>
     <div class="bet-buttons-1">
-      <app-bet style="width: 100%"
+      <app-bet *ngIf="numberOfBets >= 1" style="display:flex;justify-content: end; margin-right: 10px;width: 100%"
                className="win-1"
                [currentGame]="currentGame"
                [nextGame]="nextGame"
@@ -94,11 +150,13 @@
                [currentStatus]="currentStatus"
                [id]="'id1'"
                [id2]="'id2'"
+               [showAddBet]="numberOfBets == 1"
+               (addAppBet)="onAddAppBet($event)"
                [startCoefficient]="startCoefficient"
                [isGameStarting]="isGameStarting"
                (passBalance)="onGetBalance($event)"
                (isBetExist)="onIsBetExist($event)"></app-bet>
-      <app-bet style="width: 100%"
+      <app-bet *ngIf="numberOfBets == 2" style="width: 100%"
                className="win-2"
                [currentGame]="currentGame"
                [nextGame]="nextGame"
@@ -107,37 +165,116 @@
                [isAutoReached]="isAutoReached"
                [firstStatus]="firstStatus"
                [currentStatus]="currentStatus"
+               [showAddBet]="false"
+               [showRemove]="numberOfBets == 2"
                [id]="'id1'"
                [id2]="'id2'"
                [startCoefficient]="startCoefficient"
                [isGameStarting]="isGameStarting"
                (passBalance)="onGetBalance($event)"
+               (addAppBet)="onAddAppBet($event)"
+               (removeAppBet)="onRemoveAppBet($event)"
                (isBetExist)="onIsBetExist($event)"></app-bet>
     </div>
   </div>
-  <div class="first-block class-table" style="width: 30%;height: 870px;">
+  <div class="first-block class-table" style="width: 30%;height: 100%; overflow: hidden">
     <div class="tabs" style="display: flex; cursor: pointer; align-items: center; justify-content: space-around">
-      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">Todas las apuestas</div>
-      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">Mis apuestas</div>
-      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')">Arriba</div>
+      <div class="tab-item l" [ngClass]="{'isActive': currentTabType === '1'}" (click)="handleTab('1')">{{
+          {
+            'es': 'Apuestas',
+            'kg': 'Баалар',
+            'tr': 'Tüm Bahisler'
+          }[locale]
+        }}
+      </div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '2'}" (click)="handleTab('2')">
+        {{
+          {
+            'es': 'Mis apuestas',
+            'kg': 'Менин коюмдар',
+            'tr': 'Bahislerim'
+          }[locale]
+        }}
+      </div>
+      <div class="tab-item r" [ngClass]="{'isActive': currentTabType === '3'}" (click)="handleTab('3')"> {{
+          {
+            'es': 'Arriba',
+            'kg': 'Өйдө',
+            'tr': 'En İyi'
+          }[locale]
+        }}
+      </div>
     </div>
     <table style="margin-bottom: auto;">
       <thead>
       <tr style="font-size: 12px">
-<!--        <th style="padding: 10px;width: 30px;">Fecha</th>-->
-        <th style="width: 30px;">Usuario</th>
-        <th style="width: 110px;">Apuesta USD</th>
+        <th style="width: 50px;">{{
+            {
+              'es': 'Usuario',
+              'kg': 'Колдонуучу',
+              'tr': 'Oyuncu'
+            }[locale]
+          }}
+        </th>
+        <th style="width: 110px;">{{
+            {
+              'es': 'Apuesta',
+              'kg': 'Баасы',
+              'tr': 'Bahis'
+            }[locale]
+          }} {{
+            {
+              'es': 'USD',
+              'kg': 'USD',
+              'tr': 'TRY'
+            }[locale]
+          }}
+        </th>
         <th></th>
-        <th style="width: 80px;">Retiro de efectivo USD</th>
+        <th style="width: 80px;">{{
+            {
+              'es': 'Cambiar',
+              'kg': 'Өзгөртүү',
+              'tr': 'Nakit çekme'
+            }[locale]
+          }} {{
+            {
+              'es': 'USD',
+              'kg': 'USD',
+              'tr': 'TRY'
+            }[locale]
+          }}
+        </th>
       </tr>
       </thead>
       <tbody>
-      <tr style="background-color: #101112;  border-radius: 10px" *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
-<!--        <td style="padding: 10px">{{bet.date}}</td>-->
-        <td class="left-radius">{{bet.user}}</td>
-        <td>{{bet.amount}}</td>
-        <td>{{highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : ''}}</td>
-        <td class="right-radius">{{highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : ''}}</td>
+      <tr style="background-color: #101112;  border-radius: 10px; height: 34px"
+          *ngFor="let bet of userList; let i = index" [ngClass]="{'highlight': highlightedRows.includes(i)}">
+        <!--        <td style="padding: 10px">{{bet.date}}</td>-->
+        <td class="left-radius" style="display: flex; align-items: center;">
+
+          <img style="
+            width: 37px;
+            height: 30px;
+            border-radius: 100px;"
+               src="https://i.pravatar.cc/150?img={{i}}"/>
+          <span>{{ bet.user }}</span></td>
+        <td>{{ bet.amount }}</td>
+        <td>
+          <div *ngIf="highlightedRows.includes(i)" class="bubble-multiplier font-weight-bold"
+               style="width: 50px; padding: 2px 11px; border-radius: 11px; background-color: #00000080"
+               [ngClass]="{
+        'low': startCoefficients[i] < 2,
+        'middle': startCoefficients[i] >= 2 && startCoefficients[i] < 10,
+        'high': startCoefficients[i] >= 10}"
+          >
+
+            {{ highlightedRows.includes(i) ? startCoefficients[i].toFixed(2) : '' }}
+          </div>
+        </td>
+        <td
+          class="right-radius">{{ highlightedRows.includes(i) ? (bet.amount * startCoefficients[i]).toFixed(2) : '' }}
+        </td>
       </tr>
       </tbody>
     </table>
@@ -145,5 +282,24 @@
 </div>
 
 <div class="powered">
-  <span style="margin-left: 10px">Este juego es</span> <img style="margin-left: 10px" src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg" alt=""> <span style="color: white; margin-left: 10px">Provably Fair</span> <span style="margin-left: auto; margin-right: 10px">Powered by SPRIBE</span>
+  <span style="margin-left: 10px">{{
+      {
+        'es': 'Este juego es',
+        'kg': 'Бул оюн',
+        'tr': 'Bu oyun'
+      }[locale]
+    }}</span> <img style="margin-left: 10px"
+                   src="https://aviator-demo.spribegaming.com/icon-provabyfair.652dcfd9d89241e2.svg"
+                   alt=""> <span style="color: white; margin-left: 10px">{{
+    {
+      'es': 'Provably Fair',
+      'kg': 'Provably Fair',
+      'tr': 'Provably Fair'
+    }[locale]
+  }}</span>
+  <span style="display:flex;margin-left: auto; margin-right: 10px">Powered by
+    <img
+      style="margin-left: 5px;"
+      src="https://aviator-demo.spribegaming.com/logo.eba496b407593c0e.svg" alt="">
+  </span>
 </div>

@@ -1,18 +1,19 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {RoomService} from "../service/room.service";
 import {AnimationOptions, LottieComponent} from "ngx-lottie";
 import {AnimationItem} from "lottie-web";
-import {ReplaySubject, Subject, takeUntil} from "rxjs";
+import {filter, map, ReplaySubject, Subject, takeUntil} from "rxjs";
 import {v4 as uuidv4} from "uuid";
-import {Router, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BetComponent} from "../bet/bet.component";
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [RouterOutlet, LottieComponent, CommonModule, FormsModule, BetComponent],
+  imports: [RouterOutlet, LottieComponent, CommonModule, FormsModule, BetComponent, MatProgressBarModule],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -20,11 +21,26 @@ import {BetComponent} from "../bet/bet.component";
 
 export class GameComponent implements OnInit, OnDestroy {
 
+  styles = {
+    // maxHeight: '800px',
+    // height: '100%'
+  }
+  color: any = 'warn';
+  mode: any = 'determinate';
+  bufferValue = 75;
+
+  nextGameLoadingValue: number = 100;
+  nextGameLoadingTimer: any;
+  numberOfDecrements: number = 100;
+  intervalDuration: number = 0;
+
   public currentTabType: string = '1';
+  public numberOfBets: number = 2;
   public isClickedHistory: boolean = false;
 
   private roomService = inject(RoomService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   public userList = [
     {
@@ -130,19 +146,52 @@ export class GameComponent implements OnInit, OnDestroy {
       coeff: 1.01
     },
     {
-      date: '18:30',
-      amount: 99,
-      user: 'pa**6',
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
       coeff: 1.01
     },
     {
-      date: '18:30',
-      amount: 99,
-      user: 'pa**6',
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
+      coeff: 1.01
+    },
+    {
+      date: '04:30',
+      amount: 1,
+      user: 'pe**6',
+      coeff: 1.01
+    },
+    {
+      date: '09:30',
+      amount: 33,
+      user: 'me**6',
       coeff: 1.01
     },
   ];
-
+  public bgAudio = new Audio('/assets/sounds/bg_music.mp3');
+  private flyAwayAudio = new Audio('/assets/sounds/flyaway.mp3');
+  private flyReadyAudio = new Audio('/assets/sounds/fly_ready.mp3');
+  public locale = 'es';
   startCoefficients: number[] = this.userList.map(() => 1.01);
 
   public options: AnimationOptions = {
@@ -166,19 +215,15 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public isGameStarting: boolean = false;
 
-  public coefficientList: any[] = []
-  public coeffRow: any[] = [];
+  public coefficientList: any[] = [];
 
   public showLoading: boolean = true;
 
   public isBet: boolean = false;
-  public isBet2: boolean = false;
   public isFlewAway: boolean = false;
   public startCoefficient: number = 1;
   private endCoefficient: number = 2;
-  private steps: number = 100;
-  private intervalTime: number = 60000; // Time interval in milliseconds
-  private currentIndex: number = 0;
+
   public betId: number = 0;
   firstStatus: string = '';
   currentStatus: string = '';
@@ -188,15 +233,8 @@ export class GameComponent implements OnInit, OnDestroy {
   public showLogin = false;
   private animationItem: AnimationItem | undefined;
   private animationBgItem: AnimationItem | undefined;
-  private animationLoadingItem: AnimationItem | undefined;
   private firstLoading: boolean = true;
   public balance: number = 0;
-
-  public isChecked: boolean = false;
-  public inputCoeff: number = 0;
-
-  public windCoeff: number = 0;
-  public winSum: number = 0;
 
   intervalId: any;
 
@@ -211,33 +249,65 @@ export class GameComponent implements OnInit, OnDestroy {
   // new Code
   public currentGame: any;
   public nextGame: any;
+  public backendTimeDifference: number = JSON.parse(localStorage.getItem('backendTimeDifference') ?? '0');
+
   //
   public currentBtnType: string = 'bet';
 
-  isBetExit: boolean = false;
-
-  public hasAlertBeenShown: boolean = true;
-  interRoom: any;
   public gameStatus: string = 'waiting';
   private obs: Subject<boolean> = new Subject<boolean>();
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.locale = params.get('locale') ?? 'es'; // Получаем значение параметра
+      console.log('Locale from query params:', this.locale);
+    });
+
+    this.roomService.connect();
+    this.bgAudio.load()
+    this.flyReadyAudio.load()
+    this.flyAwayAudio.load()
     this.roomService.getBalance()
       .pipe(takeUntil(this.#destroyed$))
       .subscribe(res => {
-        this.balance = res.balance;
+          this.balance = res.balance;
         }
       )
-    this.interRoom = setInterval(() => {
-      this.getRooms();
-    }, 1500);
+    this.bgAudio.addEventListener("canplaythrough", (event) => {
+      /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+      // this.bgAudio.play();
+
+    });
+    var audio = document.getElementsByTagName('audio')[0];
+    var audio_play_btn = document.getElementById('audio_play_btn');
+    audio_play_btn?.click();
+    audio.addEventListener("canplay", () => {
+      setTimeout(() => {
+        audio_play_btn?.click();
+        audio.play();
+      }, 3000)
+    });
+
+    document.addEventListener('click', () => {
+      audio.play();
+    })
+    //
+    // this.bgAudio.addEventListener("onended", (event) => {
+    //   /* аудио может быть воспроизведено; проиграть, если позволяют разрешения */
+    //   this.bgAudio.load();
+    //   // this.bgAudio.play();
+    //   console.log('BG AUDIO ENDED')
+    // });
+
+    this.getRooms();
     this.showLogin = !localStorage.getItem('token');
     if (!localStorage.getItem('token')) {
       this.login();
     }
     this.obs.asObservable().subscribe(res => {
       if (!this.firstLoading && res) {
+        // console.log('FUCK OFF')
         this.restart();
       }
     });
@@ -255,41 +325,116 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
-  showAlert: boolean = true;
+  showCurrentGameOverAlert: boolean = true;
+  nextGameTimeout: any;
+  timeZoneDifference: number = 5 * 60 * 60 * 1000;
+
+  private isGamePlaying(element: any, index: number, array: any) {
+    return element.status === 'PLAYING';
+  }
+
+  private isGameCreated(element: any, index: number, array: any) {
+    return element.status === 'CREATED';
+  }
+
+  private isGameFinished(element: any, index: number, array: any) {
+    return element.status === 'FINISHED';
+  }
+
   private getRooms(): void {
 
-    this.roomService.getRoomsList()
-      .pipe(takeUntil(this.#destroyed$))
+    this.roomService.getRoomsWS()
+      .pipe(
+        map(res => JSON.parse(res))
+      )
       .subscribe(res => {
-        /// NEW CODE
-        this.endCoefficient = res[1].coefficient;
-        if (res[1].status === 'PLAYING'){
-          this.nextGame = res[0];
-          this.currentGame = res[1];
-          this.play();
-          this.showLoading = false;
-          this.isGameStarted = true;
-          this.hasAlertBeenShown = false;
-          this.showAlert = false;
-        } else if (res[1].status === "FINISHED") {
-          if (!this.showAlert) {
-            this.isFlewAway = true;
-            setTimeout(() => {
-              this.isFlewAway = false;
-              this.showLoading = true;
-              this.clearAllIntervals()
-              this.clearHighlightedRows()
-            },2000);
+        let indexPlayingGame = res.findIndex(this.isGamePlaying)
+        let indexCreatedGame = res.findIndex(this.isGameCreated)
+        let indexFinishedGame = res.findIndex(this.isGameFinished)
+
+        /// Set next game
+        /// If nextGame not same
+        if (indexCreatedGame != -1 && this.nextGame?.id != res[indexCreatedGame].id) {
+          console.log('Set next game')
+          this.nextGame = res[indexCreatedGame];
+          this.coefficientList = [...res.slice(2)];
+
+          if (this.nextGameTimeout == null) {
+            const nextGameStartDateInMillisecond = new Date(this.nextGame.playing_from).getTime() + this.timeZoneDifference;
+
+            const nextGameStartDateLocal = new Date(nextGameStartDateInMillisecond);
+            const nextGameStartFromNow = nextGameStartDateLocal.getTime() - new Date().getTime() + this.backendTimeDifference;
+            console.log("Next game start in " + nextGameStartFromNow / 1000 + " sec.");
+            //
+            // this.intervalDuration = nextGameStartFromNow / this.numberOfDecrements;
+            // this.nextGameLoadingValue = this.numberOfDecrements;
+            // this.nextGameLoadingTimer = setInterval(() => {
+            //   if (this.nextGameLoadingValue > 0) {
+            //     this.nextGameLoadingValue -= 1;
+            //   } else {
+            //     clearInterval(this.nextGameLoadingTimer);
+            //   }
+            // }, this.intervalDuration);
+
+            this.nextGameTimeout = setTimeout(() => {
+              this.play(this.nextGame);
+              var nextGameStart = new Date(this.nextGame.playing_from).getTime();
+              var nextGameActualStart = new Date(this.nextGame.playing_from).getTime() + this.backendTimeDifference;
+
+              console.log('GAME START ' + new Date(nextGameStart));
+              console.log('Difference ' + this.backendTimeDifference);
+              console.log('GAME START ACTUAL ' + new Date(nextGameActualStart));
+              this.showLoading = false;
+              this.nextGameTimeout = null;
+            }, nextGameStartFromNow);
           }
-          this.showAlert = true;
-          this.nextGame = res[0];
-          this.currentGame = res[1];
-          this.isGameStarted = false;
-          this.stop();
-          this.stopBg();
         }
-        /// OLD CODE
-        this.coefficientList = [...res.slice(1), ...res];
+
+
+        /// Set current game
+        /// If currentGame not same
+        if (indexPlayingGame != -1 && this.currentGame?.id != res[indexPlayingGame].id) {
+          console.log('Set current game')
+          if (this.currentGame != null && this.currentGame!.id != res[indexPlayingGame].id) {
+            this.backendTimeDifference = new Date().getTime() - (new Date(res[indexPlayingGame].playing_from).getTime() + this.timeZoneDifference)
+            localStorage.setItem('backendTimeDifference', JSON.stringify(this.backendTimeDifference));
+            console.log('BACKEND time difference \'playing\'' + this.backendTimeDifference / 1000);
+          }
+          this.currentGame = res[indexPlayingGame];
+          this.showCurrentGameOverAlert = false;
+        }
+
+        let isCurrentGameFinished = res[indexFinishedGame].id === this.currentGame?.id
+
+        if (isCurrentGameFinished && this.nextGameLoadingTimer == null) {
+          this.nextGameLoadingValue = 100;
+
+          const nextGameStartDateInMillisecond = new Date(this.nextGame.playing_from).getTime() + this.timeZoneDifference;
+
+          const nextGameStartDateLocal = new Date(nextGameStartDateInMillisecond);
+          const nextGameStartFromNow = nextGameStartDateLocal.getTime() - new Date().getTime() + this.backendTimeDifference;
+
+          this.intervalDuration = nextGameStartFromNow / this.numberOfDecrements;
+          this.nextGameLoadingValue = this.numberOfDecrements;
+          this.nextGameLoadingTimer = setInterval(() => {
+            if (this.nextGameLoadingValue > 0) {
+              this.nextGameLoadingValue -= 1;
+            } else {
+              clearInterval(this.nextGameLoadingTimer);
+              this.nextGameLoadingTimer = null;
+            }
+          }, this.intervalDuration);
+        }
+
+        /// Action on current game finished
+        /// set next game timer to start play
+
+        // if (res.some((e: any) => e.status === 'PLAYING')) {
+        //   this.coefficientList = [...res.slice(2), ...res];
+        // } else {
+        //   this.coefficientList = [...res.slice(1), ...res];
+        // }
+
         this.betId = res[0].id;
         this.currentStatus = res[1].status;
         this.firstStatus = res[0].status;
@@ -305,61 +450,205 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
-  public changeCoefficientAutomatically(): void {
-    // const stepSize = (this.endCoefficient - this.startCoefficient) / this.steps;
-    console.log(this.endCoefficient, (this.endCoefficient - this.startCoefficient) , (this.endCoefficient - this.startCoefficient) / this.steps)
-    const startDate = new Date(this.currentGame.playing_from);
-    const endDate = new Date(this.currentGame.playing_until);
-    const totalSteps = Math.ceil((this.currentGame.coefficient - this.startCoefficient) / 0.1); // Total number of steps
-    const totalDuration = endDate.getTime() - startDate.getTime() - 1000; // Total duration in milliseconds
-    const intervalTime = totalDuration / totalSteps; // Time per step
+  gameRuntimeCalculator(endCoef: number) {
+    // Initial parameters
+    let initialCoef = 1.0;
+    let currentCoef = initialCoef;
 
-    const intervalDuration = totalDuration / totalSteps; // Interval duration per step
-    const stepSize = (this.currentGame.coefficient - this.startCoefficient) / totalSteps; // Step increment
+    let initialDuration = 1.0;
+    let increment = 0.1; // coefficient increment
+    let stepDecrement = 0.010; // duration decrement per 2s step
+    let stepThreshold = 1.0; // threshold for applying step decrement
 
+    let totalDuration = 0.0;
+    let currentDuration = initialDuration;
 
-    // Ensure interval ID is cleared in case of multiple calls
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+    // Calculation loop
+    while (currentCoef < endCoef) {
+      totalDuration += currentDuration;
+      currentCoef += increment;
+
+      // Check if we have passed a 2s threshold and adjust duration
+      if (totalDuration >= stepThreshold) {
+        if (currentDuration - stepDecrement <= 0.1) {
+          currentDuration = 0.1;
+          stepThreshold += 1.0; // update the next threshold
+          continue;
+        } else {
+          currentDuration -= stepDecrement;
+          stepThreshold += 1.0; // update the next threshold
+        }
+      }
     }
 
-    // Reset currentIndex to ensure proper counting from the start
-    this.currentIndex = 0;
+    return totalDuration * 1000;
+  }
 
-    this.intervalId = setInterval(() => {
-      // Check if the current index has reached the total steps
-      if (this.currentIndex >= this.steps + 20) {
-        // this.isFlewAway = true;
-        // this.stop(); // Stop the main animation
-        // this.stopBg(); // Stop the background animation
-        this.firstLoading = false;
-        this.startCoefficient = 1;
-        // setTimeout(() => {
-        //   this.isFlewAway = false
-        // }, 2000);
-        // Emit the observer event
-        clearInterval(this.intervalId); // Clear the interval to stop execution
-      } else {
-        // Increment the startCoefficient by the step size
-        this.startCoefficient += 0.1;
-        console.log(stepSize);
-        this.roomService.setCoeff(this.startCoefficient);
-        this.currentIndex++;
+  generateIntervals(totalDuration: number) {
+    console.log(`Total Duration ${totalDuration}`)
+    let initialDuration = 100.0;  // initial duration in milliseconds
+    let stepDecrement = 1.0;  // duration decrement every 10 steps in milliseconds
+    let steps = 10;  // steps to apply the decrement
 
-        // if (this.isChecked) {
-        //   // Check if auto coefficient is reached and update the flag
-        //   if (this.startCoefficient.toFixed(1) === this.inputCoeff.toFixed(1)) {
-        //     this.isAutoReached = true;
-        //   }
-        // }``
+    let intervals = [];
+    let currentDuration = initialDuration;
+    let stepCounter = 0;
+    let remainingDuration = totalDuration;
+
+    while (remainingDuration > 0) {
+      intervals.push(currentDuration);
+      remainingDuration -= currentDuration;
+      stepCounter++;
+
+      // Check if we need to decrement the duration
+      if (stepCounter === steps) {
+        stepCounter = 0;  // reset step counter
+        if (currentDuration - stepDecrement <= 10) {
+          currentDuration = 10;
+        } else {
+          currentDuration -= stepDecrement;
+        }
       }
-    }, intervalTime);
 
+      // Ensure we don't add more duration than remaining
+      if (remainingDuration < currentDuration) {
+        intervals.push(remainingDuration);
+        break;
+      }
+    }
+
+    console.log(`Intervals: ${intervals.length}`);
+    return intervals;
+  }
+
+  public async changeCoefficientAutomatically(playingGame: any): Promise<void> {
+    const totalDuration = this.gameRuntimeCalculator(playingGame.coefficient);
+    console.log(`asdasd ${new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime()}`)
+    const totalDuration2 = new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime();
+    const intervals = this.generateIntervals(totalDuration2);
+    let startCoefficient = 1.0;
+    const endCoefficient = playingGame.coefficient;
+    const increment = 0.01;
+
+    // Calculate the number of steps required to reach the end coefficient
+    const steps = Math.ceil((endCoefficient - startCoefficient) / increment);
+
+    let currentStep = 0;
+
+    console.log(playingGame);
+    while (this.startCoefficient < endCoefficient) {
+      await this.delay(intervals[currentStep]);
+      this.startCoefficient += increment;
+      // console.log('Current Coefficient:', this.startCoefficient, currentStep, endCoefficient);
+      currentStep++;
+    }
+    console.log('game ended ' + this.startCoefficient + ' ' + endCoefficient);
+
+    this.currentGame = {
+      ...this.currentGame,
+      'status': 'FINISHED',
+    };
+
+    this.flyawayAnimation();
+
+    if (!this.showCurrentGameOverAlert) {
+      this.isFlewAway = true;
+      this.showCurrentGameOverAlert = true;
+
+      setTimeout(() => {
+        this.isFlewAway = false;
+        this.showLoading = true;
+        this.clearAllIntervals()
+        this.clearHighlightedRows();
+        this.toggleHidePlane(false)
+        // console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
+      }, 3000);
+    }
+    this.isGameStarted = false;
+    this.stop();
+    this.stopBg();
+    // console.log('Final Coefficient:', this.startCoefficient, this.currentGame.coefficient);
+    this.startCoefficient = 1.0
+  }
+
+  private toggleHidePlane(hide: Boolean) {
+    var lottieSvgClass1Elements = document.getElementsByClassName('lottie-svg-class1');
+
+    if (lottieSvgClass1Elements.length <= 0) {
+      return;
+    }
+
+    var lottieSvg = lottieSvgClass1Elements[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+
+    var plane: SVGGElement[] = [];
+
+    for (var i = 0; i < lottieSvg.length; i++) {
+      lottieSvg[i].style.display = hide ? 'none' : 'block'
+      var paths = lottieSvg[i].getElementsByTagName('path')
+      if (paths.length > 0) {
+        paths[0].style.display = hide ? 'none' : 'block'
+      }
+    }
+  }
+
+  private flyawayAnimation() {
+    var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+    var ngLottie = document.getElementsByTagName('ng-lottie')[0] as HTMLElement
+    var ngLottieSvg = document.getElementsByTagName('ng-lottie')[0].getElementsByTagName('svg')[0]
+    var LottieNewContainer = document.getElementsByClassName('lottie-new-container')[0] as HTMLElement
+
+    var plane: SVGGElement[] = [];
+
+    for (var i = 0; i < lottieSvg.length; i++) {
+      if (lottieSvg[i].classList.contains('ai')) {
+        plane.push(lottieSvg[i])
+      } else {
+        lottieSvg[i].style.display = 'none'
+      }
+    }
+
+    const svgMatrix1 = plane[0].transform.animVal[0].matrix
+    const initialTransform1 = getComputedStyle(plane[0]).transform;
+    const initialTransform2 = getComputedStyle(plane[1]).transform;
+    const initialTransform3 = getComputedStyle(plane[2]).transform;
+
+
+    const keyframes1 = [
+      {transform: initialTransform1},
+      {transform: 'translateX(350vw) translateY(20px)'}
+    ];
+
+    const keyframes2 = [
+      {transform: initialTransform2},
+      {transform: 'translateX(350vw) translateY(20px)'}];
+
+    const keyframes3 = [
+      {transform: initialTransform3},
+      {transform: 'translateX(350vw) translateY(20px)'}];
+
+    // Define the animation options
+    const options = {
+      duration: 1300, // Animation duration in milliseconds
+      easing: 'linear' // Easing function
+    };
+    ngLottieSvg.classList.add('flyaway')
+    this.flyAwayAudio.play()
+    // Start the animation
+    var planeAnimation = plane[0].animate(keyframes1, options);
+    plane[1].animate(keyframes2, options);
+    plane[2].animate(keyframes3, options);
+    planeAnimation.onfinish = (event) => {
+      this.toggleHidePlane(true)
+      this.flyawayAnimationRevert();
+    }
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   public animationCreated(animationItem: AnimationItem): void {
     this.animationItem = animationItem;
-    // this.play();
     setTimeout(() => {
       // this.changeCoefficientAutomatically();
     }, 100);
@@ -367,7 +656,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public animationBgCreated(animationItem: AnimationItem): void {
     this.animationBgItem = animationItem;
-    // this.playBg();
   }
 
   public playBg(): void {
@@ -382,12 +670,22 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  public play(): void {
+  public play(game: any): void {
+    this.flyawayAnimationRevert()
+    this.toggleHidePlane(false)
+    // if (this.bgAudio.paused) {
+    //   this.bgAudio.play()
+    // }
+
     if (this.animationItem && !this.isGameStarted) {
+      // console.log(123)
       // this.isFlewAway = false;
       this.animationItem.play();
       this.playBg();
-      this.changeCoefficientAutomatically();
+      this.flyReadyAudio.play();
+      this.flyawayAnimationRevert()
+      this.changeCoefficientAutomatically(game);
+      console.log('play');
       this.startHighlightingSequence();
     }
   }
@@ -399,6 +697,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public stop(): void {
+    clearInterval(this.intervalId)
     if (this.animationItem) {
       this.animationItem.stop();
     }
@@ -406,22 +705,21 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public restart(): void {
     this.isFlewAway = true;
+    // console.log('FUCKKKKK OFFFF')
     if (this.animationItem) {
       this.isBet = false;
       this.stop();
       clearInterval(this.mainIntervalId);
+      this.startCoefficient = 1;
       this.isGameStarting = false;
       this.clearAllIntervals();
       this.resetCoefficients();
-      this.coeffRow = [];
       this.clearHighlightedRows();
-      this.getRooms();
     }
   }
 
   private resetCoefficients(): void {
     this.startCoefficient = 1.0;
-    this.currentIndex = 0;
   }
 
   public login(): void {
@@ -434,7 +732,15 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public onGetBalance(event: any): void {
-    this.balance = event;
+    this.balance = event + parseFloat(`0.${parseInt(localStorage.getItem('lastBalanceDouble') ?? '0')}`);
+  }
+
+  public onAddAppBet(event: any): void {
+    this.numberOfBets++;
+  }
+
+  public onRemoveAppBet(event: any): void {
+    this.numberOfBets--;
   }
 
   startHighlightingSequence() {
@@ -447,25 +753,41 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   startHighlighting() {
+    console.log(this.userList.length);
     const indices = this.generateRandomIndices();
-    this.highlightRow(indices[0], 1000); // Highlight first row after 3 seconds
-    this.highlightRow(indices[1], 2000); // Highlight third row after 5 seconds
-    this.highlightRow(indices[2], 3000); // Highlight third row after 5 seconds
-    this.highlightRow(indices[3], 4000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[4], 4500); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[5], 5000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[6], 5000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[7], 7000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[8], 9000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[9], 9000); // Highlight fifth row after 7 seconds
-    this.highlightRow(indices[10], 10000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[0], 500); // Highlight first row after 3 seconds
+    this.highlightRow(indices[1], 1000); // Highlight third row after 5 seconds
+    this.highlightRow(indices[2], 1500); // Highlight third row after 5 seconds
+    this.highlightRow(indices[3], 1500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[4], 1900); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[5], 2000); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[6], 2100); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[7], 2500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[8], 2500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[9], 3050); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[10], 3100); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[11], 3100); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[12], 3500); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[13], 3550); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[14], 3950); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[15], 4150); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[16], 4250); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[17], 4350); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[18], 4450); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[19], 150); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[20], 350); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[21], 250); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[22], 50); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[23], 250); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[24], 350); // Highlight fifth row after 7 seconds
+    this.highlightRow(indices[25], 420); // Highlight fifth row after 7 seconds
   }
 
   generateRandomIndices(): number[] {
     const indices = [];
     const usedIndices = new Set<number>();
 
-    while (indices.length < 10) {
+    while (indices.length < 17) {
       const randomIndex = Math.floor(Math.random() * this.userList.length);
       if (!usedIndices.has(randomIndex)) {
         indices.push(randomIndex);
@@ -511,9 +833,37 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.interRoom);
+    this.startCoefficient = 1;
     this.clearAllIntervals();
     this.#destroyed$.next(true);
     this.#destroyed$.complete();
+    this.roomService.close();
+  }
+
+  private flyawayAnimationRevert() {
+    try {
+      var lottieSvg = document.getElementsByClassName('lottie-svg-class1')[0].getElementsByTagName('g')[0].getElementsByTagName('g')
+      var ngLottie = document.getElementsByTagName('ng-lottie')[0] as HTMLElement
+      var ngLottieSvg = document.getElementsByTagName('ng-lottie')[0].getElementsByTagName('svg')[0]
+      var LottieNewContainer = document.getElementsByClassName('lottie-new-container')[0] as HTMLElement
+
+      var plane: SVGGElement[] = [];
+
+
+      ngLottieSvg.classList.remove('flyaway')
+
+      // LottieNewContainer.style.removeProperty('width')
+      // ngLottie.style.removeProperty('max-width')
+      // ngLottieSvg.style.removeProperty('max-width')
+      for (var i = 0; i < lottieSvg.length; i++) {
+        if (lottieSvg[i].classList.contains('ai')) {
+          plane.push(lottieSvg[i])
+        } else {
+          lottieSvg[i].style.display = 'block'
+        }
+      }
+    } catch (e) {
+
+    }
   }
 }

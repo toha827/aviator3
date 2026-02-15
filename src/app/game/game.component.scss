@@ -8,18 +8,22 @@
   display: flex;
   background-color: #1b1c1d;
   align-items: center;
+
   .title {
     cursor: pointer;
     color: #ffffff;
     font-size: 18px;
   }
+
   .ml-auto {
     margin-left: auto;
   }
+
   .balance {
     color: #ffffff;
     margin-right: 15px;
     font-size: 18px;
+
     span {
       color: #28a909;
     }
@@ -31,16 +35,21 @@
 .coefficient {
   display: flex;
   //justify-content: space-between;
-  margin-left: 10px;
-  margin-right: 10px;
+  //margin-left: auto;
+  //margin-right: auto;
+  //margin-left: 10px;
+  //margin-right: 10px;
   gap: 2px;
+
   .item {
     font-weight: 700;
-    font-size: 12px;
+    font-size: 14px;
   }
 }
+
 .color-red {
   color: red;
+  font-size: 105px;
 }
 
 .graph {
@@ -49,19 +58,29 @@
   //border-bottom: 1px solid white;
   position: relative;
   display: flex;
+
   .flex-away {
     position: absolute;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    .color-red {
+      font-weight: 900;
+    }
+
+    .s {
+      margin-top: 55px;
+    }
   }
+
   .sum {
     color: white;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 50px;
+    font-size: 105px;
     z-index: 99999;
     font-weight: bold;
   }
@@ -73,22 +92,25 @@ button {
 
 .first-block {
   padding: 10px;
-  max-width: 750px;
+  max-width: 480px;
   display: flex;
   position: relative;
   width: 90%;
   flex-direction: column;
-  justify-content: center;
+  // почему то ломает верстку
+  // justify-content: center;
   align-items: center;
   border-radius: 10px;
   background-color: #1b1c1d;
   z-index: 0;
   margin: 0 auto;
   border: solid 1px transparent;
+  overflow: scroll;
 }
 
 .highlight {
-  background-color: #427f00 !important;
+  background-color: #123405 !important;
+  outline: thin solid #427f00;
   //td {
   // border: 1px solid #123405 !important;
   //}
@@ -106,7 +128,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 22px;
   width: 100%;
   text-align: center;
   font-size: 12px;
@@ -128,6 +150,7 @@ button {
   font-size: 14px;
   border-radius: 20px;
   width: 118px;
+
   span {
     margin-left: 10px;
   }
@@ -146,6 +169,7 @@ button {
   border: solid 1px #414148;
   background: #252528;
   cursor: pointer;
+
   .arrow {
     margin-left: 5px;
   }
@@ -170,17 +194,20 @@ button {
     border-top-right-radius: 15px;
     display: flex;
     background-color: #1f2128;
+
     span {
       color: white;
       font-size: 14px;
     }
   }
+
   .body-history {
     background-color: #262830;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px;
+
     .item {
       background-color: #00000080;
       padding: 2px 11px;
@@ -189,6 +216,7 @@ button {
     }
   }
 }
+
 .rot {
   transform: rotate(180deg);
 }
@@ -197,7 +225,7 @@ button {
   display: flex;
 }
 
-#gear{
+#gear {
   animation-name: ckw;
   animation-duration: 1.5s;
   /* Things added */
@@ -206,6 +234,7 @@ button {
   display: inline-block;
   /* <--- */
 }
+
 @keyframes ckw {
   0% {
     transform: rotate(0deg);

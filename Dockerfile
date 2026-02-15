@@ -1,27 +1,11 @@
-# projects/aviator3/Dockerfile
+FROM node:alpine
 
-# Stage 1: Build
-FROM node:20-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-# Builds to dist/aviator3/browser
-RUN npm run build -- --configuration production
+WORKDIR /usr/src/app
 
-# --- ADD THIS LINE TO DEBUG ---
-RUN ls -R /app/dist
-# ------------------------------
+COPY . /usr/src/app
 
-# Stage 2: Serve
-FROM nginx:alpine
-RUN rm -rf /usr/share/nginx/html/*
+RUN npm install -g @angular/cli
 
-# Copy build artifacts
-# Check your angular.json if the output path is different!
-COPY --from=build /app/dist/aviator2/browser /usr/share/nginx/html
+RUN npm install
 
-
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["ng", "serve", "--host", "0.0.0.0"]

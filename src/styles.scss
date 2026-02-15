@@ -1,7 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+* {
+  box-sizing: border-box;
+}
 
 .pointer-none {
   pointer-events: none;
@@ -110,15 +114,15 @@ table {
   height: calc(max(100px, 70vh))!important;
 }
 
-.lottie-svg-class1 {
-  width:calc(max(800px, 50vw))!important;
-  height: calc(max(200px, 70vh))!important;
-}
+//.lottie-svg-class1 {
+//  width:calc(max(800px, 50vw))!important;
+//  height: calc(max(200px, 70vh))!important;
+//}
 
 .graph-body {
   display:flex;
   flex-direction: column;
-  height: 100vh;
+  //height: 100vh;
   width: 70%;
 }
 
@@ -133,7 +137,7 @@ table {
 .body {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
 }
 
 .main-content {
@@ -144,18 +148,19 @@ table {
 
 .coefficient {
   display: flex;
-  flex-wrap: wrap;
+  //flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .item {
   margin: 10px;
+  flex-grow: 1;
 }
 
 .graph {
   //max-height: 100vh !important;
-  height: 100vh !important;
+  //height: 100vh !important;
   position: relative;
 }
 
@@ -213,20 +218,80 @@ table {
 }
 
 th, td {
-  padding: 10px;
+
   text-align: left;
   font-size: 12px;
 }
 
-@media (700px <= width <= 1990px) {
+td img{
+  padding-right: 10px;
+}
+
+@media (1280px <= width <= 1444px) {
+  //.coeff-list-test {
+  //  width: 900px !important;
+  //}
+}
+
+@media (200px <= width <= 404px) {
+  #lottie-container div {
+    height: 104% !important;
+  }
+}
+
+@media (1000px <= width <= 1279px) {
+  //.coeff-list-test {
+  //  width: 750px !important;
+  //}
+}
+
+@media (1150px <= width <= 2300px) {
+  .first-block-bet {
+    width: 97% !important;
+    max-width: 100% !important;
+  }
+}
+@media (2301px <= width <= 3200px) {
+  .first-block-bet {
+    width: 80% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (1150px <= width <= 2890px) {
+  .win-1 {
+    margin-top: -580px !important;
+  }
+
+  .win-2 {
+    margin-top: -500px !important;
+  }
+  .graph {
+    //height: 100% !important;
+  }
+  .lottie-new-container {
+    width: 100%;
+    height: 500px;
+  }
+  .mt-20 {
+    margin-top: 20px !important;
+  }
+  .coeff-list-test {
+    overflow: hidden;
+    flex-wrap: nowrap;
+    //width: 1050px;
+    //max-width: 1230px;
+    //min-width: 750px;
+  }
+
   .bet-buttons-1 {
-    margin-top: 120px;
+    margin-top: -25px;
     display: flex;
   }
 
   .graph-body {
     width: 100% !important;
-    height: 75vh;
+    //height: 75vh;
   }
 
   .class-table {
@@ -235,24 +300,32 @@ th, td {
   }
 
   .body {
-    height: 110vh !important;
+    height: 100vh !important;
   }
 
   .lottie-svg-class {
     width: calc(74vw) !important;
-    max-width: 1750px !important;
-    height: calc(63vh) !important;
+    //max-width: 1750px !important;
+    height: 480px !important;
     max-height: 1450px !important;
-    border-left: 1px solid white;
-    border-bottom: 1px solid white;
+    border-left: 1px solid rgba(255, 255, 2555, .3);
+    border-bottom: 1px solid rgba(255, 255, 2555, .3);
+    -webkit-background-clip: padding-box; /* for Safari */
+    background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
+    //border-left: 1px solid white;
+    //border-bottom: 1px solid white;
   }
 
   .lottie-svg-class1 {
-    width: calc(100vw) !important;
+    //width: calc(100vw) !important;
     max-width: 1000px !important;
-    height: calc(66vh) !important;
-    max-height: 555px !important;
+    height: 820px !important;
+    max-height: 540px !important;
     // margin-top: -4px;
+  }
+
+  .lottie-svg-class1.flyaway {
+    max-width: 100% !important;
   }
 
   .fun-mode {
@@ -285,21 +358,83 @@ th, td {
   .header {
     // width: 113% !important;
   }
-  .lottie-svg-class1 {
-    margin-top: -7px !important;
-  }
+  //.lottie-svg-class1 {
+  //  margin-top: -7px !important;
+  //}
 }
 
-@media (280px <= width <= 650px) {
+@media (280px <= width <= 450px) {
+
+  .coefficient {
+    flex-wrap: nowrap;
+  }
+}
+@media (280px <= width <= 1150px) {
+  .first-block {
+    margin: 0 auto !important;
+  }
+  .example-margin {
+    margin-top: 0 !important;
+  }
+  ::ng-deep .mat-mdc-progress-bar.mat-warn {
+    margin-top: 0 !important;
+  }
+  .mt-20 {
+    margin-top: 10px !important;
+  }
+  .mt-50 {
+    //margin-top: 40px !important;
+  }
+
+  .p {
+    font-size: 20px !important;
+  }
+  .s {
+    margin-top: 30px !important;
+    font-size: 60px !important;
+  }
+  .sum {
+    font-size: 60px !important;
+  }
+  .loading-text {
+    font-size: 20px !important;
+  }
+
+  .win-1 {
+    margin-top: -30vh;
+    //margin-left: 65px !important;
+    left: 55% !important;
+    //top: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+  .win-2 {
+    margin-top: -40vh;
+    left: 55% !important;
+    transform: translate(-50%,-50%);
+    //margin-left: 65px !important;
+  }
 
   #gear {
-    width: 30px !important;
-    height: 30px !important;
+    width: 40px !important;
+    height: 40px !important;
   }
 
   .lottie-new-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
+  }
+  .lottie-new-container #lottie-container {
+    width: 100%;
+  }
+  .lottie-new-container #lottie-container {
+    width: 100%;
+  }
+  .lottie-new-container #lottie-container:first-child{
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
   .coeff-list-test {
     overflow: hidden;
@@ -307,27 +442,27 @@ th, td {
     width: 342px;
   }
   .flex-away {
-    top: 60% !important;
+    top: 45% !important;
   }
   #lottie-container {
     display: flex;
     div {
-      height: 200px !important;
+      height: 100% !important;
     }
   }
 
   .body {
     width: 100%;
-    height: 180vh !important;
+    //height: 180vh !important;
   }
 
   .header {
-    width: 105%;
+    width: 100%;
   }
 
   .graph-body {
     width: 100% !important;
-    height: 70vh !important;
+    //height: 70vh !important;
   }
 
   .graph {
@@ -340,26 +475,37 @@ th, td {
   }
 
   #lottie-container {
-    height: 23vh;
+    //height: 23vh;
     width: 400px;
   }
-
+  path {
+    width: 100%;
+  }
   .lottie-svg-class {
-    width: calc(95vw) !important;
-    max-width: 1950px !important;
-    height: calc(23vh) !important;
-    max-height: 550px !important;
-    border-left: 1px solid white;
-    border-bottom: 1px solid white;
+    margin-bottom: 50px;
+    //width: calc(95vw) !important;
+    width: 100% !important;
+    height: 100% !important;
+    //max-width: 1950px !important;
+    //height: 30vh !important;
+    max-height: 250px !important;
+    //min-height: 250px !important;
+    border-left: 1px solid rgba(255, 255, 2555, .01);
+    border-bottom: 1px solid rgba(255, 255, 2555, .01);
+    //-webkit-background-clip: padding-box; /* for Safari */
+    //background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
   }
 
   .lottie-svg-class1 {
-    width: calc(100vw) !important;
-    max-width: 365px !important;
-    height: calc(86vh) !important;
-    max-height: 200px !important;
-    //margin-left: 37px;
-    margin-top: 2px;
+    display: flex;
+    height: 100% !important;
+    //min-height: 250px !important;
+    //max-height: 250px !important;
+    //height: 20vh !important;
+    //width: 96vw !important;
+    //max-width: 400px !important;
+    //height: 30vh !important;
+    //max-height: 800px !important;
   }
 
   .fun-mode {
@@ -376,14 +522,14 @@ th, td {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1150px) {
 
   .body {
     flex-direction: row-reverse;
   }
 
   .class-table {
-    margin-top: 20px!important;
+    margin-top: 0 !important;
   }
 
   .graph-body {
@@ -424,4 +570,91 @@ table {
   color: #5e6269;
   left: 20px;
   height: 40px;
+}
+
+.box {
+  animation: move 1s;
+  //animation-play-state: paused;
+  //animation-delay: var(--delay);
+}
+
+@keyframes move {
+  0% {
+    transform: translate(40%, 30%)
+  }
+  25% {
+    transform: translate(50%, 30%)
+  }
+  50% {
+    transform: translate(60%, 30%)
+  }
+  75% {
+    transform: translate(70%, 30%)
+  }
+  100% {
+    transform: translate(100%, 30%)
+  }
+}
+
+.mdc-linear-progress__buffer-bar {
+  background-color: rgb(44, 45, 48) !important;
+}
+
+.mdc-linear-progress__bar-inner {
+  border-radius: 20px;
+  //background-color: #f44336 !important;
+  //background-color: red !important;
+  border-color: red !important;
+}
+md-progress-linear .md-container {
+  height: 100px !important;
+}
+.mdc-linear-progress__buffer-bar {
+  border-radius: 20px;
+}
+.mdc-linear-progress__buffer {
+  border-radius: 20px;
+}
+
+
+
+.mat-mdc-progress-bar {
+  border-radius: 10px;
+  --mdc-linear-progress-track-height: 7px;
+  --mdc-linear-progress-active-indicator-height: 7px;
+}
+
+md-progress-linear .md-container .md-bar {
+  height: 100px !important;
+}
+
+//:host ::ng-deep .mat-progress-bar {
+//  height: 20px !important;
+//}
+//
+//:host ::ng-deep .mat-progress-bar .mdc-linear-progress__bar-inner {
+//  border-top-width: 20px !important;
+//}
+//
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
+@media (1800px <= width <= 3200px) {
+  .bet-buttons-1 {
+
+  }
+  .graph {
+    height: 65% !important;
+  }
+  .lottie-svg-class {
+    height: 35vw !important;
+  }
+
+  #lottie-container {
+    height: 33vw !important;
+  }
+  .class-table {
+    height: 83vh !important;
+  }
 }
