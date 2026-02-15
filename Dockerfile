@@ -21,8 +21,7 @@ RUN rm -rf /usr/share/nginx/html/*
 # Check your angular.json if the output path is different!
 COPY --from=build /app/dist/aviator2/browser /usr/share/nginx/html
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

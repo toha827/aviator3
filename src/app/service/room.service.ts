@@ -1,13 +1,13 @@
-import {inject, Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {BehaviorSubject, Observable} from "rxjs";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class RoomService {
-  private readonly baseUrl = 'http://209.250.233.190:80';
+  private readonly baseUrl = 'http://94.247.129.5';
   private http = inject(HttpClient);
   checkIsAuto$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   checkShowOver: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -36,7 +36,7 @@ export class RoomService {
     return this.http.put(`${this.baseUrl}/v1/bets/cancels/${id}`, {})
   }
 
-  public addCoefficient(body: {coefficient: number[]}): Observable<any> {
+  public addCoefficient(body: { coefficient: number[] }): Observable<any> {
     return this.http.post(`${this.baseUrl}/v1/bets/add-coefficients`, body);
   }
 
@@ -44,7 +44,7 @@ export class RoomService {
     return this.http.get(`${this.baseUrl}/v1/bets/balance`);
   }
 
-  public setBalance(body: {amount: number}): Observable<any> {
+  public setBalance(body: { amount: number }): Observable<any> {
     return this.http.post(`${this.baseUrl}/v1/bets/set-balance`, body);
   }
 
