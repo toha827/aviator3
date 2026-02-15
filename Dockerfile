@@ -9,6 +9,10 @@ COPY . .
 # Builds to dist/aviator3/browser
 RUN npm run build -- --configuration production
 
+# --- ADD THIS LINE TO DEBUG ---
+RUN ls -R /app/dist
+# ------------------------------
+
 # Stage 2: Serve
 FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
