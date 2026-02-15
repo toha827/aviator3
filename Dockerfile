@@ -19,7 +19,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy build artifacts
 # Check your angular.json if the output path is different!
-COPY --from=build /app/dist/aviator3/browser /usr/share/nginx/html
+COPY --from=build /app/dist/aviator2/browser /usr/share/nginx/html
 
 # Copy nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
