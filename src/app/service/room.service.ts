@@ -34,7 +34,7 @@ export class RoomService {
   }
 
   connect(): void {
-    this.socket = new WebSocket('wss://api.1pscpy.com/v1/rooms/websocket');
+    this.socket = new WebSocket('wss://http://94.247.129.5/v1/rooms/websocket');
 
     this.socket.onopen = () => {
       console.log('WebSocket connection established.');
