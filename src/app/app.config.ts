@@ -18,6 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     provideEnvironmentNgxMask(),
     provideCacheableAnimationLoader(),
-    provideLottieOptions({ player: () => player }),
+    provideLottieOptions({ player: () => player }), provideAnimationsAsync(),
   ]
 };

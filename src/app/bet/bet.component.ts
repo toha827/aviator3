@@ -3,6 +3,7 @@ import {BehaviorSubject, exhaustMap, ReplaySubject, takeUntil, tap} from "rxjs";
 import {RoomService} from "../service/room.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-bet',
@@ -13,6 +14,8 @@ import {FormsModule} from "@angular/forms";
 })
 export class BetComponent implements OnInit {
 
+  private route = inject(ActivatedRoute);
+  public locale = 'es';
   private _currentStatus = '';
   private _isBet = false;
   @Input() isGameStarting: boolean = false;
@@ -36,6 +39,8 @@ export class BetComponent implements OnInit {
 
   @Input() id: string = '';
   @Input() id2: string = '';
+  @Input() showAddBet: boolean = false;
+  @Input() showRemove: boolean = false;
   // public isBet: boolean = false;
   private _gameStatus: string = '';
 
@@ -116,17 +121,18 @@ export class BetComponent implements OnInit {
   _currentGame: any;
   currentBet: any;
 
+  private withdrawAudio = new Audio('/assets/sounds/withdraw.mp3');
+
   @Input()
   set currentGame(value) {
     this._currentGame = value;
-    if (this.currentBet != null){
+    if (this.currentBet != null) {
 
     }
-    if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame.id && this._currentGame.status === "FINISHED") {
+    if (this.currentBet != null && this.currentBet.aviator_room_id === this._currentGame?.id && this._currentGame?.status === "FINISHED") {
       this.currentBet = null;
     }
   }
-
 
 
   get currentGame() {
@@ -143,6 +149,8 @@ export class BetComponent implements OnInit {
   }
 
 
+  @Output() addAppBet: EventEmitter<any> = new EventEmitter<any>();
+  @Output() removeAppBet: EventEmitter<any> = new EventEmitter<any>();
   @Output() passBalance: EventEmitter<any> = new EventEmitter<any>();
   @Output() passIsChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() isBetExist: EventEmitter<any> = new EventEmitter<any>()
@@ -161,11 +169,10 @@ export class BetComponent implements OnInit {
     },
   ]
   public showAuto: boolean = false;
-  private _amount: number = 1.0;
+  private _amount: number = 1.00;
   public inputCoeff: number = 1.1;
   public currentType: string = 'bet';
   public showCancel: boolean = false;
-
 
 
   get amount(): number {
@@ -184,13 +191,19 @@ export class BetComponent implements OnInit {
   #destroyed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.locale = params.get('locale') ?? 'es'; // Получаем значение параметра
+      console.log('Locale from query params:', this.locale);
+    });
+
+    this.withdrawAudio.load()
     this.roomService.getCoeff().subscribe(res => {
       if (this.isChecked && this.inputCoeff == +this.startCoefficient.toFixed(1)) {
-            this.isShowAlert = true;
-            setTimeout(() => {
-              this.isShowAlert = false;
-            }, 2000);
-            this.withDraw();
+        this.isShowAlert = true;
+        setTimeout(() => {
+          this.isShowAlert = false;
+        }, 2000);
+        this.withDraw();
       }
     })
     this.autoId = `${this.id}-auto`;
@@ -229,17 +242,26 @@ export class BetComponent implements OnInit {
   public withDraw() {
     if (this.currentGame.status === 'PLAYING') {
       this.currentBtnType = 'bet';
+
+      var ClickedCoef = this.startCoefficient
+
       this.roomService.withdraw()
         .pipe(
           tap(res => {
             ///response withdraw bet;
-            this.winCoefficient = this.startCoefficient;
+            var lastBalanceDouble = JSON.parse(localStorage.getItem('lastBalanceDouble') ?? '0') % 100
+            this.winCoefficient = ClickedCoef;
             this.winSum = this.amount * this.winCoefficient;
+            console.log(this.winSum.toFixed(2).substring(this.winSum.toFixed(2).length - 2))
+            var result = parseInt(this.winSum.toFixed(2).substring(this.winSum.toFixed(2).length - 2)) + lastBalanceDouble
+
+            localStorage.setItem('lastBalanceDouble', JSON.stringify(result))
             this.isShowAlert = true;
             setTimeout(() => {
               this.isShowAlert = false;
-            }, 2000);
+            }, 3000);
             this.currentBet = null;
+            this.withdrawAudio.play()
             this.showAlert.emit({
               coeff: this.winCoefficient,
               sum: this.winSum
