@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 })
 
 export class RoomService {
-  private readonly baseUrl = 'http://94.247.129.5:9900';
+  private readonly baseUrl = 'http://194.32.140.143:9900';
   private http = inject(HttpClient);
   private socket: any;
 
@@ -34,7 +34,7 @@ export class RoomService {
   }
 
   connect(): void {
-    this.socket = new WebSocket('ws://94.247.129.5:9900/v1/rooms/websocket');
+    this.socket = new WebSocket('ws://194.32.140.143:9900/v1/rooms/websocket');
 
     this.socket.onopen = () => {
       console.log('WebSocket connection established.');
