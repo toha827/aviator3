@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
 import {RoomService} from "../service/room.service";
 import {AnimationOptions, LottieComponent} from "ngx-lottie";
 import {AnimationItem} from "lottie-web";
@@ -41,6 +41,8 @@ export class GameComponent implements OnInit, OnDestroy {
   private roomService = inject(RoomService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
 
   public userList = [
     {
@@ -327,7 +329,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   showCurrentGameOverAlert: boolean = true;
   nextGameTimeout: any;
-  timeZoneDifference: number = 5 * 60 * 60 * 1000;
+  timeZoneDifference: number = 0;
 
   private isGamePlaying(element: any, index: number, array: any) {
     return element.status === 'PLAYING';
@@ -522,26 +524,27 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public async changeCoefficientAutomatically(playingGame: any): Promise<void> {
-    const totalDuration = this.gameRuntimeCalculator(playingGame.coefficient);
-    console.log(`asdasd ${new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime()}`)
     const totalDuration2 = new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime();
     const intervals = this.generateIntervals(totalDuration2);
-    let startCoefficient = 1.0;
     const endCoefficient = playingGame.coefficient;
     const increment = 0.01;
-
-    // Calculate the number of steps required to reach the end coefficient
-    const steps = Math.ceil((endCoefficient - startCoefficient) / increment);
 
     let currentStep = 0;
 
     console.log(playingGame);
-    while (this.startCoefficient < endCoefficient) {
-      await this.delay(intervals[currentStep]);
-      this.startCoefficient += increment;
-      // console.log('Current Coefficient:', this.startCoefficient, currentStep, endCoefficient);
-      currentStep++;
-    }
+    
+    // Run the animation loop outside Angular Zone to avoid triggering global change detection on every delay/step
+    await this.ngZone.runOutsideAngular(async () => {
+      while (this.startCoefficient < endCoefficient) {
+        await this.delay(intervals[currentStep]);
+        this.startCoefficient += increment;
+        currentStep++;
+        
+        // Explicitly trigger change detection for only this component tree to keep rendering smooth and performant
+        this.cdr.detectChanges();
+      }
+    });
+    
     console.log('game ended ' + this.startCoefficient + ' ' + endCoefficient);
 
     this.currentGame = {
@@ -558,17 +561,17 @@ export class GameComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.isFlewAway = false;
         this.showLoading = true;
-        this.clearAllIntervals()
+        this.clearAllIntervals();
         this.clearHighlightedRows();
-        this.toggleHidePlane(false)
-        // console.log('FUCCCSAKCSCKAS OFFO ASOF KASF')
+        this.toggleHidePlane(false);
+        this.cdr.detectChanges();
       }, 3000);
     }
     this.isGameStarted = false;
     this.stop();
     this.stopBg();
-    // console.log('Final Coefficient:', this.startCoefficient, this.currentGame.coefficient);
-    this.startCoefficient = 1.0
+    this.startCoefficient = 1.0;
+    this.cdr.detectChanges();
   }
 
   private toggleHidePlane(hide: Boolean) {
