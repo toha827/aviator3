@@ -251,6 +251,7 @@ export class GameComponent implements OnInit, OnDestroy {
   // new Code
   public currentGame: any;
   public nextGame: any;
+  public activeGameId: number | null = null;
   public backendTimeDifference: number = JSON.parse(localStorage.getItem('backendTimeDifference') ?? '0');
 
   //
@@ -524,6 +525,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   public async changeCoefficientAutomatically(playingGame: any): Promise<void> {
+    this.activeGameId = playingGame.id;
     const totalDuration2 = new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime();
     const intervals = this.generateIntervals(totalDuration2);
     const endCoefficient = playingGame.coefficient;
@@ -536,7 +538,17 @@ export class GameComponent implements OnInit, OnDestroy {
     // Run the animation loop outside Angular Zone to avoid triggering global change detection on every delay/step
     await this.ngZone.runOutsideAngular(async () => {
       while (this.startCoefficient < endCoefficient) {
-        await this.delay(intervals[currentStep]);
+        if (this.activeGameId !== playingGame.id) {
+          return; // Abort if a new game starts
+        }
+
+        const delayTime = currentStep < intervals.length ? intervals[currentStep] : (intervals[intervals.length - 1] || 50);
+        await this.delay(delayTime);
+
+        if (this.activeGameId !== playingGame.id) {
+          return; // Abort check after delay
+        }
+
         this.startCoefficient += increment;
         currentStep++;
         
@@ -545,6 +557,10 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     });
     
+    if (this.activeGameId !== playingGame.id) {
+      return; // Ensure we don't proceed with animation trigger for an obsolete game
+    }
+
     console.log('game ended ' + this.startCoefficient + ' ' + endCoefficient);
 
     this.currentGame = {
