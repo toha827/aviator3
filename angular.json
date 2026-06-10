@@ -61,6 +61,11 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "allowedHosts": [
+              "betwager.org"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "aviator:build:production"
