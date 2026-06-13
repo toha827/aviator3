@@ -453,8 +453,7 @@ export class GameComponent implements OnInit, OnDestroy {
       })
   }
 
-  gameRuntimeCalculator(endCoef: number) {
-    // Initial parameters
+  generateTimeline(endCoef: number): { time: number, coef: number }[] {
     let initialCoef = 1.0;
     let currentCoef = initialCoef;
 
@@ -466,95 +465,87 @@ export class GameComponent implements OnInit, OnDestroy {
     let totalDuration = 0.0;
     let currentDuration = initialDuration;
 
-    // Calculation loop
+    const timeline = [{ time: 0, coef: 1.0 }];
+
+    // Calculation loop matching backend exactly
     while (currentCoef < endCoef) {
       totalDuration += currentDuration;
       currentCoef += increment;
+      
+      // Store time in milliseconds, round coefficient
+      timeline.push({ time: totalDuration * 1000, coef: parseFloat(currentCoef.toFixed(2)) });
 
-      // Check if we have passed a 2s threshold and adjust duration
+      // Check if we have passed a 1s threshold and adjust duration
       if (totalDuration >= stepThreshold) {
         if (currentDuration - stepDecrement <= 0.1) {
           currentDuration = 0.1;
           stepThreshold += 1.0; // update the next threshold
-          continue;
         } else {
           currentDuration -= stepDecrement;
           stepThreshold += 1.0; // update the next threshold
         }
       }
     }
-
-    return totalDuration * 1000;
-  }
-
-  generateIntervals(totalDuration: number) {
-    console.log(`Total Duration ${totalDuration}`)
-    let initialDuration = 100.0;  // initial duration in milliseconds
-    let stepDecrement = 1.0;  // duration decrement every 10 steps in milliseconds
-    let steps = 10;  // steps to apply the decrement
-
-    let intervals = [];
-    let currentDuration = initialDuration;
-    let stepCounter = 0;
-    let remainingDuration = totalDuration;
-
-    while (remainingDuration > 0) {
-      intervals.push(currentDuration);
-      remainingDuration -= currentDuration;
-      stepCounter++;
-
-      // Check if we need to decrement the duration
-      if (stepCounter === steps) {
-        stepCounter = 0;  // reset step counter
-        if (currentDuration - stepDecrement <= 10) {
-          currentDuration = 10;
-        } else {
-          currentDuration -= stepDecrement;
-        }
-      }
-
-      // Ensure we don't add more duration than remaining
-      if (remainingDuration < currentDuration) {
-        intervals.push(remainingDuration);
-        break;
-      }
+    
+    // Cap the last point at exactly the endCoef
+    if (timeline[timeline.length - 1].coef > endCoef) {
+      timeline[timeline.length - 1].coef = endCoef;
     }
 
-    console.log(`Intervals: ${intervals.length}`);
-    return intervals;
+    return timeline;
   }
 
   public async changeCoefficientAutomatically(playingGame: any): Promise<void> {
     this.activeGameId = playingGame.id;
-    const totalDuration2 = new Date(this.nextGame.playing_until).getTime() - new Date(this.nextGame.playing_from).getTime();
-    const intervals = this.generateIntervals(totalDuration2);
     const endCoefficient = playingGame.coefficient;
-    const increment = 0.01;
-
-    let currentStep = 0;
+    const timeline = this.generateTimeline(endCoefficient);
+    // Backend accurately calculates the total duration inside its timeline.
+    const totalDurationMs = timeline[timeline.length - 1].time;
 
     console.log(playingGame);
     
-    // Run the animation loop outside Angular Zone to avoid triggering global change detection on every delay/step
-    await this.ngZone.runOutsideAngular(async () => {
-      while (this.startCoefficient < endCoefficient) {
-        if (this.activeGameId !== playingGame.id) {
-          return; // Abort if a new game starts
-        }
-
-        const delayTime = currentStep < intervals.length ? intervals[currentStep] : (intervals[intervals.length - 1] || 50);
-        await this.delay(delayTime);
-
-        if (this.activeGameId !== playingGame.id) {
-          return; // Abort check after delay
-        }
-
-        this.startCoefficient += increment;
-        currentStep++;
+    // Run the animation loop outside Angular Zone to avoid triggering global change detection on every frame
+    await this.ngZone.runOutsideAngular(() => {
+      return new Promise<void>((resolve) => {
+        const startTime = performance.now();
         
-        // Explicitly trigger change detection for only this component tree to keep rendering smooth and performant
-        this.cdr.detectChanges();
-      }
+        const animate = (currentTime: number) => {
+          if (this.activeGameId !== playingGame.id) {
+            resolve();
+            return;
+          }
+
+          const elapsed = currentTime - startTime;
+
+          if (elapsed >= totalDurationMs) {
+            this.startCoefficient = endCoefficient;
+            this.cdr.detectChanges();
+            resolve();
+            return;
+          }
+
+          // Interpolate the coefficient based on elapsed time and the pre-calculated backend timeline
+          // Find the exact timeline segment
+          let tIndex = timeline.findIndex(t => t.time > elapsed);
+          if (tIndex === -1) { tIndex = timeline.length - 1; }
+          const prev = tIndex > 0 ? timeline[tIndex - 1] : timeline[0];
+          const next = timeline[tIndex];
+
+          if (prev.time === next.time) {
+            this.startCoefficient = prev.coef;
+          } else {
+            const ratio = (elapsed - prev.time) / (next.time - prev.time);
+            this.startCoefficient = prev.coef + ratio * (next.coef - prev.coef);
+          }
+
+          // Force update to keep rendering smooth and performant
+          this.cdr.detectChanges();
+
+          requestAnimationFrame(animate);
+        };
+        
+        requestAnimationFrame(animate);
+      });
     });
     
     if (this.activeGameId !== playingGame.id) {
@@ -662,9 +653,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+
 
   public animationCreated(animationItem: AnimationItem): void {
     this.animationItem = animationItem;
